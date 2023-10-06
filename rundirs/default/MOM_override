@@ -1,0 +1,100 @@
+
+
+#override DT = 300
+#override DT_THERM = 1800
+
+
+
+! === Override the boundary forcing to include tides
+
+
+
+OBC_TIDE_N_CONSTITUENTS = 1    ! default = 0
+                                ! Number of tidal constituents being added to the open boundary.
+
+OBC_TIDE_CONSTITUENTS = "M2" !
+                                ! Names of tidal constituents being added to the open boundaries.
+OBC_TIDE_ADD_EQ_PHASE = True    !   [Boolean] default = False
+                                ! If true, add the equilibrium phase argument to the specified tidal phases.
+OBC_TIDE_ADD_NODAL = False       !   [Boolean] default = False
+                                ! If true, include 18.6 year nodal modulation in the boundary tidal forcing.
+OBC_TIDE_REF_DATE = 1995, 1, 1! this had been set differently to TIDE_REF_DATE
+                                ! Reference date to use for tidal calculations and equilibrium phase.
+!OBC_TIDE_NODAL_REF_DATE = 1995, 7, 2 ! default = 0
+                                ! Fixed reference date to use for nodal modulation of boundary tides.
+
+
+
+! segment 1: southern boundary
+#override OBC_SEGMENT_001 = "J=0,I=0:N,FLATHER,ORLANSKI,NUDGED"
+#override OBC_SEGMENT_001_VELOCITY_NUDGING_TIMESCALES = .3, 360.0 ! inflow and outflow timescales
+#override OBC_SEGMENT_001_DATA = "U=file:forcing/forcing_obc_segment_001.nc(u),V=file:forcing/forcing_obc_segment_001.nc(v),SSH=file:forcing/forcing_obc_segment_001.nc(eta),TEMP=file:forcing/forcing_obc_segment_001.nc(temp),SALT=file:forcing/forcing_obc_segment_001.nc(salt),Uamp=file:forcing/tu_001.nc(uamp),Uphase=file:forcing/tu_001.nc(uphase),Vamp=file:forcing/tu_001.nc(vamp),Vphase=file:forcing/tu_001.nc(vphase),SSHamp=file:forcing/tz_001.nc(zamp),SSHphase=file:forcing/tz_001.nc(zphase)"
+
+! segment 2: northern boundary
+#override OBC_SEGMENT_002 = "J=N,I=N:0,FLATHER,ORLANSKI,NUDGED"
+#override OBC_SEGMENT_002_VELOCITY_NUDGING_TIMESCALES = .3, 360.0 ! inflow and outflow timescales
+#override OBC_SEGMENT_002_DATA = "U=file:forcing/forcing_obc_segment_002.nc(u),V=file:forcing/forcing_obc_segment_002.nc(v),SSH=file:forcing/forcing_obc_segment_002.nc(eta),TEMP=file:forcing/forcing_obc_segment_002.nc(temp),SALT=file:forcing/forcing_obc_segment_002.nc(salt),Uamp=file:forcing/tu_002.nc(uamp),Uphase=file:forcing/tu_002.nc(uphase),Vamp=file:forcing/tu_002.nc(vamp),Vphase=file:forcing/tu_002.nc(vphase),SSHamp=file:forcing/tz_002.nc(zamp),SSHphase=file:forcing/tz_002.nc(zphase)"
+
+! segment 3: western boundary
+#override OBC_SEGMENT_003 = "I=0,J=N:0,FLATHER,ORLANSKI,NUDGED"
+#override OBC_SEGMENT_003_VELOCITY_NUDGING_TIMESCALES = .3, 360.0 ! inflow and outflow timescales
+#override OBC_SEGMENT_003_DATA = "U=file:forcing/forcing_obc_segment_003.nc(u),V=file:forcing/forcing_obc_segment_003.nc(v),SSH=file:forcing/forcing_obc_segment_003.nc(eta),TEMP=file:forcing/forcing_obc_segment_003.nc(temp),SALT=file:forcing/forcing_obc_segment_003.nc(salt),Uamp=file:forcing/tu_003.nc(uamp),Uphase=file:forcing/tu_003.nc(uphase),Vamp=file:forcing/tu_003.nc(vamp),Vphase=file:forcing/tu_003.nc(vphase),SSHamp=file:forcing/tz_003.nc(zamp),SSHphase=file:forcing/tz_003.nc(zphase)"
+
+! segment 4: eastern boundary
+#override OBC_SEGMENT_004 = "I=N,J=0:N,FLATHER,ORLANSKI,NUDGED"
+#override OBC_SEGMENT_004_VELOCITY_NUDGING_TIMESCALES = .3, 360.0 ! inflow and outflow timescales
+#override OBC_SEGMENT_004_DATA = "U=file:forcing/forcing_obc_segment_004.nc(u),V=file:forcing/forcing_obc_segment_004.nc(v),SSH=file:forcing/forcing_obc_segment_004.nc(eta),TEMP=file:forcing/forcing_obc_segment_004.nc(temp),SALT=file:forcing/forcing_obc_segment_004.nc(salt),Uamp=file:forcing/tu_004.nc(uamp),Uphase=file:forcing/tu_004.nc(uphase),Vamp=file:forcing/tu_004.nc(vamp),Vphase=file:forcing/tu_004.nc(vphase),SSHamp=file:forcing/tz_004.nc(zamp),SSHphase=file:forcing/tz_004.nc(zphase)"
+
+
+!BODY TIDES!!
+! === module MOM_dynamics_split_RK2 ===
+!TIDES = True                    !   [Boolean] default = False
+!                                ! If true, apply tidal momentum forcing.
+!
+!
+!! === module MOM_tidal_forcing ===
+!TIDE_M2 = True                  !   [Boolean] default = False
+!                                ! If true, apply tidal momentum forcing at the M2 frequency. This is only used
+!                                ! if TIDES is true.
+!TIDE_S2 = True                  !   [Boolean] default = False
+!                                ! If true, apply tidal momentum forcing at the S2 frequency. This is only used
+!                                ! if TIDES is true.
+!TIDE_N2 = True                  !   [Boolean] default = False
+!                                ! If true, apply tidal momentum forcing at the N2 frequency. This is only used
+!                                ! if TIDES is true.
+!TIDE_K2 = True                  !   [Boolean] default = False
+!                                ! If true, apply tidal momentum forcing at the K2 frequency. This is only used
+!                                ! if TIDES is true.
+!TIDE_K1 = True                  !   [Boolean] default = False
+!                                ! If true, apply tidal momentum forcing at the K1 frequency. This is only used
+!                                ! if TIDES is true.
+!TIDE_O1 = True                  !   [Boolean] default = False
+!                                ! If true, apply tidal momentum forcing at the O1 frequency. This is only used
+!                                ! if TIDES is true.
+!TIDE_P1 = True                  !   [Boolean] default = False
+!                                ! If true, apply tidal momentum forcing at the P1 frequency. This is only used
+!                                ! if TIDES is true.
+!TIDE_Q1 = True                  !   [Boolean] default = False
+!                                ! If true, apply tidal momentum forcing at the Q1 frequency. This is only used
+!                                ! if TIDES is true.
+!TIDE_MF = True                  !   [Boolean] default = False
+!                                ! If true, apply tidal momentum forcing at the MF frequency. This is only used
+!                                ! if TIDES is true.
+!TIDE_MM = True                  !   [Boolean] default = False
+!                                ! If true, apply tidal momentum forcing at the MM frequency. This is only used
+!                                ! if TIDES is true.
+!TIDE_SAL_SCALAR_VALUE = 0.094   !   [m m-1]
+!                                ! The constant of proportionality between sea surface height (really it should
+!                                ! be bottom pressure) anomalies and bottom geopotential anomalies. This is only
+!                                ! used if TIDES and TIDE_USE_SAL_SCALAR are true.
+!TIDE_REF_DATE = 2010, 1, 1      ! default = 0
+!                                ! Year,month,day to use as reference date for tidal forcing. If not specified,
+!                                ! defaults to 0.
+!TIDE_USE_EQ_PHASE = True        !   [Boolean] default = False
+                                ! Correct phases by calculating equilibrium phase arguments for TIDE_REF_DATE.
+!! OVerride to give diagnostic coordinate
+#override NUM_DIAG_COORDS = 2
+#override DIAG_COORDS = "z Z ZSTAR", "rho2 RHO2 RHO"
+! drho (arg 5) is a bit magic and has a big impact on
+! the tail of the coord...
+#override DIAG_COORD_DEF_RHO2 = "FILE:diag_rho2.nc,interfaces=rho2"
