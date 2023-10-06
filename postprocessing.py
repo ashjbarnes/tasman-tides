@@ -1,0 +1,1 @@
+# Script to be run after mom6 has finished. Payu should call, hopefully able to run locally in new output directory otherwise will need to pass it arguments to know which output to run on / where to save processed data
