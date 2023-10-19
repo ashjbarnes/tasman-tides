@@ -5,11 +5,13 @@ import numpy as np
 from netCDF4 import Dataset
 import matplotlib.pyplot as plt
 import os
+import haversine
 import xarray as xr
 import subprocess
 import matplotlib.pyplot as plt
 import shutil
 import xesmf
+import pathlib as Path
 
 def setup_mom6(name,tname,overrides = [],walltime = None,common_forcing = False,default_dir = "default"):
     ## If common forcing is provided, set another input folder that contains the windstress for all runs in this experiment
