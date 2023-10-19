@@ -140,17 +140,17 @@ def beamgrid(data,lat0 = -42.1,lon0 = 147.2,beamwidth = 400,beamlength = 1500,pl
     ## Create target grid to interpolate onto
     newgrid = xr.DataArray(
         data = X_ * 0,
-        dims = ["i","j"],
+        dims = ["yb","xb"],
         coords = {
-            "xb":(["j"], - X_[0,:]), ## This sets the coordinate as running from Tasmania -> Mac ridge
-            "yb":(["i"],Y_[:,0]),
+            "xb":(["xb"], - X_[0,:]), ## This sets the coordinate as running from Tasmania -> Mac ridge
+            "yb":(["yb"],Y_[:,0]),
             "lon":(["i","j"],LONrot),
             "lat":(["i","j"],LATrot),
         }
     )
 
     regridder = xesmf.Regridder(
-    data.rename({"xh":"lon","yh":"lat"}),newgrid,"bilinear"
+    data,newgrid,"bilinear"
     )
 
     out = regridder(
