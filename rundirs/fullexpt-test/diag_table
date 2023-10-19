@@ -1,25 +1,15 @@
 eac
 1991 1 1 0 0 0
 
+## 2D Diagnostics
 "ocean_daily",            1, "days",   1, "days", "time"
 "ice_daily",              1, "days",   1, "days", "time"
-# "ocean_6hourly", 6, "hours", 1, "hours", "time"
 "ocean_hourly", 1, "hours", 1, "hours", "time"
 
-
-# Sea surface height above geoid
 "ocean_model",   "zos",          "zos",              "ocean_hourly",         "all", "mean", "none",2
-# Sea Surface Temperature
-# "ocean_model",   "v",          "v",              "ocean_6hourly",         "all", "mean", "none",2
-# Sea Surface Salinity
-# "ocean_model",   "u",          "u",              "ocean_6hourly",         "all", "mean", "none",2
-# Sea Water Potential Temperature at Sea Floor
 "ocean_model",   "tob",          "tob",              "ocean_daily",        "all", "mean", "none",2
-# Sea Water Salinity at Sea Floor
 "ocean_model",   "sob",          "sob",              "ocean_daily",         "all", "mean", "none",2
-# Mixed layer depth (delta rho = 0.03)
 "ocean_model",   "mlotst",       "mlotst",           "ocean_daily",         "all", "mean", "none",2
-# Sea Surface Speed
 "ocean_model",   "speed",        "speed",            "ocean_hourly",         "all", "mean", "none",2
 
 
@@ -31,21 +21,32 @@ eac
 
 ## Instead of regional selection, split the variables of interest into separate files and slice afterwards in Python
 
-
+## 3D Diagnostifcs on z*
 "hourly_u", 1, "hours", 1, "hours", "time"
 "hourly_h", 1, "hours", 1, "hours", "time"
 "hourly_v", 1, "hours", 1, "hours", "time"
 "hourly_rho", 1, "hours", 1, "hours", "time"
-"hourly_e", 1, "hours", 1, "hours", "time"
 "daily_N2", 5, "days", 1, "days","time"
-
-#"ocean_model_rho2","u",   "u",   "hourly_u","all",.false.,"none",2
-#"ocean_model_rho2","v",   "v",   "hourly_v","all",.false.,"none",2
-#"ocean_model_rho2","rhopot2",   "rhopot2",   "hourly_rho","all",.false.,"none",2
-"ocean_model_rho2","e","e","hourly_e","all",.false.,"none",2
 
 "ocean_model","u",   "u",   "hourly_u","all",.false.,"none",2
 "ocean_model","v",   "v",   "hourly_v","all",.false.,"none",2
 "ocean_model","h",   "h",   "hourly_h","all",.false.,"none",2
 "ocean_model","rhopot2",   "rhopot2",   "hourly_rho","all",.false.,"none",2
 "ocean_model","subML_N2",   "subML_N2",   "daily_N2","all","mean","none",2
+
+
+## 3D Diagnostics on isopycnal surfaces
+"hourly_e", 1, "hours", 1, "hours", "time"
+"hourly_u_ISOP", 1, "hours", 1, "hours", "time"
+"hourly_v_ISOP", 1, "hours", 1, "hours", "time"
+
+"ocean_model_rho2","e","e","hourly_e","all",.false.,"none",2
+"ocean_model_rho2","u",   "u",   "hourly_u_ISOP","all",.false.,"none",2
+"ocean_model_rho2","v",   "v",   "hourly_v_ISOP","all",.false.,"none",2
+
+
+
+
+
+
+
