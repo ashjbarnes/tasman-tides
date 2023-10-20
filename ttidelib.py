@@ -83,9 +83,8 @@ def lonlat_to_xy(lon,lat,lon0,lat0):
     x0,y0 = R * np.cos(lat0) * np.sin(lon0) , R * np.sin(lat0)
     x,y = R * np.cos(lat) * np.sin(lon) - x0, R * np.sin(lat) - y0
 
-
-
     return x,y
+
 def beamgrid(data,lat0 = -42.1,lon0 = 147.2,beamwidth = 400,beamlength = 1500,plot = False,xname = "xh",yname = "yh",vmin = None,vmax = None):
     # make a docstring describing these variables
     """
@@ -144,8 +143,8 @@ def beamgrid(data,lat0 = -42.1,lon0 = 147.2,beamwidth = 400,beamlength = 1500,pl
         coords = {
             "xb":(["xb"], - X_[0,:]), ## This sets the coordinate as running from Tasmania -> Mac ridge
             "yb":(["yb"],Y_[:,0]),
-            "lon":(["i","j"],LONrot),
-            "lat":(["i","j"],LATrot),
+            "lon":(["yb","xb"],LONrot),
+            "lat":(["yb","xb"],LATrot),
         }
     )
 
@@ -189,8 +188,8 @@ def beamgrid(data,lat0 = -42.1,lon0 = 147.2,beamwidth = 400,beamlength = 1500,pl
 
     else:
         out = out.assign_coords(
-            {"x":(["i","j"],Xrot),
-             "y":(["i","j"],Yrot)}
+            {"x":(["yb","xb"],Xrot),
+             "y":(["yb","xb"],Yrot)}
         )
 
         ## Define the original grid on cartesian coordinates
