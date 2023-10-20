@@ -124,11 +124,11 @@ def beamgrid(data,lat0 = -42.1,lon0 = 147.2,beamwidth = 400,beamlength = 1500,pl
     y_ = np.linspace(
         -0.5 * beamwidth,
         0.5 * beamwidth,
-        int(beamwidth // res))
+        int(beamwidth // res) + 1)
     x_ = np.linspace(
         0,
         -1 * beamlength,
-        int(beamlength // res))
+        int(beamlength // res) + 1)
     
     X_,Y_ = np.meshgrid(x_,y_)
     ## Define the rotated grid as represented on the original grid. I.E, the points on x_ y_ as represented on the x,y coordinate system
