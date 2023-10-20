@@ -1,66 +1,70 @@
-# Script to be run after mom6 has finished. Payu should call, hopefully able to run locally in new output directory otherwise will need to pass it arguments to know which output to run on / where to save processed data
-import numpy as np
-import subprocess
-import xarray as xr
+from matplotlib import rc
 from pathlib import Path
+import numpy as np
+import os
+import xarray as xr
+from dask.distributed import Client
+import haversine
+from pathlib import Path
+import sys
+sys.path.append("/home/149/ab8992/tasman-tides/")
+import ttidelib as tt
+client = Client()
 
-def get_transect_data(path,vector = np.array([[150,-49.8],[165,-43.3]])):
-    """
-    Returns a dataset containing 4D hourly transect data along beam path
+#TODO Have postprocessing script read the diag table to figure out which variables to process?
 
-    Parameters
-    ----------
-    output_path : Path object
-        Path to output directory containing MOM6 output
-    vector : np.array
-        Array containing two points in longitude, latitude space that define the beam path
-    """
+#TODO Allow python file to take arguments for chunking?
 
-    ## Need to modify longitude to ensure we're comparing distances correctly
-    longitude_factor = np.cos(-47.5 * np.pi / 180)
+if __name__ == "__main__":
+    rundir = Path.cwd()
+    # Get the name of folder from Path object
+    expt = rundir.name
 
-    dist = 1352 #! Hardcoded length of the transect. Pending decision of how to handle non-uniformality of the distnaces along transect
+    # Find most recent output folder
+    i = 0
+    while (rundir / f"archive/output{i:03d}").exists():
+        i += 1
+    i -=1
+    output = f"output{i:03d}"
 
-    ## Angle from horizontal to the beam path
-    theta = np.arctan(
-        (vector[0,1] - vector[1,1]) / (longitude_factor * (vector[0,0] - vector[1,0]))
-    )
+    # Set up the run and output directories
+    mom6out = Path.cwd() / "rundirs" / expt / f"archive/output{output:03d}"
+    gdataout = Path("/g/data/nm03/ab8992/") / expt / f"output{output:03d}"
+    if not gdataout.exists():
+        gdataout.mkdir(parents=True)
+
+    diags = {
+        "hourly_rho":{"x":"xh","y":"yh","z":"zl"},
+        "hourly_u":{"x":"xq","y":"yh","z":"zl"},
+        "hourly_v":{"x":"xh","y":"yq","z":"zl"},
+        "hourly_e":{"x":"xh","y":"yh","z":"zi"}
+    }
+
+    for diag in diags:
+        try:
+            ds = xr.open_mfdataset(
+                str(mom6out / f"*{diag}.nc"),
+                chunks={diags[diag]["z"]: 10,"time":50},
+                decode_times=False,
+            )
+        except:
+            print(f"Failed to open {diag}")
+            continue
 
 
+        out = tt.beamgrid(ds,xname = diags[diag]["x"],yname = diags[diag]["y"])
+        out = out.chunk({"yb": 10}).persist()
 
-    h = xr.open_mfdataset(path / "hourly_h.nc",decode_times = False, parallel = True,chunks = "auto").sel(xh = slice(145,175),yh = slice(-52,-30))
-    v = xr.open_mfdataset(path / "hourly_v.nc",decode_times = False, parallel = True,chunks = "auto").sel(xh = slice(145,175),yq = slice(-52,-30))
-    u = xr.open_mfdataset(path / "hourly_u.nc",decode_times = False, parallel = True,chunks = "auto").sel(xq = slice(145,175),yh = slice(-52,-30))
-    isop = xr.open_mfdataset(path / "hourly_e.nc",decode_times = False, parallel = True,chunks = "auto").sel(xh = slice(145,175),yh = slice(-52,-30))
+        ## Now split the data up into different y levels
+        ## Try split in 4 parts in yh direction
 
-    ## Construct transect
-    x = xr.DataArray(np.arange(150,165,0.2),dims="l")
-    y = xr.DataArray(np.linspace(-43.3,-49.8,x.shape[0]),dims="l")
-    # fig,ax = plt.subplots(1,figsize = (10,10))
+        i = 0
+        while i * 10 < out["yb"].shape[0]:
+            out.isel(
+                {
+                    "yb" : slice(i*10,(i+1)*10)
+                    }
+                    ).to_netcdf(gdataout / f"y{i:02d}_{diag}.nc")
 
-    u_transect = u.interp(xq = x,yh = y)
-    v_transect = v.interp(xh = x,yq = y)
-    h_transect = h.interp(xh = x,yh = y)
-    isop_transect = isop.interp(xh = x,yh = y)
 
-    ## Calculate velocity along transect
-    ul = u_transect.u * np.cos(theta)  + v_transect.v * np.sin(theta)
-    ul = ul.assign_coords({"l":('l',np.linspace(0,dist,ul.l.shape[0]))})
-    h_transect = h_transect.assign_coords({"l":('l',np.linspace(0,dist,h_transect.l.shape[0]))})
-    ul = ul.load()
-    h_transect = h_transect.h.load()
-    isop_transect = isop_transect.load()
-    depth = h_transect.cumsum(dim='zl')
-    u_newz = xr.DataArray(data=ul.values,dims=["time","zl", "l"],
-            coords=dict(l=(["l"], ul.l.values),depth=(["time","zl", "l"], depth.values)),
-            attrs= ul.attrs)
-
-    data = xr.Dataset(
-        data_vars = {"h_transect":h_transect,
-            "isop_transect":isop_transect.e,
-            "depth":depth,
-            "u_newz":u_newz})
-    data = data.chunk({"time":1})
-
-    return data
-
+            i += 1
