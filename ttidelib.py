@@ -161,28 +161,20 @@ def beamgrid(data,lat0 = -42.1,lon0 = 147.2,beamwidth = 400,beamlength = 1500,pl
     out.attrs = data.attrs
     out.attrs["Description"] = f"Beamwidth {beamwidth}km, Beamlength {beamlength}km, Resolution {res}km, angle {theta} degrees, origin {lat0,lon0}"
     out.xb.attrs = {
-        "Description": {
             "long_name": "Distance along beam from Tasmania towards Macquarie Ridge",
             "units": "km",
-        }
     }
     out.yb.attrs = {
-        "Description": {
             "long_name": "Distance perpendicular to beam referened from beam centre",
             "units": "km",
-        }
     }
     out.lon.attrs = {
-        "Description": {
             "long_name": "Longitude of grid point",
             "units": "degrees",
-        }
     }
     out.lat.attrs = {
-        "Description": {
             "long_name": "Latitude of grid point",
             "units": "degrees",
-        }
     }
 
     if plot == False:
