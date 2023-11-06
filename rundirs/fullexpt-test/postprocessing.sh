@@ -1,6 +1,6 @@
 #!/bin/bash
 #PBS -N python-test
-#PBS -P <project code>
+#PBS -P v45
 #PBS -q normal
 #PBS -l walltime=5:00:00
 #PBS -l ncpus=96

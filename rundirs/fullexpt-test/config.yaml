@@ -27,3 +27,5 @@ storage:
 
 mpi:
   module: openmpi/4.1.2
+postscript:
+  postprocessing.sh

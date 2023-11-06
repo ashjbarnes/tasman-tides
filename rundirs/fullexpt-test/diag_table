@@ -38,13 +38,17 @@ ttide
 
 
 ## 3D mixing diagnostics on isoycnal surfaces. Daily averages
-"daily_3d", 1, "days", 1, "hours", "time"
+"KE_stress", 1, "days", 1, "hours", "time"
+"KE_visc", 1, "days", 1, "hours", "time"
+"KE_horvisc", 1, "days", 1, "hours", "time"
+"PE_to_KE", 1, "days", 1, "hours", "time"
+"dKE_dt", 1, "days", 1, "hours", "time"
 
-"ocean_model_rho2","KE_stress",   "KE_stress",   "daily_3d","all","mean","none",2
-"ocean_model_rho2","KE_visc",   "KE_visc",   "daily_3d","all","mean","none",2
-"ocean_model_rho2","KE_horvisc",   "KE_horvisc",   "daily_3d","all","mean","none",2
-"ocean_model_rho2","PE_to_KE",   "PE_to_KE",   "daily_3d","all","mean","none",2
-"ocean_model_rho2","dKE_dt",   "dKE_dt",   "daily_3d","all","mean","none",2
+"ocean_model_rho2","KE_stress",   "KE_stress",   "KE_stress","all","mean","none",2
+"ocean_model_rho2","KE_visc",   "KE_visc",   "KE_visc","all","mean","none",2
+"ocean_model_rho2","KE_horvisc",   "KE_horvisc",   "KE_horvisc","all","mean","none",2
+"ocean_model_rho2","PE_to_KE",   "PE_to_KE",   "PE_to_KE","all","mean","none",2
+"ocean_model_rho2","dKE_dt",   "dKE_dt",   "dKE_dt","all","mean","none",2
 
 
 
