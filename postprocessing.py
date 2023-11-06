@@ -17,13 +17,13 @@ import json
 
 hourly_diags = {
     "u":
-    {"x":"xh","y":"yh","z":"zl"},
+    {"x":"xq","y":"yh","z":"zl"},
     "h":
     {"x":"xh","y":"yh","z":"zl"},
     "v":
-    {"x":"xh","y":"yh","z":"zl"},
+    {"x":"xh","y":"yq","z":"zl"},
     "rho":
-    {"x":"xh","y":"yh","z":"zi"},
+    {"x":"xh","y":"yh","z":"zl"},
     "e":
     {"x":"xh","y":"yh","z":"rho2_i"},
     "u_ISOP":
@@ -34,13 +34,19 @@ hourly_diags = {
     {"x":"xh","y":"yh","z":"zl"}
 }
 
-daily_diags = [
-    "KE_stress",
-    "KE_visc",
-    "KE_horvisc",
-    "PE_to_KE",
-    "dKE_dt"
-]
+daily_diags = {
+    "KE_stress":
+    {"x":"xq","y":"yh","z":"zl"},
+    "KE_visc":
+    {"x":"xh","y":"yh","z":"zl"},
+    "KE_horvisc":
+    {"x":"xh","y":"yq","z":"zl"},
+    "PE_to_KE":
+    {"x":"xh","y":"yh","z":"zl"},
+    "dKE_dt":
+    {"x":"xh","y":"yh","z":"zl"}
+}
+
 
 
 
@@ -56,7 +62,7 @@ if __name__ == "__main__":
         i += 1
     i -=1
     output = f"output{i:03d}"
-
+    print(output)
     # Set up the run and output directories
     mom6out = rundir /  f"archive/{output}"
     gdataout = Path("/g/data/nm03/ab8992/") / expt / f"{output}"
@@ -65,6 +71,7 @@ if __name__ == "__main__":
 
     ## Simply move the surface variables to gdata. These are unchunked and for the entire domain
 
+    print(str(mom6out))
     try:
         surface_filename = list(mom6out.glob('*.surface.nc'))[0].name
         shutil.move(str(mom6out / surface_filename),str(gdataout / "surface.nc"))
@@ -76,17 +83,18 @@ if __name__ == "__main__":
  
 
     for diag in daily_diags:
-        try:
-            
-            ds = xr.open_dataset(
-                str(mom6out / f"*{diag}.nc"),
-                decode_times=False,
-            )
-            out = tt.beamgrid(ds[diag],xname = "xh",yname = "yh")
-            out.to_netcdf(gdataout / f"{diag}.nc")
-        except Exception as e:        
-            print(f"Failed to open 3d daily diags")
-            print(e)
+        # try:
+        print(str(mom6out / f"*{diag}.nc"))
+        ds = xr.open_mfdataset(
+            str(mom6out / f"*{diag}.nc"),
+            chunks={"rho2_l": 10},
+            decode_times=False,
+        )
+        out = tt.beamgrid(ds[diag],xname = "xh",yname = "yh")
+        out.to_netcdf(gdataout / f"{diag}.nc")
+        # except Exception as e:        
+        #     print(f"Failed to open 3d daily diags")
+        #     print(e)
 
 
 
