@@ -1,4 +1,3 @@
-from matplotlib import rc
 from pathlib import Path
 import numpy as np
 import os
@@ -9,17 +8,18 @@ from pathlib import Path
 import sys
 sys.path.append("/home/149/ab8992/tasman-tides/")
 import ttidelib as tt
-client = Client()
+
 
 #TODO Have postprocessing script read the diag table to figure out which variables to process?
 
 #TODO Allow python file to take arguments for chunking?
 
 if __name__ == "__main__":
+    client = Client()
     rundir = Path.cwd()
     # Get the name of folder from Path object
     expt = rundir.name
-
+    print(f"Running postprocessing for experiment {expt}")
     # Find most recent output folder
     i = 0
     while (rundir / f"archive/output{i:03d}").exists():
@@ -28,8 +28,8 @@ if __name__ == "__main__":
     output = f"output{i:03d}"
 
     # Set up the run and output directories
-    mom6out = Path.cwd() / "rundirs" / expt / f"archive/output{output:03d}"
-    gdataout = Path("/g/data/nm03/ab8992/") / expt / f"output{output:03d}"
+    mom6out = rundir /  f"archive/{output}"
+    gdataout = Path("/g/data/nm03/ab8992/") / expt / f"output{output}"
     if not gdataout.exists():
         gdataout.mkdir(parents=True)
 
@@ -41,25 +41,27 @@ if __name__ == "__main__":
     }
 
     for diag in diags:
+        print(f"processing {diag}")
         try:
             ds = xr.open_mfdataset(
                 str(mom6out / f"*{diag}.nc"),
                 chunks={diags[diag]["z"]: 10,"time":50},
                 decode_times=False,
             )
-        except:
+        except Exception as e:
             print(f"Failed to open {diag}")
+            print(e)
             continue
 
-
+        print(diags[diag]["x"])
         out = tt.beamgrid(ds,xname = diags[diag]["x"],yname = diags[diag]["y"])
-        out = out.chunk({"yb": 10}).persist()
+        out = out.chunk({"yb": 12}).persist()
 
         ## Now split the data up into different y levels
         ## Try split in 4 parts in yh direction
 
         i = 0
-        while i * 10 < out["yb"].shape[0]:
+        while i * 12 < out["yb"].shape[0]:
             out.isel(
                 {
                     "yb" : slice(i*10,(i+1)*10)
