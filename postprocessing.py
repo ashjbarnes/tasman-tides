@@ -1,6 +1,7 @@
 from pathlib import Path
 import numpy as np
 import os
+import shutil
 import xarray as xr
 from dask.distributed import Client
 import haversine
@@ -8,11 +9,40 @@ from pathlib import Path
 import sys
 sys.path.append("/home/149/ab8992/tasman-tides/")
 import ttidelib as tt
-
+import json
 
 #TODO Have postprocessing script read the diag table to figure out which variables to process?
 
 #TODO Allow python file to take arguments for chunking?
+
+hourly_diags = {
+    "u":
+    {"x":"xh","y":"yh","z":"zl"},
+    "h":
+    {"x":"xh","y":"yh","z":"zl"},
+    "v":
+    {"x":"xh","y":"yh","z":"zl"},
+    "rho":
+    {"x":"xh","y":"yh","z":"zi"},
+    "e":
+    {"x":"xh","y":"yh","z":"rho2_i"},
+    "u_ISOP":
+    {"x":"xh","y":"yh","z":"rho2_l"},
+    "v_ISOP":
+    {"x":"xh","y":"yh","z":"rho2_l"},
+    "daily_mixing":
+    {"x":"xh","y":"yh","z":"zl"}
+}
+
+daily_diags = [
+    "KE_stress"
+    "KE_visc"
+    "KE_horvisc"
+    "PE_to_KE"
+    "dKE_dt"
+]
+
+
 
 if __name__ == "__main__":
     client = Client()
@@ -33,19 +63,35 @@ if __name__ == "__main__":
     if not gdataout.exists():
         gdataout.mkdir(parents=True)
 
-    diags = {
-        "hourly_rho":{"x":"xh","y":"yh","z":"zl"},
-        "hourly_u":{"x":"xq","y":"yh","z":"zl"},
-        "hourly_v":{"x":"xh","y":"yq","z":"zl"},
-        "hourly_e":{"x":"xh","y":"yh","z":"zi"}
-    }
+    ## Simply move the surface variables to gdata. These are unchunked and for the entire domain
+    if (mom6out / "surface.nc").exists():
+        shutil.move(str(mom6out / "surface.nc"),str(gdataout / "surface.nc"))
 
-    for diag in diags:
-        print(f"processing {diag}")
+    ## Now process the 3D Daily diagnostics. These are cut down to the transect but unchunked. They all have the same dimension names
+    for diag in daily_diags:
         try:
             ds = xr.open_mfdataset(
                 str(mom6out / f"*{diag}.nc"),
-                chunks={diags[diag]["z"]: 10,"time":50},
+                chunks="auto",
+                decode_times=False,
+            )
+        except Exception as e:
+            print(f"Failed to open surface.nc")
+            print(e)
+
+        out = tt.beamgrid(ds,xname = "xh",yname = "yh")
+        out.to_netcdf(gdataout / f"{diag}.nc")
+
+
+    ## Now we do the biggest ones, the hourly diagnostics. These are output in their own folder, chunked along y dimension
+    for diag in hourly_diags:
+        print(f"processing {diag}")
+        if not (gdataout / f"{diag}").exists():
+            (gdataout / f"{diag}").mkdir(parents=True)
+        try:
+            ds = xr.open_mfdataset(
+                str(mom6out / f"*{diag}.nc"),
+                chunks={hourly_diags[diag]["z"]: 10,"time":50},
                 decode_times=False,
             )
         except Exception as e:
@@ -53,8 +99,7 @@ if __name__ == "__main__":
             print(e)
             continue
 
-        print(diags[diag]["x"])
-        out = tt.beamgrid(ds,xname = diags[diag]["x"],yname = diags[diag]["y"])
+        out = tt.beamgrid(ds,xname = hourly_diags[diag]["x"],yname = hourly_diags[diag]["y"])
         out = out.chunk({"yb": 12}).persist()
 
         ## Now split the data up into different y levels
@@ -66,7 +111,7 @@ if __name__ == "__main__":
                 {
                     "yb" : slice(i*10,(i+1)*10)
                     }
-                    ).to_netcdf(gdataout / f"y{i:02d}_{diag}.nc")
+                    ).to_netcdf(gdataout / f"{diag}" / f"{diag}_y{i:02d}.nc")
 
 
             i += 1
