@@ -18,37 +18,37 @@ ttide
 "h", 1, "hours", 1, "hours", "time"
 "v", 1, "hours", 1, "hours", "time"
 "rho", 1, "hours", 1, "hours", "time"
-"N2", 1, "days", 1, "hours","time"
+# "N2", 1, "days", 1, "hours","time"
 
-"ocean_model","u",   "u",   "u","all",.false.,"none",2
-"ocean_model","v",   "v",   "v","all",.false.,"none",2
-"ocean_model","h",   "h",   "h","all",.false.,"none",2
-"ocean_model","rhopot2",   "rhopot2",   "rho","all",.false.,"none",2
-"ocean_model","subML_N2",   "subML_N2",   "N2","all",.false.,"none",2
+"ocean_model_z","u",   "u",   "u","all",.false.,"none",2
+"ocean_model_z","v",   "v",   "v","all",.false.,"none",2
+"ocean_model_z","h",   "h",   "h","all",.false.,"none",2
+"ocean_model_z","rhopot2",   "rho",   "rho","all",.false.,"none",2
+# "ocean_model","subML_N2",   "subML_N2",   "N2","all",.false.,"none",2
 
 
 ## 3D Diagnostics on isopycnal surfaces
 "e", 1, "hours", 1, "hours", "time"
-"u_ISOP", 1, "hours", 1, "hours", "time"
-"v_ISOP", 1, "hours", 1, "hours", "time"
+# "u_ISOP", 1, "hours", 1, "hours", "time"
+# "v_ISOP", 1, "hours", 1, "hours", "time"
 
 "ocean_model_rho2","e","e","e","all",.false.,"none",2
-"ocean_model_rho2","u",   "u",   "u_ISOP","all",.false.,"none",2
-"ocean_model_rho2","v",   "v",   "v_ISOP","all",.false.,"none",2
+# "ocean_model_rho2","u",   "u",   "u_ISOP","all",.false.,"none",2
+# "ocean_model_rho2","v",   "v",   "v_ISOP","all",.false.,"none",2
 
 
 ## 3D mixing diagnostics on isoycnal surfaces. Daily averages
-# "KE_stress", 1, "days", 1, "hours", "time"
-# "KE_visc", 1, "days", 1, "hours", "time"
-# "KE_horvisc", 1, "days", 1, "hours", "time"
-# "PE_to_KE", 1, "days", 1, "hours", "time"
-# "dKE_dt", 1, "days", 1, "hours", "time"
+"KE_stress", 1, "days", 1, "hours", "time"
+"KE_visc", 1, "days", 1, "hours", "time"
+"KE_horvisc", 1, "days", 1, "hours", "time"
+"PE_to_KE", 1, "days", 1, "hours", "time"
+"dKE_dt", 1, "days", 1, "hours", "time"
 
-"ocean_model_rho2","KE_stress",   "KE_stress",   "KE_stress","all","mean","none",2
-"ocean_model_rho2","KE_visc",   "KE_visc",   "KE_visc","all","mean","none",2
-"ocean_model_rho2","KE_horvisc",   "KE_horvisc",   "KE_horvisc","all","mean","none",2
-"ocean_model_rho2","PE_to_KE",   "PE_to_KE",   "PE_to_KE","all","mean","none",2
-"ocean_model_rho2","dKE_dt",   "dKE_dt",   "dKE_dt","all","mean","none",2
+"ocean_model_z","KE_stress",   "KE_stress",   "KE_stress","all","mean","none",2
+"ocean_model_z","KE_visc",   "KE_visc",   "KE_visc","all","mean","none",2
+"ocean_model_z","KE_horvisc",   "KE_horvisc",   "KE_horvisc","all","mean","none",2
+"ocean_model_z","PE_to_KE",   "PE_to_KE",   "PE_to_KE","all","mean","none",2
+"ocean_model_z","dKE_dt",   "dKE_dt",   "dKE_dt","all","mean","none",2
 
 
 
