@@ -60,28 +60,13 @@ if __name__ == "__main__":
 
     # Set up the run and output directories
     mom6out = rundir /  f"archive/{output}"
-    gdataout = Path("/g/data/nm03/ab8992/") / expt / f"output{output}"
+    gdataout = Path("/g/data/nm03/ab8992/") / expt / f"{output}"
     if not gdataout.exists():
         gdataout.mkdir(parents=True)
 
     ## Simply move the surface variables to gdata. These are unchunked and for the entire domain
     if (mom6out / "surface.nc").exists():
         shutil.move(str(mom6out / "surface.nc"),str(gdataout / "surface.nc"))
-
-    ## Now process the 3D Daily diagnostics. These are cut down to the transect but unchunked. They all have the same dimension names
-    for diag in daily_diags:
-        try:
-            ds = xr.open_mfdataset(
-                str(mom6out / f"*{diag}.nc"),
-                chunks="auto",
-                decode_times=False,
-            )
-        except Exception as e:
-            print(f"Failed to open surface.nc")
-            print(e)
-
-        out = tt.beamgrid(ds,xname = "xh",yname = "yh")
-        out.to_netcdf(gdataout / f"{diag}.nc")
 
 
     ## Now we do the biggest ones, the hourly diagnostics. These are output in their own folder, chunked along y dimension
