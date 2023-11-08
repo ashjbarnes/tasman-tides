@@ -16,38 +16,33 @@ import json
 #TODO Allow python file to take arguments for chunking?
 
 hourly_diags = {
-    "u":
-    {"x":"xq","y":"yh","z":"zl"},
-    "h":
-    {"x":"xh","y":"yh","z":"zl"},
-    "v":
-    {"x":"xh","y":"yq","z":"zl"},
     "rho":
-    {"x":"xh","y":"yh","z":"zl"},
+    {"x":"xh","y":"yh","z":"zi"},
     "e":
     {"x":"xh","y":"yh","z":"rho2_i"},
-    "u_ISOP":
-    {"x":"xh","y":"yh","z":"rho2_l"},
-    "v_ISOP":
-    {"x":"xh","y":"yh","z":"rho2_l"},
-    "daily_mixing":
-    {"x":"xh","y":"yh","z":"zl"}
+    "Khh":
+    {"x":"xh","y":"yh","z":"zl"},
 }
 
-daily_diags = {
-    "KE_stress":
-    {"x":"xq","y":"yh","z":"zl"},
-    "KE_visc":
-    {"x":"xh","y":"yh","z":"zl"},
-    "KE_horvisc":
-    {"x":"xh","y":"yq","z":"zl"},
-    "PE_to_KE":
-    {"x":"xh","y":"yh","z":"zl"},
-    "dKE_dt":
-    {"x":"xh","y":"yh","z":"zl"}
-}
+daily_diags = [
+    "KE_stress"
+    "KE_visc"
+    "KE_horvisc"
+    "PE_to_KE"
+    "dKE_dt"
+]
 
+def save_chunked(data,name,chunks = 12):
+        data = data.chunk({"yb": chunks}).persist()
 
+        i = 0
+        while i * chunks < data["yb"].shape[0]:
+            data.isel(
+                {
+                    "yb" : slice(i*10,(i+1)*10)
+                    }
+                    ).to_netcdf(gdataout / f"{name}" / f"{name}_y{i:02d}.nc")
+            i += 1
 
 
 if __name__ == "__main__":
@@ -62,43 +57,66 @@ if __name__ == "__main__":
         i += 1
     i -=1
     output = f"output{i:03d}"
-    print(output)
+
     # Set up the run and output directories
     mom6out = rundir /  f"archive/{output}"
-    gdataout = Path("/g/data/nm03/ab8992/") / expt / f"{output}"
+    gdataout = Path("/g/data/nm03/ab8992/") / expt / f"output{output}"
     if not gdataout.exists():
         gdataout.mkdir(parents=True)
 
     ## Simply move the surface variables to gdata. These are unchunked and for the entire domain
-
-    print(str(mom6out))
-    try:
-        surface_filename = list(mom6out.glob('*.surface.nc'))[0].name
-        shutil.move(str(mom6out / surface_filename),str(gdataout / "surface.nc"))
-    except Exception as e:
-        print("Could not find surface file!")
-        print(e)
+    if (mom6out / "surface.nc").exists():
+        shutil.move(str(mom6out / "surface.nc"),str(gdataout / "surface.nc"))
 
     ## Now process the 3D Daily diagnostics. These are cut down to the transect but unchunked. They all have the same dimension names
- 
-
     for diag in daily_diags:
-        # try:
-        print(str(mom6out / f"*{diag}.nc"))
-        ds = xr.open_mfdataset(
-            str(mom6out / f"*{diag}.nc"),
-            chunks={"rho2_l": 10},
-            decode_times=False,
-        )
-        out = tt.beamgrid(ds[diag],xname = "xh",yname = "yh")
+        try:
+            ds = xr.open_mfdataset(
+                str(mom6out / f"*{diag}.nc"),
+                chunks="auto",
+                decode_times=False,
+            )
+        except Exception as e:
+            print(f"Failed to open surface.nc")
+            print(e)
+
+        out = tt.beamgrid(ds,xname = "xh",yname = "yh")
         out.to_netcdf(gdataout / f"{diag}.nc")
-        # except Exception as e:        
-        #     print(f"Failed to open 3d daily diags")
-        #     print(e)
 
 
+    ## Now we do the biggest ones, the hourly diagnostics. These are output in their own folder, chunked along y dimension
 
-    # Now we do the biggest ones, the hourly diagnostics. These are output in their own folder, chunked along y dimension
+    ## First do the velocities together, as these need to be summed along and against the beam
+
+    theta = np.arctan((-43.3 + 49.8) / -17) # This is the angle of rotation
+    u = xr.open_mfdataset(
+        str(mom6out / f"u.nc"),
+        chunks={"zl": 10,"time":50},
+        decode_times=False,
+    )
+    v = xr.open_mfdataset(
+        str(mom6out / f"v.nc"),
+        chunks={"zl": 10,"time":50},
+        decode_times=False,
+    )
+
+    u = tt.beamgrid(u,xname = "xq")
+    v = tt.beamgrid(v,yname = "yq")
+
+    # Rotate the velocities
+    u_rot = u["u"] * np.cos(theta) - v["v"] * np.sin(theta)
+    v_rot = u["u"] * np.sin(theta) + v["v"] * np.cos(theta)
+
+    # Set the name of u to "u" and description to "velocity along beam"
+    u_rot.name = "u"
+    u_rot.attrs["long_name"] = "Velocity along beam (Eastward positive)"
+    v_rot.name = "v"
+    v_rot.attrs["long_name"] = "Velocity across beam (Northward positive)"
+
+    save_chunked(u_rot,"u",chunks = 12)
+    save_chunked(v_rot,"v",chunks = 12)
+
+    ## Now do the rest of the hourly diagnostics
     for diag in hourly_diags:
         print(f"processing {diag}")
         if not (gdataout / f"{diag}").exists():
@@ -117,16 +135,5 @@ if __name__ == "__main__":
         out = tt.beamgrid(ds,xname = hourly_diags[diag]["x"],yname = hourly_diags[diag]["y"])
         out = out.chunk({"yb": 12}).persist()
 
-        ## Now split the data up into different y levels
-        ## Try split in 4 parts in yh direction
+        save_chunked(out,diag,chunks = 12)
 
-        i = 0
-        while i * 12 < out["yb"].shape[0]:
-            out.isel(
-                {
-                    "yb" : slice(i*10,(i+1)*10)
-                    }
-                    ).to_netcdf(gdataout / f"{diag}" / f"{diag}_y{i:02d}.nc")
-
-
-            i += 1
