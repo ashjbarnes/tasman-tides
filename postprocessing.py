@@ -34,7 +34,8 @@ daily_diags = [
 
 def save_chunked(data,name,chunks = 12):
         data = data.chunk({"yb": chunks}).persist()
-
+        if not (gdataout / f"{name}").exists():
+            (gdataout / f"{name}").mkdir(parents=True)
         i = 0
         while i * chunks < data["yb"].shape[0]:
             data.isel(
@@ -65,9 +66,14 @@ if __name__ == "__main__":
         gdataout.mkdir(parents=True)
 
     ## Simply move the surface variables to gdata. These are unchunked and for the entire domain
-    if (mom6out / "surface.nc").exists():
-        shutil.move(str(mom6out / "surface.nc"),str(gdataout / "surface.nc"))
 
+    try:
+        surface_filename = list(mom6out.glob('*.surface.nc'))[0].name
+        shutil.move(str(mom6out / surface_filename),str(gdataout / "surface.nc"))
+    except Exception as e:
+        print("Couldn't move surface.nc")
+        print(e)
+    ## Use glob to find the 
 
     ## Now we do the biggest ones, the hourly diagnostics. These are output in their own folder, chunked along y dimension
 
@@ -75,12 +81,12 @@ if __name__ == "__main__":
 
     theta = np.arctan((-43.3 + 49.8) / -17) # This is the angle of rotation
     u = xr.open_mfdataset(
-        str(mom6out / f"u.nc"),
+        str(mom6out / f"*u.nc"),
         chunks={"zl": 10,"time":50},
         decode_times=False,
     )
     v = xr.open_mfdataset(
-        str(mom6out / f"v.nc"),
+        str(mom6out / f"*v.nc"),
         chunks={"zl": 10,"time":50},
         decode_times=False,
     )
@@ -104,8 +110,6 @@ if __name__ == "__main__":
     ## Now do the rest of the hourly diagnostics
     for diag in hourly_diags:
         print(f"processing {diag}")
-        if not (gdataout / f"{diag}").exists():
-            (gdataout / f"{diag}").mkdir(parents=True)
         try:
             ds = xr.open_mfdataset(
                 str(mom6out / f"*{diag}.nc"),

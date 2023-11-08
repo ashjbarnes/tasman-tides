@@ -117,7 +117,6 @@ def beamgrid(data,lat0 = -42.1,lon0 = 147.2,beamwidth = 400,beamlength = 1500,pl
     theta *= -1 ## Look, I just did some trial and error until the beam was in the right quadrant. Who needs year 10 maths
     res = haversine.haversine((lat[0],lon[0]),(lat[0],lon[1]))
     res = np.ceil(res)
-    print(res)
     LAT , LON = np.meshgrid(lat,lon)
 
     ## Define target grid on rotated mesh in km
