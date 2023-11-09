@@ -17,10 +17,10 @@ import json
 hourly_diags = {
     "rho":
     {"x":"xh","y":"yh","z":"zi"},
-    "e":
-    {"x":"xh","y":"yh","z":"rho2_i"},
     "Khh":
     {"x":"xh","y":"yh","z":"zl"},
+    "e":
+    {"x":"xh","y":"yh","z":"rho2_i"}
 }
 
 daily_diags = [
@@ -84,12 +84,12 @@ if __name__ == "__main__":
         str(mom6out / f"*u.nc"),
         chunks={"zl": 10,"time":10},
         decode_times=False,
-    ).sel(xq = slice(145,170),yh = slice(-55,-40))
+    ).sel(xq = slice(145,170),yh = slice(-55,-40)).u
     v = xr.open_mfdataset(
         str(mom6out / f"*v.nc"),
         chunks={"zl": 10,"time":10},
         decode_times=False,
-    ).sel(xh = slice(145,170),yq = slice(-55,-40))
+    ).sel(xh = slice(145,170),yq = slice(-55,-40)).v
 
     u = tt.beamgrid(u,xname = "xq",chunks = 12)
     v = tt.beamgrid(v,yname = "yq",chunks = 12)
@@ -115,7 +115,7 @@ if __name__ == "__main__":
                 str(mom6out / f"*{diag}.nc"),
                 chunks={hourly_diags[diag]["z"]: 10,"time":10},
                 decode_times=False,
-            ).sel({hourly_diags[diag]["x"] : slice(145,170), hourly_diags[diag]["x"] : slice(-55,-40)})
+            )[diag].sel({hourly_diags[diag]["x"] : slice(145,170), hourly_diags[diag]["x"] : slice(-55,-40)})
         except Exception as e:
             print(f"Failed to open {diag}")
             print(e)
