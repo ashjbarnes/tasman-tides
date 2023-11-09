@@ -85,7 +85,7 @@ def lonlat_to_xy(lon,lat,lon0,lat0):
 
     return x,y
 
-def beamgrid(data,lat0 = -42.1,lon0 = 147.2,beamwidth = 400,beamlength = 1500,plot = False,xname = "xh",yname = "yh",vmin = None,vmax = None):
+def beamgrid(data,lat0 = -42.1,lon0 = 147.2,beamwidth = 400,beamlength = 1500,plot = False,xname = "xh",yname = "yh",vmin = None,vmax = None,chunks = 12):
     # make a docstring describing these variables
     """
     data : xarray.DataArray
@@ -102,7 +102,8 @@ def beamgrid(data,lat0 = -42.1,lon0 = 147.2,beamwidth = 400,beamlength = 1500,pl
         Resolution of the grid in km
     plot : bool
         Whether to plot the grid. If plotting, only pass dataarray
-
+    chunks : int
+        Chunk size for dask along the yb axis
     Return a xarray.DataArray cut down to size on to the beam grid. The resolution is automatically determined from the base grid.
 
     """
@@ -177,7 +178,7 @@ def beamgrid(data,lat0 = -42.1,lon0 = 147.2,beamwidth = 400,beamlength = 1500,pl
     }
 
     if plot == False:
-        return out
+        return out.chunk({"yb": chunks}).persist()
 
     else:
         out = out.assign_coords(
