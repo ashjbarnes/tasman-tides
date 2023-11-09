@@ -10,7 +10,6 @@ import sys
 sys.path.append("/home/149/ab8992/tasman-tides/")
 import ttidelib as tt
 import json
-
 #TODO Have postprocessing script read the diag table to figure out which variables to process?
 
 #TODO Allow python file to take arguments for chunking?
@@ -33,21 +32,21 @@ daily_diags = [
 ]
 
 def save_chunked(data,name,chunks = 12):
-        data = data.chunk({"yb": chunks}).persist()
-        if not (gdataout / f"{name}").exists():
-            (gdataout / f"{name}").mkdir(parents=True)
-        i = 0
-        while i * chunks < data["yb"].shape[0]:
-            data.isel(
-                {
-                    "yb" : slice(i*10,(i+1)*10)
-                    }
-                    ).to_netcdf(gdataout / f"{name}" / f"{name}_y{i:02d}.nc")
-            i += 1
+    if not (gdataout / f"{name}").exists():
+        (gdataout / f"{name}").mkdir(parents=True)
+    i = 0
+    while i * chunks < data["yb"].shape[0]:
+        data.isel(
+            {
+                "yb" : slice(i*10,(i+1)*10)
+                }
+                ).to_netcdf(gdataout / f"{name}" / f"{name}_y{i:02d}.nc")
+        i += 1
 
 
 if __name__ == "__main__":
     client = Client()
+    print(client)
     rundir = Path.cwd()
     # Get the name of folder from Path object
     expt = rundir.name
@@ -61,6 +60,7 @@ if __name__ == "__main__":
 
     # Set up the run and output directories
     mom6out = rundir /  f"archive/{output}"
+    print(f"Processing {mom6out}")
     gdataout = Path("/g/data/nm03/ab8992/") / expt / f"{output}"
     if not gdataout.exists():
         gdataout.mkdir(parents=True)
@@ -69,30 +69,30 @@ if __name__ == "__main__":
 
     try:
         surface_filename = list(mom6out.glob('*.surface.nc'))[0].name
-        shutil.move(str(mom6out / surface_filename),str(gdataout / "surface.nc"))
+        shutil.copy(str(mom6out / surface_filename),str(gdataout / "surface.nc"))
     except Exception as e:
         print("Couldn't move surface.nc")
         print(e)
-    ## Use glob to find the 
+    # Use glob to find the 
 
-    ## Now we do the biggest ones, the hourly diagnostics. These are output in their own folder, chunked along y dimension
+    # Now we do the biggest ones, the hourly diagnostics. These are output in their own folder, chunked along y dimension
 
-    ## First do the velocities together, as these need to be summed along and against the beam
+    # First do the velocities together, as these need to be summed along and against the beam
 
     theta = np.arctan((-43.3 + 49.8) / -17) # This is the angle of rotation
     u = xr.open_mfdataset(
         str(mom6out / f"*u.nc"),
-        chunks={"zl": 10,"time":50},
+        chunks={"zl": 10,"time":10},
         decode_times=False,
-    )
+    ).sel(xq = slice(145,170),yh = slice(-55,-40))
     v = xr.open_mfdataset(
         str(mom6out / f"*v.nc"),
-        chunks={"zl": 10,"time":50},
+        chunks={"zl": 10,"time":10},
         decode_times=False,
-    )
+    ).sel(xh = slice(145,170),yq = slice(-55,-40))
 
-    u = tt.beamgrid(u,xname = "xq")
-    v = tt.beamgrid(v,yname = "yq")
+    u = tt.beamgrid(u,xname = "xq",chunks = 12)
+    v = tt.beamgrid(v,yname = "yq",chunks = 12)
 
     # Rotate the velocities
     u_rot = u["u"] * np.cos(theta) - v["v"] * np.sin(theta)
@@ -113,9 +113,9 @@ if __name__ == "__main__":
         try:
             ds = xr.open_mfdataset(
                 str(mom6out / f"*{diag}.nc"),
-                chunks={hourly_diags[diag]["z"]: 10,"time":50},
+                chunks={hourly_diags[diag]["z"]: 10,"time":10},
                 decode_times=False,
-            )
+            ).sel({hourly_diags[diag]["x"] : slice(145,170), hourly_diags[diag]["x"] : slice(-55,-40)})
         except Exception as e:
             print(f"Failed to open {diag}")
             print(e)
@@ -125,4 +125,3 @@ if __name__ == "__main__":
         out = out.chunk({"yb": 12}).persist()
 
         save_chunked(out,diag,chunks = 12)
-
