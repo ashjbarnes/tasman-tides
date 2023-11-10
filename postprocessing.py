@@ -16,11 +16,11 @@ import json
 
 hourly_diags = {
     "rho":
-    {"x":"xh","y":"yh","z":"zi"},
+    {"x":"xh","y":"yh","z":"z_i"},
+    "khh":
+    {"x":"xh","y":"yh","z":"z_l"},
     "e":
-    {"x":"xh","y":"yh","z":"rho2_i"},
-    "Khh":
-    {"x":"xh","y":"yh","z":"zl"},
+    {"x":"xh","y":"yh","z":"rho2_i"}
 }
 
 daily_diags = [
@@ -46,7 +46,7 @@ def save_chunked(data,name,chunks = 12):
 
 if __name__ == "__main__":
     client = Client()
-    print(client)
+    # print(client)
     rundir = Path.cwd()
     # Get the name of folder from Path object
     expt = rundir.name
@@ -57,6 +57,10 @@ if __name__ == "__main__":
         i += 1
     i -=1
     output = f"output{i:03d}"
+
+    # #! Temporaray
+    # output = "output000"
+    # #! Temporary
 
     # Set up the run and output directories
     mom6out = rundir /  f"archive/{output}"
@@ -73,10 +77,8 @@ if __name__ == "__main__":
     except Exception as e:
         print("Couldn't move surface.nc")
         print(e)
-    # Use glob to find the 
 
     # Now we do the biggest ones, the hourly diagnostics. These are output in their own folder, chunked along y dimension
-
     # First do the velocities together, as these need to be summed along and against the beam
 
     theta = np.arctan((-43.3 + 49.8) / -17) # This is the angle of rotation
@@ -84,19 +86,19 @@ if __name__ == "__main__":
         str(mom6out / f"*u.nc"),
         chunks={"zl": 10,"time":10},
         decode_times=False,
-    ).sel(xq = slice(145,170),yh = slice(-55,-40))
+    ).sel(xq = slice(145,170),yh = slice(-55,-40)).u
     v = xr.open_mfdataset(
         str(mom6out / f"*v.nc"),
         chunks={"zl": 10,"time":10},
         decode_times=False,
-    ).sel(xh = slice(145,170),yq = slice(-55,-40))
+    ).sel(xh = slice(145,170),yq = slice(-55,-40)).v
 
     u = tt.beamgrid(u,xname = "xq",chunks = 12)
     v = tt.beamgrid(v,yname = "yq",chunks = 12)
 
     # Rotate the velocities
-    u_rot = u["u"] * np.cos(theta) - v["v"] * np.sin(theta)
-    v_rot = u["u"] * np.sin(theta) + v["v"] * np.cos(theta)
+    u_rot = u * np.cos(theta) - v * np.sin(theta)
+    v_rot = u * np.sin(theta) + v * np.cos(theta)
 
     # Set the name of u to "u" and description to "velocity along beam"
     u_rot.name = "u"
@@ -115,7 +117,7 @@ if __name__ == "__main__":
                 str(mom6out / f"*{diag}.nc"),
                 chunks={hourly_diags[diag]["z"]: 10,"time":10},
                 decode_times=False,
-            ).sel({hourly_diags[diag]["x"] : slice(145,170), hourly_diags[diag]["x"] : slice(-55,-40)})
+            )[diag].sel({hourly_diags[diag]["x"] : slice(145,170), hourly_diags[diag]["y"] : slice(-55,-40)})
         except Exception as e:
             print(f"Failed to open {diag}")
             print(e)
