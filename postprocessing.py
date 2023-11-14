@@ -65,7 +65,7 @@ if __name__ == "__main__":
     # Set up the run and output directories
     mom6out = rundir /  f"archive/{output}"
     print(f"Processing {mom6out}")
-    gdataout = Path("/g/data/nm03/ab8992/") / expt / f"{output}"
+    gdataout = Path("/g/data/nm03/ab8992/outputs") / expt / f"{output}"
     if not gdataout.exists():
         gdataout.mkdir(parents=True)
 
