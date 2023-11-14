@@ -4,17 +4,22 @@ version: 1.0
 work/INPUT/atmos_mosaic_tile1Xland_mosaic_tile1.nc:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/blank-ttide-20-synbath/atmos_mosaic_tile1Xland_mosaic_tile1.nc
   hashes:
-    binhash: a7e07f3693da4803afcfb6ee493561c0
-    md5: df1f64f4e1664a6cc9b9e47a4f40b53c
+    binhash: e89995710b11fdfe2c2da1c69a9961fb
+    md5: 68442e35c97def33a353ce931adfb8fc
 work/INPUT/atmos_mosaic_tile1Xocean_mosaic_tile1.nc:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/blank-ttide-20-synbath/atmos_mosaic_tile1Xocean_mosaic_tile1.nc
   hashes:
-    binhash: 354b4d893efaf663b581c7123e3fabfb
-    md5: 997b3136bf366cd69b626e9e9156dc80
+    binhash: f9641a8d7d7882521ee5dbaddc4d226e
+    md5: caac392a6d2c5498d76254ada9b97ff5
+work/INPUT/bathy_original.nc:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/blank-ttide-20-synbath/bathy_original.nc
+  hashes:
+    binhash: 478c1f971814571d754457ce3ae58ea9
+    md5: 7f039b1c777f315b1863ab57104192cd
 work/INPUT/diag_rho2.nc:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/blank-ttide-20-synbath/diag_rho2.nc
   hashes:
-    binhash: 5284ab61b386477f0a775b942fa363c8
+    binhash: f479d1defd14bf20c6b4e2791766e0bf
     md5: f2c98102749b170ce8ac3a7ccd3932fc
 work/INPUT/forcing/blank_init/init_eta.nc:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/blank-ttide-20-synbath/forcing/blank_init/init_eta.nc
@@ -149,23 +154,28 @@ work/INPUT/grid.nc:
 work/INPUT/grid_spec.nc:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/blank-ttide-20-synbath/grid_spec.nc
   hashes:
-    binhash: d1f051596b0dfac4380e0e641aed78b1
+    binhash: 65b09512bf7b9081354cd1d517302559
     md5: 844422b6e25238923bb4395ef0f19040
 work/INPUT/hgrid.nc:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/blank-ttide-20-synbath/hgrid.nc
   hashes:
-    binhash: b4e2cac21014270412ea272a1ce2382a
+    binhash: 8d74c594ad25abdd174da2621f3b030b
     md5: 6db5741eb9d7adb65905da4f6914bb88
 work/INPUT/land_mask.nc:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/blank-ttide-20-synbath/land_mask.nc
   hashes:
-    binhash: 6d2626e171194e91cf752b80bd706695
-    md5: ec968808928b054b4aa26fb1dd327e1c
+    binhash: d71d94424b3610ac23ca01d258f278aa
+    md5: 0642e1176113c5755f3fcf659d22e303
 work/INPUT/land_mosaic_tile1Xocean_mosaic_tile1.nc:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/blank-ttide-20-synbath/land_mosaic_tile1Xocean_mosaic_tile1.nc
   hashes:
-    binhash: e0232440509cbe4b7db6bad6eb62aa2b
-    md5: 752e5fd9df81f5979c47ee8b2751a822
+    binhash: a58bbc2a96ef25e8f6fc304e87852740
+    md5: 6ff1274d4c5e4e665d861912249907dd
+work/INPUT/mask_table.44.20x25:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/blank-ttide-20-synbath/mask_table.44.20x25
+  hashes:
+    binhash: 0fb0e5e56264bb69ebcab85bb0a72dd7
+    md5: eb96749d708f798bd01d29460ada9003
 work/INPUT/mask_table.46.25x20:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/blank-ttide-20-synbath/mask_table.46.25x20
   hashes:
@@ -174,12 +184,12 @@ work/INPUT/mask_table.46.25x20:
 work/INPUT/ocean_mask.nc:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/blank-ttide-20-synbath/ocean_mask.nc
   hashes:
-    binhash: 6f746fc6f96444cbe4acd18e2d9beb73
-    md5: 9cc9738db84e07701eba397c7c6c4508
+    binhash: 103b7f742cc8a2a6dd473b10ba8ec7a8
+    md5: 88f6534c3d1177f054aaf447a2f23512
 work/INPUT/ocean_mosaic.nc:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/blank-ttide-20-synbath/ocean_mosaic.nc
   hashes:
-    binhash: 62c5036acce6e91e98010714d2a1b846
+    binhash: 2bc91811cbe27ae0b3b97514a4e4e9a2
     md5: 3b63dee6974d13cd63617406d19d8946
 work/INPUT/runoff_regrid.nc:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/blank-ttide-20-synbath/runoff_regrid.nc
@@ -194,12 +204,17 @@ work/INPUT/tgrid.nc:
 work/INPUT/topog.nc:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/blank-ttide-20-synbath/topog.nc
   hashes:
-    binhash: fe4af41d2ae4983f0a3873a46e75ad66
+    binhash: 614885eabcb6aa19d09dd09b74553c25
     md5: 7ef3b9bd1bf3d3a6d2c8622b44716c2b
+work/INPUT/topog_raw.nc:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/blank-ttide-20-synbath/topog_raw.nc
+  hashes:
+    binhash: 5b11a5580ce831a4ba7887e51a78a3b6
+    md5: 16fab14629724bbcd66b869798db05d9
 work/INPUT/vcoord.nc:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/blank-ttide-20-synbath/vcoord.nc
   hashes:
-    binhash: 46c030ea641c9f20048a2d00a0a9990c
+    binhash: e6759595b26e8deb5ff1c47391996c11
     md5: f842cced8cc9990939d7c9c9009197a2
 work/INPUT/weights/bilinear_velocity_weights_east.nc:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/blank-ttide-20-synbath/weights/bilinear_velocity_weights_east.nc
