@@ -14,12 +14,14 @@ import argparse
 
 #TODO Allow python file to take arguments for chunking?
 
+
+
 parser = argparse.ArgumentParser()
-parser.add_argument('to_process', type=str, help='outputs to process. If 0, runs all, if -1 runs only last')
-parser.add_argument('yb-chunksize', type=str, help='size of chunks across beam')
+parser.add_argument('-p', '--to_process', type=str, help='outputs to process. If 0, runs all, if -1 runs only last')
+parser.add_argument('-c', '--yb-chunksize', type=str, help='size of chunks across beam',default=12)
 args = parser.parse_args()
 
-to_process = args.outputs
+to_process = args.to_process
 yb_chunksize = args.yb_chunksize
 
 
