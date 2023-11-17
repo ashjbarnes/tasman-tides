@@ -111,11 +111,9 @@ def beamgrid(data,lat0 = -42.1,lon0 = 147.2,beamwidth = 400,beamlength = 1500,pl
     if plot == True:
         assert isinstance(data,xr.DataArray), "Data must be an xarray.DataArray"
 
-    print(data)
     lon = data[xname].data
     lat = data[yname].data 
-    print(xname)
-    print(yname)
+
     theta = np.arctan((-43.3 + 49.8) / -17) #! Hardcoded. This comes out to -20.9 degrees
     theta *= -1 ## Look, I just did some trial and error until the beam was in the right quadrant. Who needs year 10 maths
     res = haversine.haversine((lat[0],lon[0]),(lat[0],lon[1]))
@@ -153,7 +151,7 @@ def beamgrid(data,lat0 = -42.1,lon0 = 147.2,beamwidth = 400,beamlength = 1500,pl
     )
 
     regridder = xesmf.Regridder(
-    data,newgrid,"bilinear"
+    data,newgrid,"bilinear",parallel = True
     )
 
     out = regridder(
