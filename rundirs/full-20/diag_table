@@ -5,10 +5,10 @@ ttide
 "surface",            6, "hours",   1, "hours", "time"
 
 "ocean_model",   "zos",          "zos",              "surface",         "all", "mean", "none",2
-"ocean_model",   "mlotst",       "mlotst",           "surface",         "all", "mean", "none",2
+#"ocean_model",   "mlotst",       "mlotst",           "surface",         "all", "mean", "none",2
 "ocean_model",   "speed",        "speed",            "surface",         "all", "mean", "none",2
-
-
+"ocean_model","taux",   "taux",   "prog_hourly","all",.false.,"none",2
+"ocean_model","tauy",   "tauy",   "prog_hourly","all",.false.,"none",2
 ## Instead of regional selection, split the variables of interest into separate files and slice afterwards in Python
 
 ## 3D Diagnostifcs on z*

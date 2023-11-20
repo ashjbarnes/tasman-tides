@@ -8,12 +8,8 @@ shortpath: /scratch/x77
 
 model: mom6
 input:
-#    - /g/data/nm03/ab8992/ttide-inputs/default/
-    - /g/data/nm03/ab8992/ttide-inputs/blank-ttide-20/
-# release exe
-# exe: /g/data/x77/ahg157/exes/MOM6_SIS2/symmetric_FMS2-e7d09b7
-# debug exe
-#exe: /g/data/x77/ahg157/exes/MOM6_SIS2/symmetric_FMS2-9bc3419a
+    - /g/data/nm03/ab8992/ttide-inputs/blank-20/
+
 exe: /g/data/v45/ab8992/mom_executables/angus_fms
 collate: false
 #runlog: true
