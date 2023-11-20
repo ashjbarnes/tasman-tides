@@ -27,7 +27,7 @@ yb_chunksize = args.yb_chunksize
 
 hourly_diags = {
     "rho":
-    {"x":"xh","y":"yh","z":"z_i"},
+    {"x":"xh","y":"yh","z":"z_l"},
     "khh":
     {"x":"xh","y":"yh","z":"z_l"},
     "e":
@@ -82,7 +82,7 @@ if __name__ == "__main__":
         outputs = [f"output{int(to_process):03d}"]
 
     for output in outputs:
-
+        print(f"\t\t Processing {output}")
         # Set up the run and output directories
         mom6out = rundir /  f"archive/{output}"
         print(f"Processing {mom6out}")
@@ -105,17 +105,17 @@ if __name__ == "__main__":
         theta = np.arctan((-43.3 + 49.8) / -17) # This is the angle of rotation
         u = xr.open_mfdataset(
             str(mom6out / f"*u.nc"),
-            chunks={"zl": 10,"time":10},
+            chunks={"z_l": 10,"time":10},
             decode_times=False,
         ).sel(xq = slice(145,170),yh = slice(-55,-40)).u
         v = xr.open_mfdataset(
             str(mom6out / f"*v.nc"),
-            chunks={"zl": 10,"time":10},
+            chunks={"z_l": 10,"time":10},
             decode_times=False,
         ).sel(xh = slice(145,170),yq = slice(-55,-40)).v
 
-        u = tt.beamgrid(u,xname = "xq",chunks = yb_chunksize)
-        v = tt.beamgrid(v,yname = "yq",chunks = yb_chunksize)
+        u = tt.beamgrid(u,xname = "xq",chunks = yb_chunksize).persist()
+        v = tt.beamgrid(v,yname = "yq",chunks = yb_chunksize).persist()
 
         # Rotate the velocities
         u_rot = u * np.cos(theta) - v * np.sin(theta)
@@ -130,6 +130,10 @@ if __name__ == "__main__":
         save_chunked(u_rot,"u",chunks = yb_chunksize)
         save_chunked(v_rot,"v",chunks = yb_chunksize)
 
+        del u
+        del v
+        del u_rot
+        del v_rot
         ## Now do the rest of the hourly diagnostics
         for diag in hourly_diags:
             print(f"processing {diag}")
@@ -148,3 +152,4 @@ if __name__ == "__main__":
             out = out.chunk({"yb": yb_chunksize}).persist()
 
             save_chunked(out,diag,chunks = yb_chunksize)
+            del out

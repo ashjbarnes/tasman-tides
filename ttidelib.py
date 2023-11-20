@@ -151,7 +151,7 @@ def beamgrid(data,lat0 = -42.1,lon0 = 147.2,beamwidth = 400,beamlength = 1500,pl
     )
 
     regridder = xesmf.Regridder(
-    data,newgrid,"bilinear",parallel = True
+    data,newgrid,"bilinear"
     )
 
     out = regridder(
@@ -182,7 +182,7 @@ def beamgrid(data,lat0 = -42.1,lon0 = 147.2,beamwidth = 400,beamlength = 1500,pl
     if "z_i" in out.dims:
         out = out.rename({"z_i":"zi"})
     if plot == False:
-        return out.chunk({"yb": chunks}).persist()
+        return out
 
     else:
         out = out.assign_coords(
