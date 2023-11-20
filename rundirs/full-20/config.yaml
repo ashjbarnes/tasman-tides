@@ -8,8 +8,8 @@ shortpath: /scratch/x77
 
 model: mom6
 input:
-    - /g/data/nm03/ab8992/ttide-inputs/default/
     - /g/data/nm03/ab8992/ttide-inputs/synbath/
+    - /g/data/nm03/ab8992/ttide-inputs/default/
 
 exe: /g/data/v45/ab8992/mom_executables/angus_fms
 collate: false

@@ -13,4 +13,4 @@ PYTHONNOUSERSITE=1
 module use /g/data/hh5/public/modules
 module load conda/analysis3-unstable
 module list
-python3 /home/149/ab8992/tasman-tides/postprocessing.py -p 0
+python3 /home/149/ab8992/tasman-tides/postprocessing.py
