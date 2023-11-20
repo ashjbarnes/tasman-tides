@@ -72,12 +72,15 @@ if __name__ == "__main__":
         outputs = [f"output{i:03d}"]
 
     if to_process == "0":
+        print("Processing all outputs...")
         # Find all output folders
         i = 0
         outputs = []
         while (rundir / f"archive/output{i:03d}").exists():
             outputs.append(f"output{i:03d}")
             i += 1
+
+        print(outputs)
     else:
         outputs = [f"output{int(to_process):03d}"]
 
