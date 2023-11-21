@@ -17,12 +17,12 @@ import argparse
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument('-p', '--to_process', type=str, help='outputs to process. If 0, runs all, if -1 runs only last',default = "-1")
+parser.add_argument('-p', '--to_process', type=str, help='outputs to process. If 0, runs all, if -1 runs only last',default = "last")
 parser.add_argument('-c', '--yb-chunksize', type=str, help='size of chunks across beam',default=12)
 args = parser.parse_args()
 
 to_process = args.to_process
-yb_chunksize = args.yb_chunksize
+yb_chunksize = int(args.yb_chunksize)
 
 
 hourly_diags = {
@@ -63,7 +63,7 @@ if __name__ == "__main__":
     expt = rundir.name
     print(f"Running postprocessing for experiment {expt}")
 
-    if to_process == "-1":
+    if to_process == "last":
         # Find most recent output folder
         i = 0
         while (rundir / f"archive/output{i:03d}").exists():
@@ -73,7 +73,7 @@ if __name__ == "__main__":
         print(f"Processing last output ({outputs[0]})")
 
 
-    elif to_process == "0":
+    elif to_process == "all":
         print("Processing all outputs...")
         # Find all output folders
         i = 0
