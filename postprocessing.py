@@ -49,7 +49,7 @@ def save_chunked(data,name,chunks = yb_chunksize):
     while i * chunks < data["yb"].shape[0]:
         data.isel(
             {
-                "yb" : slice(i*10,(i+1)*10)
+                "yb" : slice(i*chunks,(i+1)*chunks)
                 }
                 ).to_netcdf(gdataout / f"{name}" / f"{name}_y{i:02d}.nc")
         i += 1
