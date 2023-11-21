@@ -1,11 +1,12 @@
 project: x77
-queue: normal
+queue: normalbw
 walltime: 06:00:00
 jobname: ttide-40th
 ncpus: 1435
 jobfs: 10GB
 shortpath: /scratch/x77
-
+platform:
+  nodesize: 28
 model: mom6
 input:
     - /g/data/nm03/ab8992/ttide-inputs/full-40
