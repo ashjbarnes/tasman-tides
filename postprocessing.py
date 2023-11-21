@@ -57,7 +57,7 @@ def save_chunked(data,name,chunks = yb_chunksize):
 
 if __name__ == "__main__":
     client = Client()
-    # print(client)
+    print(client)
     rundir = Path.cwd()
     # Get the name of folder from Path object
     expt = rundir.name
@@ -110,14 +110,14 @@ if __name__ == "__main__":
         theta = np.arctan((-43.3 + 49.8) / -17) # This is the angle of rotation
         u = xr.open_mfdataset(
             str(mom6out / f"*u.nc"),
-            chunks={"z_l": 10,"time":10},
+            chunks={"z_l": 10,"time":10,"xq":-1,"yh":-1},
             decode_times=False,
-        ).sel(xq = slice(144,170),yh = slice(-55,-40)).u
+        ).u.sel(xq = slice(144,170),yh = slice(-55,-40))
         v = xr.open_mfdataset(
             str(mom6out / f"*v.nc"),
-            chunks={"z_l": 10,"time":10},
+            chunks={"z_l": 10,"time":10,"xh":-1,"yq":-1},
             decode_times=False,
-        ).sel(xh = slice(144,170),yq = slice(-55,-40)).v
+        ).v.sel(xh = slice(144,170),yq = slice(-55,-40))
 
         u = tt.beamgrid(u,xname = "xq",chunks = yb_chunksize).persist()
         v = tt.beamgrid(v,yname = "yq",chunks = yb_chunksize).persist()
