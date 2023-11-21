@@ -112,12 +112,12 @@ if __name__ == "__main__":
             str(mom6out / f"*u.nc"),
             chunks={"z_l": 10,"time":10},
             decode_times=False,
-        ).sel(xq = slice(145,170),yh = slice(-55,-40)).u
+        ).sel(xq = slice(144,170),yh = slice(-55,-40)).u
         v = xr.open_mfdataset(
             str(mom6out / f"*v.nc"),
             chunks={"z_l": 10,"time":10},
             decode_times=False,
-        ).sel(xh = slice(145,170),yq = slice(-55,-40)).v
+        ).sel(xh = slice(144,170),yq = slice(-55,-40)).v
 
         u = tt.beamgrid(u,xname = "xq",chunks = yb_chunksize).persist()
         v = tt.beamgrid(v,yname = "yq",chunks = yb_chunksize).persist()
@@ -147,7 +147,7 @@ if __name__ == "__main__":
                     str(mom6out / f"*{diag}.nc"),
                     chunks={hourly_diags[diag]["z"]: 10,"time":10},
                     decode_times=False,
-                )[diag].sel({hourly_diags[diag]["x"] : slice(145,170), hourly_diags[diag]["y"] : slice(-55,-40)})
+                )[diag].sel({hourly_diags[diag]["x"] : slice(144,170), hourly_diags[diag]["y"] : slice(-55,-40)})
             except Exception as e:
                 print(f"Failed to open {diag}")
                 print(e)
