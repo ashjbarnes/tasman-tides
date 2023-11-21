@@ -4,12 +4,12 @@ version: 1.0
 work/INPUT/atmos_mosaic_tile1Xland_mosaic_tile1.nc:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/full-40/atmos_mosaic_tile1Xland_mosaic_tile1.nc
   hashes:
-    binhash: d68801d7d608375cb525594d44ccc809
+    binhash: f1d542527869c27c605f1ca53fda1c21
     md5: 742f02cf056a5f9de2742623f57e5bbc
 work/INPUT/atmos_mosaic_tile1Xocean_mosaic_tile1.nc:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/full-40/atmos_mosaic_tile1Xocean_mosaic_tile1.nc
   hashes:
-    binhash: 05e801b4b173e6a99b26ed80844025f9
+    binhash: ad0283d9b0c5096dd54ecca28541a9fe
     md5: bf572f33b63c5f91e594a71f13282950
 work/INPUT/bathy_original.nc:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/full-40/bathy_original.nc
@@ -154,7 +154,7 @@ work/INPUT/forcing/tz_004.nc:
 work/INPUT/grid_spec.nc:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/full-40/grid_spec.nc
   hashes:
-    binhash: 49997aa20b0534480627842dc96c17e1
+    binhash: e515d7a924eef6d5248d02486d3ffb32
     md5: 844422b6e25238923bb4395ef0f19040
 work/INPUT/hgrid.nc:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/full-40/hgrid.nc
@@ -164,27 +164,27 @@ work/INPUT/hgrid.nc:
 work/INPUT/land_mask.nc:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/full-40/land_mask.nc
   hashes:
-    binhash: 1e6991aea3a7af06c1b0546749178298
+    binhash: 4f546c35e09803cfafbb56e768a9edad
     md5: 515881076b1c85de0cbe61762ba7e36a
 work/INPUT/land_mosaic_tile1Xocean_mosaic_tile1.nc:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/full-40/land_mosaic_tile1Xocean_mosaic_tile1.nc
   hashes:
-    binhash: ecfa964c1222e512899339a305052b7a
+    binhash: a9cf41347e989b895e0f6f826433dfd1
     md5: 30c00fd2c18e79a7170502ef39e5cd97
-work/INPUT/mask_table.87.30x30:
-  fullpath: /g/data/nm03/ab8992/ttide-inputs/full-40/mask_table.87.30x30
+work/INPUT/mask_table.165.40x40:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/full-40/mask_table.165.40x40
   hashes:
-    binhash: 6f2b8f0b74b1742edc0d9bb8593eec6a
-    md5: 5dd49062b88665388aa4283ea66675ff
+    binhash: cbaa8a94284a0aa7b5479b28907144cd
+    md5: 786f698460093feec56ba8bec3644f95
 work/INPUT/ocean_mask.nc:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/full-40/ocean_mask.nc
   hashes:
-    binhash: dcc751796ca90172a5c855f707c6001a
+    binhash: 672ec1cc0210220e545e70adba8c4415
     md5: 2a08dcf515ea2d342d9c182ba4c21be4
 work/INPUT/ocean_mosaic.nc:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/full-40/ocean_mosaic.nc
   hashes:
-    binhash: 660de1145d76bd751bcc81f8e95c2e71
+    binhash: 8be7afd74320b5ca369020b7a39e50b5
     md5: 3b63dee6974d13cd63617406d19d8946
 work/INPUT/topog.nc:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/full-40/topog.nc
