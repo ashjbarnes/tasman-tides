@@ -56,7 +56,7 @@ def save_chunked(data,name,chunks = yb_chunksize):
 
 
 if __name__ == "__main__":
-    client = Client()
+    client = Client(threads_per_worker = 2)
     print(client)
     rundir = Path.cwd()
     # Get the name of folder from Path object
@@ -145,7 +145,7 @@ if __name__ == "__main__":
             try:
                 ds = xr.open_mfdataset(
                     str(mom6out / f"*{diag}.nc"),
-                    chunks={hourly_diags[diag]["z"]: 10,"time":10},
+                    chunks={hourly_diags[diag]["z"]: 10,"time":10,"xh":-1,"yh":-1},
                     decode_times=False,
                 )[diag].sel({hourly_diags[diag]["x"] : slice(144,170), hourly_diags[diag]["y"] : slice(-55,-40)})
             except Exception as e:
@@ -153,8 +153,7 @@ if __name__ == "__main__":
                 print(e)
                 continue
 
-            out = tt.beamgrid(ds,xname = hourly_diags[diag]["x"],yname = hourly_diags[diag]["y"])
-            out = out.chunk({"yb": yb_chunksize}).persist()
+            out = tt.beamgrid(ds,xname = hourly_diags[diag]["x"],yname = hourly_diags[diag]["y"]).persist()
 
             save_chunked(out,diag,chunks = yb_chunksize)
             del out
