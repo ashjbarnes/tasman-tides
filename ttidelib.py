@@ -12,6 +12,7 @@ import matplotlib.pyplot as plt
 import shutil
 import xesmf
 import pathlib as Path
+from xmovie import Movie 
 
 def setup_mom6(name,tname,overrides = [],walltime = None,common_forcing = False,default_dir = "default"):
     ## If common forcing is provided, set another input folder that contains the windstress for all runs in this experiment
@@ -216,5 +217,22 @@ def beamgrid(data,lat0 = -42.1,lon0 = 147.2,beamwidth = 400,beamlength = 1500,pl
         return out
     
 
-# out = beamgrid(u,-43,148,plot = True)
-# out = beamgrid(e_.e,-42.1,147.2,plot = True,vmin = -10,vmax = 10,beamlength = 1700)
+def make_movie(data,plot_function,runname,plotname,plot_kwargs = {}):
+    """
+    data_list : dictionary of dataarrays required by plot function
+    plot_function : function to plot data
+    runname : name of the run eg full-20
+    plotname : name of the plot eg "h_energy_transfer"
+    plot_kwargs : kwargs to pass to plot function
+    """
+
+    outpath = f"/g/data/v45/ab8992/dropbox/tasman-tides/{runname}/movies/{plotname}/"
+    if not os.path.exists(outpath):
+        os.makedirs(outpath)
+    
+    print(f"Making movie and writing to {outpath}")
+    mov = Movie(data,plot_function,input_check = False,plot_kwargs = plot_kwargs)
+    mov.save(outpath,overwrite_existing = True,parallel = True,parallel_compute_kwargs=dict(scheduler="processes", num_workers=28)) # ,
+    print("finsished.")
+    return
+
