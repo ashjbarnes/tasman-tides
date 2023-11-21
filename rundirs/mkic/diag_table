@@ -2,7 +2,7 @@ ttide
 2015 1 1 0 0 0
 
 ## 2D Diagnostics at 6hrs frequency. Mostly for tracking eddies 
-"surface",            6, "hours",   1, "hours", "time"
+"surface",            1, "hours",   1, "hours", "time"
 
 "ocean_model",   "zos",          "zos",              "surface",         "all", "mean", "none",2
 #"ocean_model",   "mlotst",       "mlotst",           "surface",         "all", "mean", "none",2
