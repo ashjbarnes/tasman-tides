@@ -234,7 +234,27 @@ def m2filter(field,freq = m2f,tol = 0.015):
     FIELD_filtered = FIELD.where(np.abs(np.abs(FIELD.freq_time) - freq) < tol,0)
     return np.real(xrft.ifft(FIELD_filtered,dim = "freq_time"))
 
+def calculate_ke(u,v,time):
 
+    u = u.fillna(0)
+    v = v.fillna(0)
+
+    u_ = u.sel(
+            time = slice(time -  0.5 * averaging_window, time + 0.5 *  averaging_window)
+            ).chunk({"time":-1}).drop(["lat","lon"])
+    v_ = v.sel(
+            time = slice(time -  0.5 * averaging_window, time + 0.5 *  averaging_window)
+            ).chunk({"time":-1}).drop(["lat","lon"])
+
+    uf = m2filter(
+        u_,
+        m2f)
+    vf = m2filter(
+        v_,
+        m2f)
+
+
+    return 1032 * (uf**2 + vf**2).mean("time")
 
 def calculate_hef(u,v,time,total_only = True):
     """
@@ -369,6 +389,41 @@ def plot_hef(data,fig,i,framedim = "time",**kwargs):
     ax[0].set_xlabel('km from Tas')
     ax[0].set_ylabel('km S to N')
     ax[0].set_title('M2 Horizontal Energy Transfer with Surface Speed contours')
+    ## put gridlines on plot
+    # ax[0].grid(True, which='both')
+    ax[0].hlines(y = 0,xmin = 100,xmax = 1450,linestyles = "dashed")
+    ax[1].set_xlabel('')
+    ax[1].set_ylabel('km S to N')
+    ax[1].set_title('Transect along middle of beam')
+    return
+
+
+
+
+def plot_ke(data,fig,i,framedim = "time",**kwargs):
+
+    ax = fig.subplots(2,1)
+
+    time = data["speed"].TIME.values[i]
+    ke = calculate_ke(data["u"],data["v"],time = time)
+    exptname = "full-20" #TODO make this a kwarg
+
+    cmap = matplotlib.cm.get_cmap('RdBu')
+    data["speed"].isel(TIME = i).plot.contour(ax = ax[0],levels = [0.5,0.75,1,1.25],cmap = "copper",lineweight = 0.5,vmin = 0.25,vmax = 1.25,linewidths = 0.75)
+    ke.mean("zl").plot(ax = ax[0],cmap = cmap,cbar_kwargs={'label': "Energy flux (tide to eddy)"})
+
+    ## Add bathymetry plot
+    plot_topo(ax[0],data["bathy"])
+
+
+    ## Second axis: vertical transect
+    ke.sel(yb = 0,method = "nearest").plot(ax = ax[1],cmap = cmap,cbar_kwargs={'label': "Kinetic Energy about M2"})
+    plot_topo(ax[1],data["bathy"],transect = 0)
+    fig.suptitle(exptname)
+    ax[1].invert_yaxis()
+    ax[0].set_xlabel('km from Tas')
+    ax[0].set_ylabel('km S to N')
+    ax[0].set_title('Kinetic Energy with Surface Speed contours')
     ## put gridlines on plot
     # ax[0].grid(True, which='both')
     ax[0].hlines(y = 0,xmin = 100,xmax = 1450,linestyles = "dashed")

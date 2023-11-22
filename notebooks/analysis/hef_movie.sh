@@ -1,5 +1,5 @@
 #!/bin/bash
-#PBS -N ttide-pprocess
+#PBS -N hef-movie
 #PBS -P v45
 #PBS -q normalbw
 #PBS -l mem=112gb
