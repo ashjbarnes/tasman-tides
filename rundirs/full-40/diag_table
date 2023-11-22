@@ -24,9 +24,9 @@ ttide
 
 
 ## 3D Diagnostics on isopycnal surfaces
-"e", 1, "hours", 1, "hours", "time"
+#"e", 1, "hours", 1, "hours", "time"
 
-"ocean_model_rho2","e","e","e","all",.false.,"none",2
+#"ocean_model_rho2","e","e","e","all",.false.,"none",2
 
 ## 3D mixing diagnostics on isoycnal surfaces. Daily averages
 "KE_stress", 1, "days", 1, "hours", "time"

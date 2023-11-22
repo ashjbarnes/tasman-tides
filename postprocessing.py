@@ -151,7 +151,7 @@ if __name__ == "__main__":
             except Exception as e:
                 print(f"Failed to open {diag}")
                 print(e)
-                continue
+                pass
 
             out = tt.beamgrid(ds,xname = hourly_diags[diag]["x"],yname = hourly_diags[diag]["y"]).persist()
 
