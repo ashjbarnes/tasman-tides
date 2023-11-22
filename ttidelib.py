@@ -1,6 +1,7 @@
 # A file to keep all common functions that might be used for postprocessing and analysis fo the ttide experiment
 
 from matplotlib import rc
+import matplotlib
 import numpy as np
 import matplotlib.pyplot as plt
 import os
@@ -252,7 +253,7 @@ def m2filter(field,freq = m2f,tol = 0.015):
 
 
 
-def hef(u,v,i,total_only = True):
+def calculate_hef(u,v,time,total_only = True):
     """
     Calculate the horizontal energy fluxes from the u and v velocities and ith time index. Time window is 12 m2 periods
     Inputs:
@@ -267,13 +268,21 @@ def hef(u,v,i,total_only = True):
     u = u.fillna(0)
     v = v.fillna(0)
 
-    t0 = u.time[0].values
-    t_middle = t0 + (i + 0.5) * averaging_window # Middle of this averaging window. Used to give a time coordinate to the output
+    # t0 = u.time[0].values
+    # t_middle = t0 + (i + 0.5) * averaging_window # Middle of this averaging window. Used to give a time coordinate to the output
+    # u_ = u.sel(
+    #         time = slice(t0 + i * averaging_window,t0 + (i + 1) * averaging_window)
+    #         ).chunk({"time":-1}).drop(["lat","lon"])
+    # v_ = v.sel(
+    #         time = slice(t0 + i * averaging_window,t0 + (i + 1) * averaging_window)
+    #         ).chunk({"time":-1}).drop(["lat","lon"])
+
+    ## Actually set it to a midpoint of the time window
     u_ = u.sel(
-            time = slice(t0 + i * averaging_window,t0 + (i + 1) * averaging_window)
+            time = slice(time -  0.5 * averaging_window, time + 0.5 *  averaging_window)
             ).chunk({"time":-1}).drop(["lat","lon"])
     v_ = v.sel(
-            time = slice(t0 + i * averaging_window,t0 + (i + 1) * averaging_window)
+            time = slice(time -  0.5 * averaging_window, time + 0.5 *  averaging_window)
             ).chunk({"time":-1}).drop(["lat","lon"])
 
     uf = m2filter(
@@ -303,11 +312,66 @@ def hef(u,v,i,total_only = True):
             "shear_strain":shear_strain,
             "total":0.5 * ((nstress_u - nstress_v) * n_strain - shear * shear_strain)
         }
-    ).expand_dims("time").assign_coords(time=('time', [t_middle]))
-    out.time.attrs = u.time.attrs
+    )
+    # out.expand_dims("TIME").assign_coords(time=('TIME', [t_middle]))
+    # out.time.attrs = u.time.attrs
 
     if total_only == True:
         return out.total ## Do this to reintroduce nans for easy plotting
 
 
     return out
+
+def plot_topo(ax,bathy = None,transect = None):
+    """
+    Plot the topography
+    """
+
+    earth_cmap = matplotlib.cm.get_cmap("gist_earth")
+    earth_cmap.set_bad(color = "white",alpha = 0)
+    if type(bathy) == type(None):
+        bathy = beamgrid(xr.open_mfdataset(f"/g/data/nm03/ab8992/ttide-inputs/full-20/topog_raw.nc",decode_times = False).elevation,xname = "lon",yname = "lat")
+
+
+
+    if type(transect) == type(None):
+        bathy.where(bathy > 0).plot(cmap = earth_cmap,vmin = -1000,vmax = 1500,ax = ax,add_colorbar = False)
+        return ax
+    
+    else:
+        transect = bathy.sel(yb = transect,method = "nearest")
+        ax.fill_between(transect.xb,transect * 0 + 6000,-1 * transect,color = "dimgrey")
+        return ax
+
+
+def plot_hef(data,fig,i,exptname = "full-20th degree"):
+
+    ax = fig.subplots(2,1)
+
+    time = data["speed"].time.values[i]
+    print(time)
+    hef = calculate_hef(data["u"],data["v"],time = time)
+
+    cmap = matplotlib.cm.get_cmap('RdBu')
+    data["speed"].isel(time = i).plot.contour(ax = ax[0],levels = [0.25,0.75,1],cmap = "copper",lineweight = 0.5,vmin = 0.25,vmax = 1,linewidths = 0.75)
+    hef.integrate("zl").plot(ax = ax[0],cmap = cmap,vmin = -0.05,vmax = 0.05,cbar_kwargs={'label': "Energy flux (tide to eddy)"})
+
+    ## Add bathymetry plot
+    plot_topo(ax[0],data["bathy"])
+
+
+    ## Second axis: vertical transect
+    hef.sel(yb = 0,method = "nearest").plot(ax = ax[1],cmap = cmap,vmin = -0.00001,vmax = 0.00001,cbar_kwargs={'label': "Energy flux (tide to eddy)"})
+    plot_topo(ax[1],data["bathy"],transect = 0)
+    fig.suptitle(exptname + " M2 Horizontal Energy transfer")
+    ax[1].invert_yaxis()
+    ax[0].set_xlabel('km from Tas')
+    ax[0].set_ylabel('km S to N')
+    ax[0].set_title('M2 Horizontal Energy Transfer with Surface Speed contours')
+    ## put gridlines on plot
+    # ax[0].grid(True, which='both')
+    ax[0].hlines(y = 0,xmin = 100,xmax = 1450,linestyles = "dashed")
+    ax[1].set_xlabel('')
+    ax[1].set_ylabel('km S to N')
+    ax[1].set_title('Transect along middle of beam')
+    return
