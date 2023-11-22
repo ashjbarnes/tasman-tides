@@ -2,7 +2,6 @@
 
 from matplotlib import rc
 import numpy as np
-from netCDF4 import Dataset
 import matplotlib.pyplot as plt
 import os
 import haversine
@@ -13,7 +12,7 @@ import shutil
 import xesmf
 import pathlib as Path
 from xmovie import Movie 
-
+import xrft
 def setup_mom6(name,tname,overrides = [],walltime = None,common_forcing = False,default_dir = "default"):
     ## If common forcing is provided, set another input folder that contains the windstress for all runs in this experiment
     default_dir = f"/home/149/ab8992/bottom_near_inertial_waves/automated/{default_dir}/*"
@@ -236,3 +235,63 @@ def make_movie(data,plot_function,runname,plotname,plot_kwargs = {}):
     print("finsished.")
     return
 
+
+##### FILTERING AND DIAGNOSTICS #####
+
+m2 = 360 / 28.984104 ## Period of m2 in hours
+averaging_window = int(12 * m2) ## this comes out to be 149.0472 hours, so close enough to a multiple of tidal periods
+m2f = 1/ m2    ## Frequency of m2 in radians per hour
+
+
+def m2filter(field,freq = m2f,tol = 0.015):
+    """
+    Filter about the m2 frequency. Just pass a field and it will return the real part of the filtered field
+    """
+    FIELD = xrft.fft(field,dim = "time")
+    FIELD_filtered = FIELD.where(np.abs(np.abs(FIELD.freq_time) - freq) < tol,0)
+    return np.real(xrft.ifft(FIELD_filtered,dim = "freq_time"))
+
+
+
+def hef(u,v,i):
+    """
+    Calculate the horizontal energy fluxes from the u and v velocities and ith time index. Time window is 12 m2 periods
+    """
+    t0 = u.time[0].values
+    u_ = u.sel(
+            time = slice(t0 + i,t0 + i + averaging_window)
+            ).chunk({"time":-1}).drop(["lat","lon"])
+    v_ = v.sel(
+            time = slice(t0 + i,t0 + i + averaging_window)
+            ).chunk({"time":-1}).drop(["lat","lon"])
+
+    uf = filter(
+        u_,
+        m2f)
+    vf = filter(
+        v_,
+        m2f)
+
+    dux = u_.mean("time").differentiate("xb")
+    dvy = v_.mean("time").differentiate("yb")
+    duy = u_.mean("time").differentiate("yb")
+    dvx = v_.mean("time").differentiate("xb")
+
+    nstress_u = (uf * uf).mean("time")
+    nstress_v = (vf * vf).mean("time")
+    n_strain = dux - dvy
+
+    shear = (uf * vf).mean("time")
+    shear_strain = duy + dvx
+    out = xr.Dataset(
+        {
+            "nstress_u":nstress_u,
+            "nstress_v":nstress_v,
+            "n_strain":n_strain,
+            "shear":shear,
+            "shear_strain":shear_strain,
+            "total":((nstress_u - nstress_v) * n_strain - shear * shear_strain)
+        }
+    )
+
+    return out
