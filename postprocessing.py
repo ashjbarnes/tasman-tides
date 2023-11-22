@@ -157,3 +157,31 @@ if __name__ == "__main__":
 
             save_chunked(out,diag,chunks = yb_chunksize)
             del out
+
+        ## Now do 2D surface diagnostics
+        print(f"processing surface diagnostics over transect")
+        try:
+            ds = xr.open_mfdataset(
+                str(mom6out / f"*surface.nc"),
+                chunks={"time":10},
+                decode_times=False,
+            ).sel({
+                "xh" : slice(144,170), "yh" : slice(-55,-40),
+                "xq" : slice(144,170), "yq" : slice(-55,-40),
+                })
+        except Exception as e:
+            print(f"Failed to open surface!")
+            print(e)
+            continue
+        eta = tt.beamgrid(ds.zos)
+        speed = tt.beamgrid(ds.speed)
+        taux = tt.beamgrid(ds.taux,xname = "xq")
+        tauy = tt.beamgrid(ds.tauy,yname = "yq")
+
+        surface_transect = xr.merge([eta,speed,taux,tauy])
+        surface_transect.to_netcdf(gdataout / "surface_transect.nc")
+        del eta
+        del speed
+        del taux
+        del tauy
+        del surface_transect

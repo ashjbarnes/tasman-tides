@@ -149,13 +149,12 @@ def beamgrid(data,lat0 = -42.1,lon0 = 147.2,beamwidth = 400,beamlength = 1500,pl
             "lat":(["yb","xb"],LATrot),
         }
     )
-
     regridder = xesmf.Regridder(
-    data,newgrid,"bilinear"
+    data.rename({xname:"lon",yname:"lat"}),newgrid,"bilinear"
     )
 
     out = regridder(
-        data.rename({xname:"lon",yname:"lat"}),keep_attrs = True
+        data,keep_attrs = True
         )
     # assign attributes to out
     out.attrs = data.attrs
