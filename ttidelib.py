@@ -216,24 +216,7 @@ def beamgrid(data,lat0 = -42.1,lon0 = 147.2,beamwidth = 400,beamlength = 1500,pl
         return out
     
 
-def make_movie(data,plot_function,runname,plotname,plot_kwargs = {}):
-    """
-    data_list : dictionary of dataarrays required by plot function
-    plot_function : function to plot data
-    runname : name of the run eg full-20
-    plotname : name of the plot eg "h_energy_transfer"
-    plot_kwargs : kwargs to pass to plot function
-    """
 
-    outpath = f"/g/data/v45/ab8992/dropbox/tasman-tides/{runname}/movies/{plotname}/"
-    if not os.path.exists(outpath):
-        os.makedirs(outpath)
-    
-    print(f"Making movie and writing to {outpath}")
-    mov = Movie(data,plot_function,input_check = False,plot_kwargs = plot_kwargs)
-    mov.save(outpath,overwrite_existing = True,parallel = True,parallel_compute_kwargs=dict(scheduler="processes", num_workers=28)) # ,
-    print("finsished.")
-    return
 
 
 ##### FILTERING AND DIAGNOSTICS #####
@@ -343,17 +326,35 @@ def plot_topo(ax,bathy = None,transect = None):
         ax.fill_between(transect.xb,transect * 0 + 6000,-1 * transect,color = "dimgrey")
         return ax
 
+def make_movie(data,plot_function,fig,runname,plotname,plot_kwargs = {"exptname":"full-20"},framerate = 10):
+    """
+    data_list : dictionary of dataarrays required by plot function
+    plot_function : function to plot data
+    runname : name of the run eg full-20
+    plotname : name of the plot eg "h_energy_transfer"
+    plot_kwargs : kwargs to pass to plot function
+    """
 
-def plot_hef(data,fig,i,exptname = "full-20th degree"):
+    outpath = f"/g/data/v45/ab8992/dropbox/tasman-tides/{runname}/movies/{plotname}/"
+    if not os.path.exists(outpath):
+        os.makedirs(outpath)
+    
+    print(f"Making movie and writing to {outpath}")
+    mov = Movie(data,plot_function,input_check = False,plot_kwargs = plot_kwargs)
+    mov.save(outpath,overwrite_existing = True,parallel = False,parallel_compute_kwargs=dict(scheduler="processes", num_workers=28),framerate = framerate) # ,
+    print("finsished.")
+    return
+
+def plot_hef(data,fig,i,framedim = "time",**kwargs):
 
     ax = fig.subplots(2,1)
 
-    time = data["speed"].time.values[i]
-    print(time)
+    time = data["speed"].TIME.values[i]
     hef = calculate_hef(data["u"],data["v"],time = time)
+    exptname = "full-20" #TODO make this a kwarg
 
     cmap = matplotlib.cm.get_cmap('RdBu')
-    data["speed"].isel(time = i).plot.contour(ax = ax[0],levels = [0.25,0.75,1],cmap = "copper",lineweight = 0.5,vmin = 0.25,vmax = 1,linewidths = 0.75)
+    data["speed"].isel(TIME = i).plot.contour(ax = ax[0],levels = [0.5,0.75,1,1.25],cmap = "copper",lineweight = 0.5,vmin = 0.25,vmax = 1.25,linewidths = 0.75)
     hef.integrate("zl").plot(ax = ax[0],cmap = cmap,vmin = -0.05,vmax = 0.05,cbar_kwargs={'label': "Energy flux (tide to eddy)"})
 
     ## Add bathymetry plot
@@ -363,7 +364,7 @@ def plot_hef(data,fig,i,exptname = "full-20th degree"):
     ## Second axis: vertical transect
     hef.sel(yb = 0,method = "nearest").plot(ax = ax[1],cmap = cmap,vmin = -0.00001,vmax = 0.00001,cbar_kwargs={'label': "Energy flux (tide to eddy)"})
     plot_topo(ax[1],data["bathy"],transect = 0)
-    fig.suptitle(exptname + " M2 Horizontal Energy transfer")
+    fig.suptitle(exptname)
     ax[1].invert_yaxis()
     ax[0].set_xlabel('km from Tas')
     ax[0].set_ylabel('km S to N')
