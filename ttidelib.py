@@ -257,11 +257,12 @@ def hef(u,v,i):
     Calculate the horizontal energy fluxes from the u and v velocities and ith time index. Time window is 12 m2 periods
     """
     t0 = u.time[0].values
+    t_middle = t0 + (i + 0.5) * averaging_window # Middle of this averaging window. Used to give a time coordinate to the output
     u_ = u.sel(
-            time = slice(t0 + i,t0 + i + averaging_window)
+            time = slice(t0 + i * averaging_window,t0 + (i + 1) * averaging_window)
             ).chunk({"time":-1}).drop(["lat","lon"])
     v_ = v.sel(
-            time = slice(t0 + i,t0 + i + averaging_window)
+            time = slice(t0 + i * averaging_window,t0 + (i + 1) * averaging_window)
             ).chunk({"time":-1}).drop(["lat","lon"])
 
     uf = m2filter(
@@ -291,6 +292,8 @@ def hef(u,v,i):
             "shear_strain":shear_strain,
             "total":((nstress_u - nstress_v) * n_strain - shear * shear_strain)
         }
-    )
+    ).expand_dims("time").assign_coords(time=('time', [t_middle]))
+
+    out.time.attrs = u.time.attrs
 
     return out
