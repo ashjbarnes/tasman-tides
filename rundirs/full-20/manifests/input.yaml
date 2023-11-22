@@ -56,6 +56,11 @@ work/INPUT/forcing/forcing_obc_segment_004.nc:
   hashes:
     binhash: addc64e8868810c2d0bade90fba3e00e
     md5: 0a712a15bec2c4b11353f065016745f1
+work/INPUT/forcing/ic_unprocessed:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/full-20/forcing/ic_unprocessed
+  hashes:
+    binhash: 5bbec18b6a03a3fdfabb2d1213f519c0
+    md5: 09ef8a953c7dafed3965fb38f9249a13
 work/INPUT/forcing/init_eta.nc:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/full-20/forcing/init_eta.nc
   hashes:
