@@ -252,10 +252,21 @@ def m2filter(field,freq = m2f,tol = 0.015):
 
 
 
-def hef(u,v,i):
+def hef(u,v,i,total_only = True):
     """
     Calculate the horizontal energy fluxes from the u and v velocities and ith time index. Time window is 12 m2 periods
+    Inputs:
+    u,v : xarray.DataArray
+        u and v velocities
+    i : int
+        index of the time window to calculate over
+    total_only : bool
+        If true, only return the total energy flux. If false, return all components
     """
+
+    u = u.fillna(0)
+    v = v.fillna(0)
+
     t0 = u.time[0].values
     t_middle = t0 + (i + 0.5) * averaging_window # Middle of this averaging window. Used to give a time coordinate to the output
     u_ = u.sel(
@@ -277,12 +288,12 @@ def hef(u,v,i):
     duy = u_.mean("time").differentiate("yb")
     dvx = v_.mean("time").differentiate("xb")
 
-    nstress_u = (uf * uf).mean("time")
-    nstress_v = (vf * vf).mean("time")
-    n_strain = dux - dvy
+    nstress_u = -1 * (uf * uf).mean("time")
+    nstress_v = -1 * (vf * vf).mean("time")
+    n_strain = -1 * (dux - dvy)
+    shear = -1 * (uf * vf).mean("time")
+    shear_strain = -1 * (duy + dvx)
 
-    shear = (uf * vf).mean("time")
-    shear_strain = duy + dvx
     out = xr.Dataset(
         {
             "nstress_u":nstress_u,
@@ -290,10 +301,13 @@ def hef(u,v,i):
             "n_strain":n_strain,
             "shear":shear,
             "shear_strain":shear_strain,
-            "total":((nstress_u - nstress_v) * n_strain - shear * shear_strain)
+            "total":0.5 * ((nstress_u - nstress_v) * n_strain - shear * shear_strain)
         }
     ).expand_dims("time").assign_coords(time=('time', [t_middle]))
-
     out.time.attrs = u.time.attrs
+
+    if total_only == True:
+        return out.total ## Do this to reintroduce nans for easy plotting
+
 
     return out
