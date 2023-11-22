@@ -264,10 +264,10 @@ def hef(u,v,i):
             time = slice(t0 + i,t0 + i + averaging_window)
             ).chunk({"time":-1}).drop(["lat","lon"])
 
-    uf = filter(
+    uf = m2filter(
         u_,
         m2f)
-    vf = filter(
+    vf = m2filter(
         v_,
         m2f)
 
