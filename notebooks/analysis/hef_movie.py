@@ -9,7 +9,7 @@ from dask.distributed import Client
 if __name__ == "__main__":
     client = Client(threads_per_worker = 2)
 
-    output = "01*"
+    output = "012"
     # eta = tt.beamgrid(xr.open_mfdataset(f"/g/data/nm03/ab8992/outputs/full-20/output{output}/surface.nc",decode_times = False).zos)
     speed = tt.beamgrid(xr.open_mfdataset(f"/g/data/nm03/ab8992/outputs/full-20/output{output}/surface.nc",decode_times = False).speed)
     u = xr.open_mfdataset(f"/g/data/nm03/ab8992/outputs/full-20/output{output}/u/*",decode_times = False).u
@@ -22,8 +22,8 @@ if __name__ == "__main__":
 
     data = xr.Dataset(
         {"speed":speed.rename({"time":"TIME"}), ## Rename since this dimension is on 6hrs
-                "u":u.isel(time = slice(20,25)),
-                "v":v.isel(time = slice(20,25)),
+                "u":u,
+                "v":v,
                 "bathy":bathy
         }
     )
@@ -32,4 +32,4 @@ if __name__ == "__main__":
 
     fig = plt.figure(figsize=(15, 12))
 
-    tt.make_movie(data,tt.plot_hef,fig,"full-20","runs10on")
+    tt.make_movie(data,tt.plot_hef,fig,"full-20","output12_hef")

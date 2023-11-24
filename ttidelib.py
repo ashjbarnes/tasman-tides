@@ -365,7 +365,7 @@ def make_movie(data,plot_function,fig,runname,plotname,plot_kwargs = {"exptname"
     print("finsished.")
     return
 
-def plot_hef(data,fig,i,framedim = "time",**kwargs):
+def plot_hef(data,fig,i,framedim = "TIME",**kwargs):
 
     ax = fig.subplots(2,1)
 
@@ -400,7 +400,7 @@ def plot_hef(data,fig,i,framedim = "time",**kwargs):
 
 
 
-def plot_ke(data,fig,i,framedim = "time",**kwargs):
+def plot_ke(data,fig,i,framedim = "TIME",**kwargs):
 
     ax = fig.subplots(2,1)
 
@@ -408,16 +408,16 @@ def plot_ke(data,fig,i,framedim = "time",**kwargs):
     ke = calculate_ke(data["u"],data["v"],time = time)
     exptname = "full-20" #TODO make this a kwarg
 
-    cmap = matplotlib.cm.get_cmap('RdBu')
+    cmap = matplotlib.cm.get_cmap('plasma')
     data["speed"].isel(TIME = i).plot.contour(ax = ax[0],levels = [0.5,0.75,1,1.25],cmap = "copper",lineweight = 0.5,vmin = 0.25,vmax = 1.25,linewidths = 0.75)
-    ke.mean("zl").plot(ax = ax[0],cmap = cmap,cbar_kwargs={'label': "Energy flux (tide to eddy)"})
+    ke.mean("zl").plot(ax = ax[0],cmap = cmap,vmax = 12,cbar_kwargs={'label': "Energy flux (tide to eddy)"})
 
     ## Add bathymetry plot
     plot_topo(ax[0],data["bathy"])
 
 
     ## Second axis: vertical transect
-    ke.sel(yb = 0,method = "nearest").plot(ax = ax[1],cmap = cmap,cbar_kwargs={'label': "Kinetic Energy about M2"})
+    ke.sel(yb = 0,method = "nearest").plot(ax = ax[1],cmap = cmap,vmax = 12,cbar_kwargs={'label': "Kinetic Energy about M2"})
     plot_topo(ax[1],data["bathy"],transect = 0)
     fig.suptitle(exptname)
     ax[1].invert_yaxis()
