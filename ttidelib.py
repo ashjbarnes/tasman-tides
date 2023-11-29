@@ -5,62 +5,27 @@ import matplotlib
 import numpy as np
 import matplotlib.pyplot as plt
 import os
+import datetime as dt
 import haversine
 import xarray as xr
 import subprocess
 import matplotlib.pyplot as plt
 import shutil
 import xesmf
-import pathlib as Path
+import cmocean
+from pathlib import Path
 from xmovie import Movie 
 import xrft
-def setup_mom6(name,tname,overrides = [],walltime = None,common_forcing = False,default_dir = "default"):
-    ## If common forcing is provided, set another input folder that contains the windstress for all runs in this experiment
-    default_dir = f"/home/149/ab8992/bottom_near_inertial_waves/automated/{default_dir}/*"
-    
-    if name in os.listdir("/home/149/ab8992/bottom_near_inertial_waves/automated"):
-        shutil.rmtree("/home/149/ab8992/bottom_near_inertial_waves/automated/" + name)
-    
-    # subprocess.run(["/home/149/ab8992/tools/myscripts/automated_mom6/copydir",name])
-    subprocess.run(f"cp {default_dir} /home/149/ab8992/bottom_near_inertial_waves/automated/{name} -r",shell = True)
+import argparse
 
-    ## We've created the new directory with name 'name'
-    # Now need to edit config file to point to the name of the topography configuraation 'tname'
-    file = open("/home/149/ab8992/bottom_near_inertial_waves/automated/" + name + "/config.yaml","r")
-    config = file.readlines()
-    file.close()
-    ##Iterate through and find jobname and input
-    
-    for line in range(len(config)):
-        if "jobname" in config[line][0:10]:
-            config[line] = "jobname: " + name  + "\n"
-            
-        if "input" in config[line][0:10]:
-            if common_forcing == False:
-                config[line] = "input: /g/data/v45/ab8992/mom6_channel_configs/" + tname + "\n"
-            else:
-                config[line] = f"input:\n     - /g/data/v45/ab8992/mom6_channel_configs/{tname}\n     - /g/data/v45/ab8992/mom6_channel_configs/{common_forcing}\n"
-            
-        if "walltime" in config[line][0:10] and walltime != None:
-            config[line] = "walltime: " + str(walltime)
-    file = open("/home/149/ab8992/bottom_near_inertial_waves/automated/" + name + "/config.yaml","w")
-    file.writelines(config)
-    
-    
-    ## Update override file
-    
-    file = open("/home/149/ab8992/bottom_near_inertial_waves/automated/" + name + "/MOM_override","r")
-    override_file = file.readlines()
-    file.close()
-    
-    for i in overrides:
-        override_file.append("#override " + i + str("\n"))
-        
-    file = open("/home/149/ab8992/bottom_near_inertial_waves/automated/" + name + "/MOM_override","w")
-    file.writelines(override_file)
-    
+def logmsg(message,logfile = Path("logs/mainlog")):
+    """
+    Write a message out to the logfile
+    """
+    current_time = dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    with open(logfile,"a") as f:
+        f.write(current_time + ":\t" + message + "\n")
     return
-
 
 def xy_to_lonlat(x,y,x0,y0):
     """
@@ -346,7 +311,7 @@ def plot_topo(ax,bathy = None,transect = None):
         ax.fill_between(transect.xb,transect * 0 + 6000,-1 * transect,color = "dimgrey")
         return ax
 
-def make_movie(data,plot_function,fig,runname,plotname,plot_kwargs = {"exptname":"full-20"},framerate = 10):
+def make_movie(data,plot_function,fig,runname,plotname,plot_kwargs = {"exptname":"full-20"},framerate = 10,parallel=False):
     """
     data_list : dictionary of dataarrays required by plot function
     plot_function : function to plot data
@@ -361,7 +326,7 @@ def make_movie(data,plot_function,fig,runname,plotname,plot_kwargs = {"exptname"
     
     print(f"Making movie and writing to {outpath}")
     mov = Movie(data,plot_function,input_check = False,plot_kwargs = plot_kwargs)
-    mov.save(outpath,overwrite_existing = True,parallel = False,parallel_compute_kwargs=dict(scheduler="processes", num_workers=28),framerate = framerate) # ,
+    mov.save(outpath,overwrite_existing = True,parallel = parallel,parallel_compute_kwargs=dict(scheduler="processes", num_workers=28),framerate = framerate) # ,
     print("finsished.")
     return
 
@@ -431,3 +396,92 @@ def plot_ke(data,fig,i,framedim = "TIME",**kwargs):
     ax[1].set_ylabel('km S to N')
     ax[1].set_title('Transect along middle of beam')
     return
+
+def plot_surfacespeed(data,fig,i,framedim = "TIME",**kwargs):
+
+    ax = fig.subplots(1)
+    time = data["speed"].time.values[i]
+    exptname = "full-20" #TODO make this a kwarg
+
+    cmap = cmocean.cm.speed
+    data["speed"].isel(time = i).plot(ax = ax,cmap = cmap,cbar_kwargs={'label': "Surface speed (m/s)"})
+
+    ## Add bathymetry plot
+    plot_topo(ax,data["bathy"])
+
+    fig.suptitle(exptname)
+    ax.set_xlabel('km from Tas')
+    ax.set_ylabel('km S to N')
+    ax.set_title('Surface speed')
+
+    return ax, None
+
+
+
+# Define the available commands
+# available_commands = ["plot_ke", "plot_hef", "beamgrid", "m2filter", "calculate_ke", "calculate_hef", "plot_topo", "make_movie"]
+
+# # Create the argument parser
+# parser = argparse.ArgumentParser(description="ttidelib command line interface")
+
+# # Add the command argument
+# parser.add_argument("-c", "--command", choices=available_commands, help="The command to run")
+
+# # Add the arguments for the selected command
+# parser.add_argument("-a", "--arguments", nargs="*", help="Arguments for the selected command")
+
+# if __name__ == "__main__":
+#     # Parse the command line arguments
+#     args = parser.parse_args()
+
+#     # Check if a command is provided
+#     if args.command:
+#         # Check which command is selected and execute the corresponding function
+#         if args.command == "plot_ke":
+#             plot_ke(data, **vars(args))
+#         elif args.command == "plot_hef":
+#             plot_hef(data, **vars(args))
+#         elif args.command == "beamgrid":
+#             beamgrid(data, **vars(args))
+#         elif args.command == "m2filter":
+#             m2filter(data, **vars(args))
+#         elif args.command == "calculate_ke":
+#             calculate_ke(data, **vars(args))
+#         elif args.command == "calculate_hef":
+#             calculate_hef(data, **vars(args))
+#         elif args.command == "plot_topo":
+#             plot_topo(data, **vars(args))
+#         elif args.command == "make_movie":
+#             make_movie(data, **vars(args))
+#     else:
+#         print("No command provided. Please specify a command using the -c/--command option.")
+
+
+
+# if __name__ == "__main__":
+#     client = Client(threads_per_worker = 2)
+
+#     output = "001"
+#     # eta = tt.beamgrid(xr.open_mfdataset(f"/g/data/nm03/ab8992/outputs/full-20/output{output}/surface.nc",decode_times = False).zos)
+#     speed = tt.beamgrid(xr.open_mfdataset(f"/g/data/nm03/ab8992/outputs/full-40/output{output}/surface.nc",decode_times = False).speed)
+#     u = xr.open_mfdataset(f"/g/data/nm03/ab8992/outputs/full-40/output{output}/u/*",decode_times = False).u
+#     v = xr.open_mfdataset(f"/g/data/nm03/ab8992/outputs/full-40/output{output}/v/*",decode_times = False).v
+#     e = xr.open_mfdataset(f"/g/data/nm03/ab8992/outputs/full-40/output{output}/e/*",decode_times = False).e
+#     rho = xr.open_mfdataset(f"/g/data/nm03/ab8992/outputs/full-40/output{output}/rho/*",decode_times = False).rho
+#     bathy = tt.beamgrid(xr.open_mfdataset(f"/g/data/nm03/ab8992/ttide-inputs/full-40/topog_raw.nc",decode_times = False).elevation,xname = "lon",yname = "lat")
+
+
+
+#     data = xr.Dataset(
+#         {"speed":speed.rename({"time":"TIME"}), ## Rename since this dimension is on 6hrs
+#                 "u":u,
+#                 "v":v,
+#                 "bathy":bathy
+#         }
+#     )
+
+#     data
+
+#     fig = plt.figure(figsize=(15, 12))
+
+#     tt.make_movie(data,tt.plot_ke,fig,"full-40","output001_ke")
