@@ -20,17 +20,15 @@ import argparse
 import io
 import sys
 
+home = Path("/home/149/ab8992/tasman-tides")
+gdata = Path("/g/data/nm03/ab8992")
+
+
 def logmsg(message,logfile = Path("logs/mainlog")):
     """
     Write a message out to the logfile. If message is None, create a new logfile with the current time
     """
     current_time = dt.datetime.now().strftime("%d-%m-%y %H:%M:%S")
-
-    if message == None:
-        logfile = logfile.parent / (logfile.stem + "_" + current_time + logfile.suffix)
-        with open(logfile,"a") as f:
-            f.write(f"Start of log for {logfile.stem} at {current_time}\n")
-        return logfile
 
     with open(logfile,"a") as f:
         f.write(current_time + ":\t" + message + "\n")
@@ -190,7 +188,7 @@ def beamgrid(data,lat0 = -42.1,lon0 = 147.2,beamwidth = 400,beamlength = 1500,pl
         return out
     
 
-def collect_data(exptname,rawdata = None,ppdata = None,surface_data = None,outputs = "output*",chunks = "auto"):
+def collect_data(exptname,rawdata = None,ppdata = None,surface_data = None,outputs = "output*",chunks = "auto",timerange = (None,None)):
     """
     Collect all data required for analysis into a single xarray.Dataset
     expname : str
@@ -203,6 +201,7 @@ def collect_data(exptname,rawdata = None,ppdata = None,surface_data = None,outpu
         Glob string to match the output directories
     chunks : dict
         Chunks to use for dask. If "auto", use the default chunking for each variable. Surface variables are only given a time chunk
+    timerange : Can choose the times instead of output. If None, use all times
     """
 
     rawdata_path = Path("/g/data/nm03/ab8992/outputs/") / exptname / outputs
@@ -215,15 +214,15 @@ def collect_data(exptname,rawdata = None,ppdata = None,surface_data = None,outpu
     data = {}
     if type(rawdata) != type(None):
         for var in rawdata:
-            data[var] = xr.open_mfdataset(rawdata_path / var / "*",chunks = chunks)
+            data[var] = xr.open_mfdataset(rawdata_path / var / "*",chunks = chunks).isel(time = slice(timerange))
 
     if type(ppdata) != type(None):
         for var in ppdata:
-            data[var] = xr.open_mfdataset(ppdata_path / var / "*",chunks = chunks)
+            data[var] = xr.open_mfdataset(ppdata_path / var / "*",chunks = chunks).isel(TIME = slice(timerange))
 
     if type(surface_data) != type(None):
         for var in surface_data:
-            data[var] = xr.open_mfdataset(rawdata_path / "surface_transect.nc",chunks = {"time":timechunk})[var]
+            data[var] = xr.open_mfdataset(rawdata_path / "surface_transect.nc",chunks = {"time":timechunk})[var].isel(time = slice(timerange))
 
     return xr.Dataset(data)
 
@@ -361,10 +360,9 @@ def make_movie(data,plot_function,runname,plotname,framerate = 10,parallel = Fal
     plotname : name of the plot eg "h_energy_transfer"
     plot_kwargs : kwargs to pass to plot function
     """
+    print(f"Making movie {plotname} for {runname}")
     tmppath = Path(f"/g/data/v45/movies_tmp/tasman-tides/{runname}/movies/{plotname}/")
     outpath = Path(f"/g/data/v45/ab8992/dropbox/tasman-tides/{runname}/movies/{plotname}")
-
-    logfile = logmsg(None,logfile = Path("logs/make_movie/{runname}_{plotname}.log"))
 
     ## Log the start of movie making
 
@@ -378,7 +376,7 @@ def make_movie(data,plot_function,runname,plotname,framerate = 10,parallel = Fal
         mov = Movie(data,plot_function,input_check = False,plot_kwargs = plot_kwargs)
         mov.save(tmppath,overwrite_existing = True,parallel = parallel,parallel_compute_kwargs=dict(scheduler="processes", num_workers=28),framerate = framerate)
     except Exception as e:
-        logmsg(f"Error in making movie: {e}",logfile = logfile)
+        print(f"Error in making movie: \n\n{e}")
         logmsg(f"Error in making movie. See {logfile} for details")
         return
     
@@ -389,10 +387,7 @@ def make_movie(data,plot_function,runname,plotname,framerate = 10,parallel = Fal
             capture_output=True,
             text=True,
         )
-    logmsg(
-        f"ffmpeg finished with returncode {result.returncode} \n\n and output \n\n{result.stdout}",
-        logfile = logfile
-        )
+    print(f"ffmpeg finished with returncode {result.returncode} \n\n and output \n\n{result.stdout}")
     logmsg(
         f"ffmpeg finished with returncode {result.returncode} for {logfile}",
     )
@@ -482,72 +477,3 @@ def plot_surfacespeed(data,fig,i,framedim = "TIME",**kwargs):
 
     return ax, None
 
-
-
-# Define the available commands
-# available_commands = ["plot_ke", "plot_hef", "beamgrid", "m2filter", "calculate_ke", "calculate_hef", "plot_topo", "make_movie"]
-
-# # Create the argument parser
-# parser = argparse.ArgumentParser(description="ttidelib command line interface")
-
-# # Add the command argument
-# parser.add_argument("-c", "--command", choices=available_commands, help="The command to run")
-
-# # Add the arguments for the selected command
-# parser.add_argument("-a", "--arguments", nargs="*", help="Arguments for the selected command")
-
-# if __name__ == "__main__":
-#     # Parse the command line arguments
-#     args = parser.parse_args()
-
-#     # Check if a command is provided
-#     if args.command:
-#         # Check which command is selected and execute the corresponding function
-#         if args.command == "plot_ke":
-#             plot_ke(data, **vars(args))
-#         elif args.command == "plot_hef":
-#             plot_hef(data, **vars(args))
-#         elif args.command == "beamgrid":
-#             beamgrid(data, **vars(args))
-#         elif args.command == "m2filter":
-#             m2filter(data, **vars(args))
-#         elif args.command == "calculate_ke":
-#             calculate_ke(data, **vars(args))
-#         elif args.command == "calculate_hef":
-#             calculate_hef(data, **vars(args))
-#         elif args.command == "plot_topo":
-#             plot_topo(data, **vars(args))
-#         elif args.command == "make_movie":
-#             make_movie(data, **vars(args))
-#     else:
-#         print("No command provided. Please specify a command using the -c/--command option.")
-
-
-
-# if __name__ == "__main__":
-#     client = Client(threads_per_worker = 2)
-
-#     output = "001"
-#     # eta = tt.beamgrid(xr.open_mfdataset(f"/g/data/nm03/ab8992/outputs/full-20/output{output}/surface.nc",decode_times = False).zos)
-#     speed = tt.beamgrid(xr.open_mfdataset(f"/g/data/nm03/ab8992/outputs/full-40/output{output}/surface.nc",decode_times = False).speed)
-#     u = xr.open_mfdataset(f"/g/data/nm03/ab8992/outputs/full-40/output{output}/u/*",decode_times = False).u
-#     v = xr.open_mfdataset(f"/g/data/nm03/ab8992/outputs/full-40/output{output}/v/*",decode_times = False).v
-#     e = xr.open_mfdataset(f"/g/data/nm03/ab8992/outputs/full-40/output{output}/e/*",decode_times = False).e
-#     rho = xr.open_mfdataset(f"/g/data/nm03/ab8992/outputs/full-40/output{output}/rho/*",decode_times = False).rho
-#     bathy = tt.beamgrid(xr.open_mfdataset(f"/g/data/nm03/ab8992/ttide-inputs/full-40/topog_raw.nc",decode_times = False).elevation,xname = "lon",yname = "lat")
-
-
-
-#     data = xr.Dataset(
-#         {"speed":speed.rename({"time":"TIME"}), ## Rename since this dimension is on 6hrs
-#                 "u":u,
-#                 "v":v,
-#                 "bathy":bathy
-#         }
-#     )
-
-#     data
-
-#     fig = plt.figure(figsize=(15, 12))
-
-#     tt.make_movie(data,tt.plot_ke,fig,"full-40","output001_ke")
