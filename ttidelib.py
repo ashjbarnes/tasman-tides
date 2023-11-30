@@ -24,7 +24,7 @@ home = Path("/home/149/ab8992/tasman-tides")
 gdata = Path("/g/data/nm03/ab8992")
 
 
-def logmsg(message,logfile = Path("logs/mainlog")):
+def logmsg(message,logfile = home / "logs" /"mainlog"):
     """
     Write a message out to the logfile. If message is None, create a new logfile with the current time
     """
@@ -188,7 +188,7 @@ def beamgrid(data,lat0 = -42.1,lon0 = 147.2,beamwidth = 400,beamlength = 1500,pl
         return out
     
 
-def collect_data(exptname,rawdata = None,ppdata = None,surface_data = None,outputs = "output*",chunks = "auto",timerange = (None,None)):
+def collect_data(exptname,rawdata = None,ppdata = None,surface_data = None,bathy = False,outputs = "output*",chunks = "auto",timerange = (None,None)):
     """
     Collect all data required for analysis into a single xarray.Dataset
     expname : str
@@ -214,16 +214,17 @@ def collect_data(exptname,rawdata = None,ppdata = None,surface_data = None,outpu
     data = {}
     if type(rawdata) != type(None):
         for var in rawdata:
-            data[var] = xr.open_mfdataset(rawdata_path / var / "*",chunks = chunks).isel(time = slice(timerange))
+            data[var] = xr.open_mfdataset(str(rawdata_path / var / "*"),chunks = chunks).isel(time = slice(timerange[0],timerange[1]))
 
     if type(ppdata) != type(None):
         for var in ppdata:
-            data[var] = xr.open_mfdataset(ppdata_path / var / "*",chunks = chunks).isel(TIME = slice(timerange))
+            data[var] = xr.open_mfdataset(str(ppdata_path / var / "*"),chunks = chunks).isel(TIME = slice(timerange[0],timerange[1]))
 
     if type(surface_data) != type(None):
         for var in surface_data:
-            data[var] = xr.open_mfdataset(rawdata_path / "surface_transect.nc",chunks = {"time":timechunk})[var].isel(time = slice(timerange))
-
+            data[var] = xr.open_mfdataset(str(rawdata_path / "surface_transect.nc"),chunks = {"time":timechunk})[var].isel(time = slice(timerange[0],timerange[1]))
+    if bathy == True:
+        data["bathy"] = xr.open_mfdataset(str(rawdata_path.parent / "bathy_transect.nc")).elevation
     return xr.Dataset(data)
 
 
@@ -361,9 +362,9 @@ def make_movie(data,plot_function,runname,plotname,framerate = 10,parallel = Fal
     plot_kwargs : kwargs to pass to plot function
     """
     print(f"Making movie {plotname} for {runname}")
-    tmppath = Path(f"/g/data/v45/movies_tmp/tasman-tides/{runname}/movies/{plotname}/")
-    outpath = Path(f"/g/data/v45/ab8992/dropbox/tasman-tides/{runname}/movies/{plotname}")
-
+    tmppath = Path(f"/g/data/v45/ab8992/movies_tmp/tasman-tides/{runname}/movies/{plotname}/")
+    outpath = Path(f"/g/data/v45/ab8992/dropbox/tasman-tides/{runname}/movies/{plotname}/")
+    print(tmppath)
     ## Log the start of movie making
 
     if os.path.exists(tmppath):
@@ -374,15 +375,17 @@ def make_movie(data,plot_function,runname,plotname,framerate = 10,parallel = Fal
     
     try:
         mov = Movie(data,plot_function,input_check = False,plot_kwargs = plot_kwargs)
-        mov.save(tmppath,overwrite_existing = True,parallel = parallel,parallel_compute_kwargs=dict(scheduler="processes", num_workers=28),framerate = framerate)
+        mov.save(str(tmppath),overwrite_existing = True,parallel = parallel,parallel_compute_kwargs=dict(scheduler="processes", num_workers=28),framerate = framerate)
     except Exception as e:
-        print(f"Error in making movie: \n\n{e}")
-        logmsg(f"Error in making movie. See {logfile} for details")
+        ## Print entire exception message
+        print("Error in making movie: \n\n")
+        print(e)
+        logmsg(f"Error in making movie.")
         return
     
     ## Now make the movie and log the result
     result = subprocess.run(
-            f"ffmpeg -r {framerate} -f image2 -s 1920x1080 -i {tmppath}/*.png -c:v libx264 -pix_fmt yuv420p {outpath + movname}.mp4",
+            f"ffmpeg -r {framerate} -f image2 -s 1920x1080 -i {tmppath}/*.png -c:v libx264 -pix_fmt yuv420p {str(outpath) + movname}.mp4",
             shell = True,
             capture_output=True,
             text=True,
