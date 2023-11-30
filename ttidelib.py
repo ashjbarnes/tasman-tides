@@ -17,15 +17,24 @@ from pathlib import Path
 from xmovie import Movie 
 import xrft
 import argparse
+import io
+import sys
 
 def logmsg(message,logfile = Path("logs/mainlog")):
     """
-    Write a message out to the logfile
+    Write a message out to the logfile. If message is None, create a new logfile with the current time
     """
-    current_time = dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    current_time = dt.datetime.now().strftime("%d-%m-%y %H:%M:%S")
+
+    if message == None:
+        logfile = logfile.parent / (logfile.stem + "_" + current_time + logfile.suffix)
+        with open(logfile,"a") as f:
+            f.write(f"Start of log for {logfile.stem} at {current_time}\n")
+        return logfile
+
     with open(logfile,"a") as f:
         f.write(current_time + ":\t" + message + "\n")
-    return
+    return 
 
 def xy_to_lonlat(x,y,x0,y0):
     """
@@ -181,7 +190,42 @@ def beamgrid(data,lat0 = -42.1,lon0 = 147.2,beamwidth = 400,beamlength = 1500,pl
         return out
     
 
+def collect_data(exptname,rawdata = None,ppdata = None,surface_data = None,outputs = "output*",chunks = "auto"):
+    """
+    Collect all data required for analysis into a single xarray.Dataset
+    expname : str
+        Name of the experiment
+    rawdata : list of str
+        List of raw data variables to include
+    ppdata : list of str
+        List of postprocessed data variables to include
+    outputs : str
+        Glob string to match the output directories
+    chunks : dict
+        Chunks to use for dask. If "auto", use the default chunking for each variable. Surface variables are only given a time chunk
+    """
 
+    rawdata_path = Path("/g/data/nm03/ab8992/outputs/") / exptname / outputs
+    ppdata_path = Path("/g/data/nm03/ab8992/postprocessed/") / exptname / outputs
+
+    timechunk = -1
+    if "time" in chunks:
+        timechunk = chunks["time"]
+
+    data = {}
+    if type(rawdata) != type(None):
+        for var in rawdata:
+            data[var] = xr.open_mfdataset(rawdata_path / var / "*",chunks = chunks)
+
+    if type(ppdata) != type(None):
+        for var in ppdata:
+            data[var] = xr.open_mfdataset(ppdata_path / var / "*",chunks = chunks)
+
+    if type(surface_data) != type(None):
+        for var in surface_data:
+            data[var] = xr.open_mfdataset(rawdata_path / "surface_transect.nc",chunks = {"time":timechunk})[var]
+
+    return xr.Dataset(data)
 
 
 ##### FILTERING AND DIAGNOSTICS #####
@@ -198,6 +242,9 @@ def m2filter(field,freq = m2f,tol = 0.015):
     FIELD = xrft.fft(field,dim = "time")
     FIELD_filtered = FIELD.where(np.abs(np.abs(FIELD.freq_time) - freq) < tol,0)
     return np.real(xrft.ifft(FIELD_filtered,dim = "freq_time"))
+
+
+
 
 def calculate_ke(u,v,time):
 
@@ -236,14 +283,6 @@ def calculate_hef(u,v,time,total_only = True):
     u = u.fillna(0)
     v = v.fillna(0)
 
-    # t0 = u.time[0].values
-    # t_middle = t0 + (i + 0.5) * averaging_window # Middle of this averaging window. Used to give a time coordinate to the output
-    # u_ = u.sel(
-    #         time = slice(t0 + i * averaging_window,t0 + (i + 1) * averaging_window)
-    #         ).chunk({"time":-1}).drop(["lat","lon"])
-    # v_ = v.sel(
-    #         time = slice(t0 + i * averaging_window,t0 + (i + 1) * averaging_window)
-    #         ).chunk({"time":-1}).drop(["lat","lon"])
 
     ## Actually set it to a midpoint of the time window
     u_ = u.sel(
@@ -292,7 +331,7 @@ def calculate_hef(u,v,time,total_only = True):
 
 def plot_topo(ax,bathy = None,transect = None):
     """
-    Plot the topography
+    Plot the topography. If transect is not None, plot a transect at the specified yb value
     """
 
     earth_cmap = matplotlib.cm.get_cmap("gist_earth")
@@ -311,23 +350,52 @@ def plot_topo(ax,bathy = None,transect = None):
         ax.fill_between(transect.xb,transect * 0 + 6000,-1 * transect,color = "dimgrey")
         return ax
 
-def make_movie(data,plot_function,fig,runname,plotname,plot_kwargs = {"exptname":"full-20"},framerate = 10,parallel=False):
+
+
+def make_movie(data,plot_function,runname,plotname,framerate = 10,parallel = False,movname = "",plot_kwargs = {}):
     """
+    Custom function to make a movie of a plot function. Saves to a folder in dropbox. Intermediate frames are saved to /tmp
     data_list : dictionary of dataarrays required by plot function
     plot_function : function to plot data
     runname : name of the run eg full-20
     plotname : name of the plot eg "h_energy_transfer"
     plot_kwargs : kwargs to pass to plot function
     """
+    tmppath = Path(f"/g/data/v45/movies_tmp/tasman-tides/{runname}/movies/{plotname}/")
+    outpath = Path(f"/g/data/v45/ab8992/dropbox/tasman-tides/{runname}/movies/{plotname}")
 
-    outpath = f"/g/data/v45/ab8992/dropbox/tasman-tides/{runname}/movies/{plotname}/"
+    logfile = logmsg(None,logfile = Path("logs/make_movie/{runname}_{plotname}.log"))
+
+    ## Log the start of movie making
+
+    if os.path.exists(tmppath):
+        shutil.rmtree(tmppath)
+    os.makedirs(tmppath)
     if not os.path.exists(outpath):
         os.makedirs(outpath)
     
-    print(f"Making movie and writing to {outpath}")
-    mov = Movie(data,plot_function,input_check = False,plot_kwargs = plot_kwargs)
-    mov.save(outpath,overwrite_existing = True,parallel = parallel,parallel_compute_kwargs=dict(scheduler="processes", num_workers=28),framerate = framerate) # ,
-    print("finsished.")
+    try:
+        mov = Movie(data,plot_function,input_check = False,plot_kwargs = plot_kwargs)
+        mov.save(tmppath,overwrite_existing = True,parallel = parallel,parallel_compute_kwargs=dict(scheduler="processes", num_workers=28),framerate = framerate)
+    except Exception as e:
+        logmsg(f"Error in making movie: {e}",logfile = logfile)
+        logmsg(f"Error in making movie. See {logfile} for details")
+        return
+    
+    ## Now make the movie and log the result
+    result = subprocess.run(
+            f"ffmpeg -r {framerate} -f image2 -s 1920x1080 -i {tmppath}/*.png -c:v libx264 -pix_fmt yuv420p {outpath + movname}.mp4",
+            shell = True,
+            capture_output=True,
+            text=True,
+        )
+    logmsg(
+        f"ffmpeg finished with returncode {result.returncode} \n\n and output \n\n{result.stdout}",
+        logfile = logfile
+        )
+    logmsg(
+        f"ffmpeg finished with returncode {result.returncode} for {logfile}",
+    )
     return
 
 def plot_hef(data,fig,i,framedim = "TIME",**kwargs):
@@ -336,7 +404,7 @@ def plot_hef(data,fig,i,framedim = "TIME",**kwargs):
 
     time = data["speed"].TIME.values[i]
     hef = calculate_hef(data["u"],data["v"],time = time)
-    exptname = "full-20" #TODO make this a kwarg
+    # exptname = "full-20" #TODO make this a kwarg
 
     cmap = matplotlib.cm.get_cmap('RdBu')
     data["speed"].isel(TIME = i).plot.contour(ax = ax[0],levels = [0.5,0.75,1,1.25],cmap = "copper",lineweight = 0.5,vmin = 0.25,vmax = 1.25,linewidths = 0.75)
@@ -344,12 +412,10 @@ def plot_hef(data,fig,i,framedim = "TIME",**kwargs):
 
     ## Add bathymetry plot
     plot_topo(ax[0],data["bathy"])
-
-
     ## Second axis: vertical transect
     hef.sel(yb = 0,method = "nearest").plot(ax = ax[1],cmap = cmap,vmin = -0.00001,vmax = 0.00001,cbar_kwargs={'label': "Energy flux (tide to eddy)"})
     plot_topo(ax[1],data["bathy"],transect = 0)
-    fig.suptitle(exptname)
+    # fig.suptitle(exptname)
     ax[1].invert_yaxis()
     ax[0].set_xlabel('km from Tas')
     ax[0].set_ylabel('km S to N')
