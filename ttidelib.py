@@ -246,14 +246,21 @@ def m2filter(field,freq = m2f,tol = 0.015):
 
 def calculate_vorticity(data):
     """
-    Calculate the relative vorticity from the u and v velocities and bathymetry
+    Calculate the relative vorticity from the u and v velocities
     """
-    f = 2 * 7.2921e-5 * np.sin(data.u.lat * np.pi / 180)
     duy = data.u.differentiate("yb")
     dvx = data.v.differentiate("xb")
     return (dvx - duy)
 
-
+def plot_vorticity(data):
+    """
+    Plot the relative vorticity. Here, data contains lazily computed vorcity as well as bathymetry.
+    """
+    vorticity = data["vorciticy"]
+    fig,ax = plt.subplots(1,1,figsize = (15,12))
+    vorticity.mean("time").plot(ax = ax,cmap = "RdBu",vmin = -1e-4,vmax = 1e-4)
+    plot_topo(ax,data["bathy"])
+    return fig
 
 def calculate_ke(u,v,time):
 
@@ -392,15 +399,23 @@ def make_movie(data,plot_function,runname,plotname,framerate = 10,parallel = Fal
 
 
     ## Make each frame of the movie and save to tmpdir
-    @dask.delayed
-    def process_chunk(data,i):
-        fig = plot_function(data.isel(time = i))
-        fig.savefig(tmppath / f"frame_{str(i).zfill(5)}.png")
-        plt.close()
-        return None
-    
-    frames = [process_chunk(data,i) for i in range(len(data.time))]
-    dask.compute(*frames)
+    if parallel == True:
+        @dask.delayed
+        def process_chunk(data,i):
+            fig = plot_function(data.isel(time = i))
+            fig.savefig(tmppath / f"frame_{str(i).zfill(5)}.png")
+            plt.close()
+            return None
+        
+        frames = [process_chunk(data,i) for i in range(len(data.time))]
+        dask.compute(*frames)
+
+    ## Do the same thing but in serial
+    else:
+        for i in range(len(data.time)):
+            fig = plot_function(data.isel(time = i))
+            fig.savefig(tmppath / f"frame_{str(i).zfill(5)}.png")
+            plt.close()
 
 
     logmsg(f"Finished making frames")
