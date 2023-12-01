@@ -4,27 +4,78 @@ import ttidelib as tt
 import os
 import subprocess
 import time
-from dask.distributed import Client
+from dask.distributed import Client,default_client
 from matplotlib import pyplot as plt
+from pathlib import Path
+home = Path("/home/149/ab8992/tasman-tides")
+gdata = Path("/g/data/nm03/ab8992")
 
-def surfacespeed(experiment, outputs):
+def startdask():
+    try:
+    # Try to get the existing Dask client
+        client = default_client()
+    except ValueError:
+        # If there's no existing client, create a new one
+        client = Client()
+
+def surfacespeed_movie(experiment, outputs):
     """
     Make a movie of the surface speed for the given experiment and outputs
     """
-    print(experiment,outputs)
-    client = Client()
+    startdask()
 
-    print(client)
-    print("Loading data...")
     data = tt.collect_data(experiment,surface_data=["speed"],chunks = {"time":1},outputs=outputs,bathy=True)
     print("loaded data")
     print(data)
     fig = plt.figure(figsize=(15, 12))
 
     print("Start making movie...")
-    tt.make_movie(data,tt.plot_surfacespeed,experiment,"plot_surfacespeed","speed",parallel=True)
+    tt.make_movie(data,
+                tt.plot_surfacespeed,
+                experiment,
+                "surface_speed",
+                framerate=10,
+                parallel=True)
 
-    return 
+    return
+
+def save_pv(experiment,outputs):
+    """
+    Save the potential vorticity for the given experiment and outputs
+    """
+    startdask()
+
+    outpath = gdata / "postprocessed/" / experiment / "pv"
+    if not outpath.exists():
+        outpath.mkdir(parents=True)
+    print("Loading data")
+    data = tt.collect_data(
+        experiment,
+        outputs=outputs,
+        rawdata = ["u","v"],
+        bathy=True
+        )
+    print("Lazily computing pv")
+    pv = tt.calculate_pv(data)
+
+    # now need to average over 149hr chunks
+    # Spatial chunk was removed from the data, but we've reduced data size by 150. 
+    # Originally, time chunk was 15 (5) days for 20th (40th) degree. For 20 deg, this means each time shapshot is a few mb. Perfect for movies in parallel
+
+    # Iterate over time in pv with steps of 149 hours. Average over each step and save as a netcdf file 
+    for t in range(0, len(pv.time), 149):
+        print("Iteration",t,sep = "\t")
+        t_str = str(t).zfill(5)  # Format t as a padded 5-digit string
+        pv_chunk = pv.isel(time=slice(t, t + 149)).mean(dim="time").drop("time")
+        ## Add the time dimension back in but call it TIME
+        data = data.expand_dims("time")
+        data = data.assign_coords(time = [400])
+        data.TIME.attrs = pv.time.attrs
+        pv_chunk.to_netcdf(outpath / f"pv_t{t_str}.nc")
+
+    return pv
+
+
 
 def qsub(recipe, experiment, outputs):
     tt.logmsg(f"Submitting {recipe} for {experiment}, {outputs} to qsub")
@@ -80,7 +131,7 @@ python3 /home/149/ab8992/tasman-tides/recipes.py -r {recipe} -e {experiment} -o 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Script to execute plotting functions from ttidelib")
-    parser.add_argument("-r", "--recipe", choices=["surfacespeed", "recipe2", "recipe3"], help="Select the recipe to execute")
+    parser.add_argument("-r", "--recipe", choices=["surfacespeed", "save_pv", "recipe3"], help="Select the recipe to execute")
     parser.add_argument("-e", "--experiment", help="Specify the experiment to apply the recipe to")
     parser.add_argument("-o", "--outputs", help="Specify the outputs to use",default = "output*")
     parser.add_argument("-q", "--qsub", default=1,type=int, help="Choose whether to execute directly or as qsub job")
@@ -92,5 +143,6 @@ if __name__ == "__main__":
         print(f"qsub {args.recipe}")
         qsub(args.recipe, args.experiment, args.outputs)
     elif args.recipe == "surfacespeed":
-        surfacespeed(args.experiment, args.outputs)
-
+        surfacespeed_movie(args.experiment, args.outputs)
+    elif args.recipe == "save_pv":
+        save_pv(args.experiment, args.outputs)

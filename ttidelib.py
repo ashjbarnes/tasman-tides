@@ -12,6 +12,7 @@ import subprocess
 import matplotlib.pyplot as plt
 import shutil
 import xesmf
+import dask
 import cmocean
 from pathlib import Path
 from xmovie import Movie 
@@ -19,7 +20,7 @@ import xrft
 import argparse
 import io
 import sys
-
+from dask.distributed import Client,default_client
 home = Path("/home/149/ab8992/tasman-tides")
 gdata = Path("/g/data/nm03/ab8992")
 
@@ -214,15 +215,15 @@ def collect_data(exptname,rawdata = None,ppdata = None,surface_data = None,bathy
     data = {}
     if type(rawdata) != type(None):
         for var in rawdata:
-            data[var] = xr.open_mfdataset(str(rawdata_path / var / "*"),chunks = chunks).isel(time = slice(timerange[0],timerange[1]))
+            data[var] = xr.open_mfdataset(str(rawdata_path / var / "*"),chunks = chunks,decode_times = False).isel(time = slice(timerange[0],timerange[1]))
 
     if type(ppdata) != type(None):
         for var in ppdata:
-            data[var] = xr.open_mfdataset(str(ppdata_path / var / "*"),chunks = chunks).isel(TIME = slice(timerange[0],timerange[1]))
+            data[var] = xr.open_mfdataset(str(ppdata_path / var / "*"),chunks = chunks,decode_times = False).isel(TIME = slice(timerange[0],timerange[1]))
 
     if type(surface_data) != type(None):
         for var in surface_data:
-            data[var] = xr.open_mfdataset(str(rawdata_path / "surface_transect.nc"),chunks = {"time":timechunk})[var].isel(time = slice(timerange[0],timerange[1]))
+            data[var] = xr.open_mfdataset(str(rawdata_path / "surface_transect.nc"),chunks = {"time":timechunk},decode_times = False)[var].isel(time = slice(timerange[0],timerange[1]))
     if bathy == True:
         data["bathy"] = xr.open_mfdataset(str(rawdata_path.parent / "bathy_transect.nc")).elevation
     return xr.Dataset(data)
@@ -243,6 +244,14 @@ def m2filter(field,freq = m2f,tol = 0.015):
     FIELD_filtered = FIELD.where(np.abs(np.abs(FIELD.freq_time) - freq) < tol,0)
     return np.real(xrft.ifft(FIELD_filtered,dim = "freq_time"))
 
+def calculate_pv(data):
+    """
+    Calculate the potential vorticity from the u and v velocities and bathymetry
+    """
+    f = 2 * 7.2921e-5 * np.sin(data.u.lat * np.pi / 180)
+    duy = data.u.differentiate("yb")
+    dvx = data.v.differentiate("xb")
+    return (f + (dvx - duy) ) / (data.bathy)
 
 
 
@@ -352,7 +361,7 @@ def plot_topo(ax,bathy = None,transect = None):
 
 
 
-def make_movie(data,plot_function,runname,plotname,framerate = 10,parallel = False,movname = "",plot_kwargs = {}):
+def make_movie(data,plot_function,runname,plotname,framerate = 10,parallel = False,plot_kwargs = {}):
     """
     Custom function to make a movie of a plot function. Saves to a folder in dropbox. Intermediate frames are saved to /tmp
     data_list : dictionary of dataarrays required by plot function
@@ -361,9 +370,15 @@ def make_movie(data,plot_function,runname,plotname,framerate = 10,parallel = Fal
     plotname : name of the plot eg "h_energy_transfer"
     plot_kwargs : kwargs to pass to plot function
     """
+    try:
+    # Try to get the existing Dask client
+        client = default_client()
+    except ValueError:
+        # If there's no existing client, create a new one
+        client = Client()
     print(f"Making movie {plotname} for {runname}")
     tmppath = Path(f"/g/data/v45/ab8992/movies_tmp/tasman-tides/{runname}/movies/{plotname}/")
-    outpath = Path(f"/g/data/v45/ab8992/dropbox/tasman-tides/{runname}/movies/{plotname}/")
+    outpath = Path(f"/g/data/v45/ab8992/dropbox/tasman-tides/{runname}/movies/")
     print(tmppath)
     ## Log the start of movie making
 
@@ -373,27 +388,37 @@ def make_movie(data,plot_function,runname,plotname,framerate = 10,parallel = Fal
     if not os.path.exists(outpath):
         os.makedirs(outpath)
     
-    try:
-        mov = Movie(data,plot_function,input_check = False,plot_kwargs = plot_kwargs)
-        mov.save(str(tmppath),overwrite_existing = True,parallel = parallel,parallel_compute_kwargs=dict(scheduler="processes", num_workers=28),framerate = framerate)
-    except Exception as e:
-        ## Print entire exception message
-        print("Error in making movie: \n\n")
-        print(e)
-        logmsg(f"Error in making movie.")
-        return
+    logmsg(f"Making movie {plotname} for {runname}")  
+
+
+    ## Make each frame of the movie and save to tmpdir
+    @dask.delayed
+    def process_chunk(data,i):
+        fig = plot_function(data.isel(time = i))
+        fig.savefig(tmppath / f"frame_{str(i).zfill(5)}.png")
+        plt.close()
+        return None
     
-    ## Now make the movie and log the result
+    frames = [process_chunk(data,i) for i in range(len(data.time))]
+    dask.compute(*frames)
+
+
+    logmsg(f"Finished making frames")
+    print(f"ffmpeg -r {framerate}  -i {tmppath}/frame_%05d.png -s 1920x1080 -c:v libx264 -pix_fmt yuv420p {str(outpath) + plotname}.mp4")
     result = subprocess.run(
-            f"ffmpeg -r {framerate} -f image2 -s 1920x1080 -i {tmppath}/*.png -c:v libx264 -pix_fmt yuv420p {str(outpath) + movname}.mp4",
+            f"ffmpeg -y -r {framerate} -i {tmppath}/frame_%05d.png -s 1920x1080 -c:v libx264 -pix_fmt yuv420p {str(outpath / plotname)}.mp4",
             shell = True,
             capture_output=True,
             text=True,
         )
     print(f"ffmpeg finished with returncode {result.returncode} \n\n and output \n\n{result.stdout}")
     logmsg(
-        f"ffmpeg finished with returncode {result.returncode} for {logfile}",
+        f"ffmpeg finished with returncode {result.returncode}",
     )
+    print(result.stderr)
+    print(result.stdout)
+    if str(result.returncode) == "1":
+        logmsg(f"ffmpeg output: {result.stdout}")
     return
 
 def plot_hef(data,fig,i,framedim = "TIME",**kwargs):
@@ -461,14 +486,14 @@ def plot_ke(data,fig,i,framedim = "TIME",**kwargs):
     ax[1].set_title('Transect along middle of beam')
     return
 
-def plot_surfacespeed(data,fig,i,framedim = "TIME",**kwargs):
+def plot_surfacespeed(data,**kwargs):
 
-    ax = fig.subplots(1)
-    time = data["speed"].time.values[i]
+    fig,ax = plt.subplots(1,figsize=(15, 12))
+    # time = data["speed"].time.values[i]
     exptname = "full-20" #TODO make this a kwarg
 
     cmap = cmocean.cm.speed
-    data["speed"].isel(time = i).plot(ax = ax,cmap = cmap,cbar_kwargs={'label': "Surface speed (m/s)"})
+    data["speed"].plot(ax = ax,cmap = cmap,cbar_kwargs={'label': "Surface speed (m/s)"},vmin = 0,vmax = 1.5)
 
     ## Add bathymetry plot
     plot_topo(ax,data["bathy"])
@@ -477,6 +502,5 @@ def plot_surfacespeed(data,fig,i,framedim = "TIME",**kwargs):
     ax.set_xlabel('km from Tas')
     ax.set_ylabel('km S to N')
     ax.set_title('Surface speed')
-
-    return ax, None
+    return fig
 
