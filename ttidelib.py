@@ -244,14 +244,14 @@ def m2filter(field,freq = m2f,tol = 0.015):
     FIELD_filtered = FIELD.where(np.abs(np.abs(FIELD.freq_time) - freq) < tol,0)
     return np.real(xrft.ifft(FIELD_filtered,dim = "freq_time"))
 
-def calculate_pv(data):
+def calculate_vorticity(data):
     """
-    Calculate the potential vorticity from the u and v velocities and bathymetry
+    Calculate the relative vorticity from the u and v velocities and bathymetry
     """
     f = 2 * 7.2921e-5 * np.sin(data.u.lat * np.pi / 180)
     duy = data.u.differentiate("yb")
     dvx = data.v.differentiate("xb")
-    return (f + (dvx - duy) ) / (data.bathy)
+    return (dvx - duy)
 
 
 
