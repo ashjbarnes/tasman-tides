@@ -254,12 +254,30 @@ def calculate_vorticity(data):
 
 def plot_vorticity(data):
     """
-    Plot the relative vorticity. Here, data contains lazily computed vorcity as well as bathymetry.
+    Plot the vorticity at both surface and a transect. Requires ppdata: vorticity_surface, vorticity_transect, bathy.
     """
-    vorticity = data["vorciticy"]
-    fig,ax = plt.subplots(1,1,figsize = (15,12))
-    vorticity.mean("time").plot(ax = ax,cmap = "RdBu",vmin = -1e-4,vmax = 1e-4)
-    plot_topo(ax,data["bathy"])
+    fig,ax = plt.subplots(2,1,figsize = (20,12))
+
+
+    data["vorticity_surface"].plot(vmin = - 0.075,vmax = 0.075,cmap = "RdBu",ax = ax[0])
+    data["vorticity_transect"].plot(vmin = - 0.05,vmax = 0.05,cmap = "RdBu",ax = ax[1])
+
+    ax[0].set_title("")
+    ax[1].set_title("")
+    ax[1].invert_yaxis()
+    tt.plot_topo(ax[0],bathy = data["bathy"])
+    tt.plot_topo(ax[1],bathy = data["bathy"],transect = 0)
+    ax[1].set_xlabel('km from Tas')
+    ax[0].set_ylabel('km S to N')
+    ax[0].set_xlabel('')
+    ax[1].set_ylabel('km S to N')
+    ax[1].set_title('Transect along middle of beam')
+    ax[0].set_title('Relative Vorticity')
+    ax[0].hlines(y = 0,xmin = 100,xmax = 1450,linestyles = "dashed",color = "black")
+
+    # Add text to the top right corner of the figure
+    ax[0].text(0.95, 0.95, data.time.values, transform=ax[0].transAxes, fontsize=10, va="top", ha="right")
+
     return fig
 
 def calculate_ke(u,v,time):
