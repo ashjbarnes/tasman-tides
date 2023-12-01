@@ -79,11 +79,11 @@ def save_vorticity(experiment,outputs):
         chunks = {"time": -1,"xb":-1,"zl":10}
         )
 
-    vorticity = tt.calculate_vorticity(rawdata).coarsen(time = 149,boundary = "trim").mean().drop("lat").drop("lon").to_array()
+    vorticity = tt.calculate_vorticity(rawdata).coarsen(time = 149,boundary = "trim").mean().drop("lat").drop("lon").rename("vorticity")
     print("Computing voricity transect")
-    vorticity_transect = vorticity.sel(yb = 0,method = "nearest").compute()
+    vorticity_transect = vorticity.sel(yb = 0,method = "nearest")
     print("Computing vorticity surface")
-    vorticity_surface = vorticity.isel(zl = 2).compute()
+    vorticity_surface = vorticity.isel(zl = 2)
 
     vorticity_surface.to_netcdf(outpath / "vorticity_surface.nc")
     vorticity_transect.to_netcdf(outpath / "vorticity_transect.nc")
