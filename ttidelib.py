@@ -197,7 +197,7 @@ def collect_data(exptname,rawdata = None,ppdata = None,surface_data = None,bathy
     rawdata : list of str
         List of raw data variables to include
     ppdata : list of str
-        List of postprocessed data variables to include
+        List of postprocessed data variables to include. Note that thse aren't organised in to "outputs" given that they are often filtered temporally and so don't fit within the same output bins as model runs
     outputs : str
         Glob string to match the output directories
     chunks : dict
@@ -206,7 +206,7 @@ def collect_data(exptname,rawdata = None,ppdata = None,surface_data = None,bathy
     """
 
     rawdata_path = Path("/g/data/nm03/ab8992/outputs/") / exptname / outputs
-    ppdata_path = Path("/g/data/nm03/ab8992/postprocessed/") / exptname / outputs
+    ppdata_path = Path("/g/data/nm03/ab8992/postprocessed/") / exptname
 
     timechunk = -1
     if "time" in chunks:
@@ -215,11 +215,11 @@ def collect_data(exptname,rawdata = None,ppdata = None,surface_data = None,bathy
     data = {}
     if type(rawdata) != type(None):
         for var in rawdata:
-            data[var] = xr.open_mfdataset(str(rawdata_path / var / "*"),chunks = chunks,decode_times = False)[var].isel(time = slice(timerange[0],timerange[1]))
+            data[var] = xr.open_mfdataset(str(rawdata_path / var / "*"),chunks = chunks,decode_times = False)[var]
 
     if type(ppdata) != type(None):
         for var in ppdata:
-            data[var] = xr.open_mfdataset(str(ppdata_path / var / "*"),chunks = chunks,decode_times = False)[var].isel(TIME = slice(timerange[0],timerange[1]))
+            data[var] = xr.open_mfdataset(str(ppdata_path / var / "*"),chunks = chunks,decode_times = False).to_array()
 
     if type(surface_data) != type(None):
         for var in surface_data:
@@ -244,9 +244,9 @@ def m2filter(field,freq = m2f,tol = 0.015):
     FIELD_filtered = FIELD.where(np.abs(np.abs(FIELD.freq_time) - freq) < tol,0)
     return np.real(xrft.ifft(FIELD_filtered,dim = "freq_time"))
 
-def calculate_vorticity(data):
+def filter_velocities(data):
     """
-    Calculate the relative vorticity from the u and v velocities
+    Given a velocity field
     """
     duy = data.u.differentiate("yb")
     dvx = data.v.differentiate("xb")
