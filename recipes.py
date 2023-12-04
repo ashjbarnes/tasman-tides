@@ -99,10 +99,9 @@ def save_filtered_vels(experiment,outputs):
     m2f = 1/ m2    ## Frequency of m2 in radians per hour
 
     outpath = gdata / "postprocessed" / experiment 
-    if not os.path.exists(outpath):
-        for i in ["UU","VV","UV"]:
-            if not os.path.exists(outpath / i):
-                os.makedirs(outpath / i)
+    for i in ["UU","VV","UV"]:
+        if not os.path.exists(outpath / i):
+            os.makedirs(outpath / i)
 
     data = tt.collect_data(
         experiment,
