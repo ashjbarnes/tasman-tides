@@ -10,6 +10,7 @@ from pathlib import Path
 home = Path("/home/149/ab8992/tasman-tides")
 gdata = Path("/g/data/nm03/ab8992")
 
+
 def startdask():
     try:
     # Try to get the existing Dask client
@@ -63,7 +64,7 @@ def vorticity_movie(experiment, outputs):
 
 def save_vorticity(experiment,outputs):
     """
-    Save the potential vorticity for the given experiment and outputs
+    Save the relative vorticity for the given experiment and outputs
     """
 
     startdask()
@@ -89,6 +90,54 @@ def save_vorticity(experiment,outputs):
     vorticity_transect.to_netcdf(outpath / "vorticity_transect.nc")
     return vorticity
 
+def save_filtered_vels(experiment,outputs):
+    """
+    Calculate the filtered velocities over 149 hours and save u'u', v'v', u'v' all averaged over 149 hours as separate files
+    """
+    m2 = 360 / 28.984104 ## Period of m2 in hours
+    averaging_window = int(12 * m2) ## this comes out to be 149.0472 hours, so close enough to a multiple of tidal periods
+    m2f = 1/ m2    ## Frequency of m2 in radians per hour
+
+    startdask()
+    outpath = gdata / "postprocessed" / experiment 
+    if not os.path.exists(outpath):
+        os.makedirs(outpath)
+
+    data = tt.collect_data(
+        experiment,
+        outputs=outputs,
+        rawdata = ["u","v"],
+        bathy=False,
+        chunks = {"time": -1,"xb":-1,"zl":10}
+        )
+
+    for i in range(0,len(data.time) // averaging_window):
+        time = data.time[(i + 0.5) * averaging_window ]
+        u_ = data.u.sel(
+                time = slice(i * averaging_window, (i + 1) * averaging_window)
+                ).chunk({"time":-1}).drop(["lat","lon"])
+        v_ = data.v.sel(
+                time = slice(i * averaging_window, (i + 1) * averaging_window)
+                ).chunk({"time":-1}).drop(["lat","lon"])
+
+        U = tt.m2filter(
+            u_,
+            m2f)
+        V = tt.m2filter(
+            v_,
+            m2f)
+        
+        UU = (U * U).mean("time").expand_dims("time").assign_coords(time = [time])
+        VV = (V * V).mean("time").expand_dims("time").assign_coords(time = [time])
+        UV = (U * V).mean("time").expand_dims("time").assign_coords(time = [time])
+
+
+        UU.to_netcdf(outpath / f"UU_{time}.nc")
+        VV.to_netcdf(outpath / f"VV_{time}.nc")
+        UV.to_netcdf(outpath / f"UV_{time}.nc")
+
+
+    return 
 
 
 def qsub(recipe, experiment, outputs):
@@ -145,7 +194,7 @@ python3 /home/149/ab8992/tasman-tides/recipes.py -r {recipe} -e {experiment} -o 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Script to execute plotting functions from ttidelib")
-    parser.add_argument("-r", "--recipe", choices=["surfacespeed", "save_vorticity", "recipe3"], help="Select the recipe to execute")
+    parser.add_argument("-r", "--recipe", choices=["surfacespeed", "save_vorticity", "save_filtered_vels"], help="Select the recipe to execute")
     parser.add_argument("-e", "--experiment", help="Specify the experiment to apply the recipe to")
     parser.add_argument("-o", "--outputs", help="Specify the outputs to use",default = "output*")
     parser.add_argument("-q", "--qsub", default=1,type=int, help="Choose whether to execute directly or as qsub job")
@@ -160,3 +209,5 @@ if __name__ == "__main__":
         surfacespeed_movie(args.experiment, args.outputs)
     elif args.recipe == "save_vorticity":
         save_vorticity(args.experiment, args.outputs)
+    elif args.recipe == "save_filtered_vels":
+        save_filtered_vels(args.experiment, args.outputs)
