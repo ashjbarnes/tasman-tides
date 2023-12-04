@@ -69,8 +69,9 @@ def save_vorticity(experiment,outputs):
 
     startdask()
     outpath = gdata / "postprocessed" / experiment
-    if not os.path.exists(outpath):
-        os.makedirs(outpath)
+    for i in ["vorticity_surface","vorticity_transect"]:
+        if not os.path.exists(outpath / i):
+            os.makedirs(outpath / i)
 
     rawdata = tt.collect_data(
         experiment,
@@ -86,8 +87,8 @@ def save_vorticity(experiment,outputs):
     print("Computing vorticity surface")
     vorticity_surface = vorticity.isel(zl = 2)
 
-    vorticity_surface.to_netcdf(outpath / "vorticity_surface.nc")
-    vorticity_transect.to_netcdf(outpath / "vorticity_transect.nc")
+    vorticity_surface.to_netcdf(outpath / "vorticity_surface" / "vorticity_surface.nc")
+    vorticity_transect.to_netcdf(outpath / "vorticity_transect" / "vorticity_transect.nc")
     return vorticity
 
 def save_filtered_vels(experiment,outputs):
