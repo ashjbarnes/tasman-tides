@@ -176,6 +176,11 @@ work/INPUT/mask_table.165.40x40:
   hashes:
     binhash: cbaa8a94284a0aa7b5479b28907144cd
     md5: 786f698460093feec56ba8bec3644f95
+work/INPUT/noholes_topog_raw.nc:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/full-40/noholes_topog_raw.nc
+  hashes:
+    binhash: 0687ae58a90ff129aab25e24670dd6f6
+    md5: 8715e9dede95884b735b2c819b77edb2
 work/INPUT/ocean_mask.nc:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/full-40/ocean_mask.nc
   hashes:
@@ -189,7 +194,12 @@ work/INPUT/ocean_mosaic.nc:
 work/INPUT/topog.nc:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/full-40/topog.nc
   hashes:
-    binhash: 9ce078e446341f7b7831c596cf69025a
+    binhash: 852688887c3576216ea2b2c9c478fc2f
+    md5: 024c499d65ac74ea0cbf8af432c8d0c3
+work/INPUT/topog_holey.nc:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/full-40/topog_holey.nc
+  hashes:
+    binhash: c3764fa64de33601022011f897dbb56b
     md5: 5c322e9b4023ac3fc32b8907c3a8cb2d
 work/INPUT/topog_raw.nc:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/full-40/topog_raw.nc
