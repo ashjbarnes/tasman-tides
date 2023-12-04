@@ -98,10 +98,11 @@ def save_filtered_vels(experiment,outputs):
     averaging_window = int(12 * m2) ## this comes out to be 149.0472 hours, so close enough to a multiple of tidal periods
     m2f = 1/ m2    ## Frequency of m2 in radians per hour
 
-    startdask()
     outpath = gdata / "postprocessed" / experiment 
     if not os.path.exists(outpath):
-        os.makedirs(outpath)
+        for i in ["UU","VV","UV"]:
+            if not os.path.exists(outpath / i):
+                os.makedirs(outpath / i)
 
     data = tt.collect_data(
         experiment,
@@ -110,16 +111,13 @@ def save_filtered_vels(experiment,outputs):
         bathy=False,
         chunks = {"time": -1,"xb":-1,"zl":10}
         )
-
     for i in range(0,len(data.time) // averaging_window):
-        time = data.time[(i + 0.5) * averaging_window ]
-        u_ = data.u.sel(
+        u_ = data.u.isel(
                 time = slice(i * averaging_window, (i + 1) * averaging_window)
                 ).chunk({"time":-1}).drop(["lat","lon"])
-        v_ = data.v.sel(
+        v_ = data.v.isel(
                 time = slice(i * averaging_window, (i + 1) * averaging_window)
                 ).chunk({"time":-1}).drop(["lat","lon"])
-
         U = tt.m2filter(
             u_,
             m2f)
@@ -127,14 +125,14 @@ def save_filtered_vels(experiment,outputs):
             v_,
             m2f)
         
-        UU = (U * U).mean("time").expand_dims("time").assign_coords(time = [time])
-        VV = (V * V).mean("time").expand_dims("time").assign_coords(time = [time])
-        UV = (U * V).mean("time").expand_dims("time").assign_coords(time = [time])
+        mid_time = data.time[round(i + 0.5 * averaging_window) ] ## Middle of time window time
+        UU = (U * U).mean("time").expand_dims("time").assign_coords(time = [mid_time])
+        VV = (V * V).mean("time").expand_dims("time").assign_coords(time = [mid_time])
+        UV = (U * V).mean("time").expand_dims("time").assign_coords(time = [mid_time])
 
-
-        UU.to_netcdf(outpath / f"UU_{time}.nc")
-        VV.to_netcdf(outpath / f"VV_{time}.nc")
-        UV.to_netcdf(outpath / f"UV_{time}.nc")
+        UU.to_netcdf(outpath / "UU" / f"UU_{str(i).zfill(3)}.nc")
+        VV.to_netcdf(outpath / "VV"/ f"VV_{str(i).zfill(3)}.nc")
+        UV.to_netcdf(outpath / "UV"/ f"UV_{str(i).zfill(3)}.nc")
 
 
     return 
