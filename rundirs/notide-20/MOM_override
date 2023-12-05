@@ -1,7 +1,7 @@
 
 
-#override DT = 150
-#override DT_THERM = 300
+#override DT = 400
+#override DT_THERM = 1200
 
 
 
@@ -23,6 +23,8 @@ OBC_TIDE_REF_DATE = 1995, 1, 1! this had been set differently to TIDE_REF_DATE
 !OBC_TIDE_NODAL_REF_DATE = 1995, 7, 2 ! default = 0
                                 ! Fixed reference date to use for nodal modulation of boundary tides.
 
+## Turn off tides
+#override OBC_NUMBER_OF_SEGMENTS = 0
 
 
 ! segment 1: southern boundary
