@@ -44,23 +44,23 @@ work/INPUT/forcing/backup_initvel:
 work/INPUT/forcing/forcing_obc_segment_001.nc:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/blank-40/forcing/forcing_obc_segment_001.nc
   hashes:
-    binhash: eb0a97e074bc890e4a4f45d43e74f4db
-    md5: ebc38fdc9911ca422a94c72b8fc67057
+    binhash: d8a6f809c3db01ca84faadb6bc267ce7
+    md5: eec1045ab8d4ad2aaa8e08a9bc491c89
 work/INPUT/forcing/forcing_obc_segment_002.nc:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/blank-40/forcing/forcing_obc_segment_002.nc
   hashes:
-    binhash: 394fe2a3377454a8a33f3ff7a0d3fdb5
-    md5: c30449fffdd62b44cb15a1209d55d03f
+    binhash: 83cfe5e7c92df43a4fe1108cdcf30f01
+    md5: 5f8d92b2337d7b2116787adc059e98c4
 work/INPUT/forcing/forcing_obc_segment_003.nc:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/blank-40/forcing/forcing_obc_segment_003.nc
   hashes:
-    binhash: 51799642d6856e27d345aa9ed67282be
-    md5: 7d38a785bedbd6b0bc34a057b46f375b
+    binhash: 6d1cba661348b701d1d8ad274c851c8b
+    md5: 2a7740e0dd5f17e9f17b62b6517c1503
 work/INPUT/forcing/forcing_obc_segment_004.nc:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/blank-40/forcing/forcing_obc_segment_004.nc
   hashes:
-    binhash: af861b1b377266073c5aa4e894212421
-    md5: 6d16a56649c0cd659996e84db769a72c
+    binhash: b1577d8d55b3213c57a9de4465cc95d6
+    md5: 3d8fe15aafaee3c7c72f55e778018f05
 work/INPUT/forcing/init_eta.nc:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/blank-40/forcing/init_eta.nc
   hashes:
@@ -76,26 +76,6 @@ work/INPUT/forcing/init_vel.nc:
   hashes:
     binhash: 06b1f0be927afe561cc14d756349faaa
     md5: f8340b9006ac35fac24ae7486c4875aa
-work/INPUT/forcing/newforcing_obc_segment_001.nc:
-  fullpath: /g/data/nm03/ab8992/ttide-inputs/blank-40/forcing/newforcing_obc_segment_001.nc
-  hashes:
-    binhash: 12eb8e3316f0d8c49bb8ee8aa38defe5
-    md5: eec1045ab8d4ad2aaa8e08a9bc491c89
-work/INPUT/forcing/newforcing_obc_segment_002.nc:
-  fullpath: /g/data/nm03/ab8992/ttide-inputs/blank-40/forcing/newforcing_obc_segment_002.nc
-  hashes:
-    binhash: 1e18b19da1fadaddaaaf5ba2a29821bf
-    md5: 5f8d92b2337d7b2116787adc059e98c4
-work/INPUT/forcing/newforcing_obc_segment_003.nc:
-  fullpath: /g/data/nm03/ab8992/ttide-inputs/blank-40/forcing/newforcing_obc_segment_003.nc
-  hashes:
-    binhash: 66d18243e4eea0f0013ee6400f8d1286
-    md5: 2a7740e0dd5f17e9f17b62b6517c1503
-work/INPUT/forcing/newforcing_obc_segment_004.nc:
-  fullpath: /g/data/nm03/ab8992/ttide-inputs/blank-40/forcing/newforcing_obc_segment_004.nc
-  hashes:
-    binhash: d2bca70e0f5751417658dfd1ac887376
-    md5: 3d8fe15aafaee3c7c72f55e778018f05
 work/INPUT/forcing/patch.sh:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/blank-40/forcing/patch.sh
   hashes:
