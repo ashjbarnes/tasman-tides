@@ -65,11 +65,15 @@ if __name__ == "__main__":
 
     if to_process == "last":
         # Find most recent output folder
-        i = 0
-        while (rundir / f"archive/output{i:03d}").exists():
-            i += 1
-        i -=1
-        outputs = [f"output{i:03d}"]
+        outputs = (rundir / f"archive").glob("output*")
+        temp = 0
+        for i in outputs:
+            s = int(i.name.split("output")[-1])
+            if s > temp:
+                temp = s
+
+        outputs = [f"output{temp:03d}"]
+
         print(f"Processing last output ({outputs[0]})")
 
 
@@ -83,9 +87,14 @@ if __name__ == "__main__":
             i += 1
 
         print(outputs)
+    elif "-" in to_process:
+        outputs = [f"output{int(i):03d}" for i in range(int(to_process.split("-")[0]),int(to_process.split("-")[1]) + 1)]
+        print(f"Processing outputs ({outputs})")
     else:
         outputs = [f"output{int(to_process):03d}"]
+        print(f"Processing specified output ({outputs})")
 
+    # Iterate over all outputs
     for output in outputs:
         print(f"\t\t Processing {output}")
         # Set up the run and output directories
