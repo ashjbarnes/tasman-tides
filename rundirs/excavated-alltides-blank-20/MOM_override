@@ -49,7 +49,7 @@ OBC_TIDE_REF_DATE = 1995, 1, 1! this had been set differently to TIDE_REF_DATE
 !BODY TIDES!!
 ! === module MOM_dynamics_split_RK2 ===
 TIDES = True                    !   [Boolean] default = False
-!                                ! If true, apply tidal momentum forcing.
+TIDE_USE_SAL_SCALAR = true!                                ! If true, apply tidal momentum forcing.
 !
 !
 !! === module MOM_tidal_forcing ===
@@ -83,7 +83,7 @@ TIDE_M2 = True                  !   [Boolean] default = False
 !TIDE_MM = True                  !   [Boolean] default = False
 !                                ! If true, apply tidal momentum forcing at the MM frequency. This is only used
 !                                ! if TIDES is true.
-!TIDE_SAL_SCALAR_VALUE = 0.094   !   [m m-1]
+TIDE_SAL_SCALAR_VALUE = 0.094   !   [m m-1]
 !                                ! The constant of proportionality between sea surface height (really it should
 !                                ! be bottom pressure) anomalies and bottom geopotential anomalies. This is only
 !                                ! used if TIDES and TIDE_USE_SAL_SCALAR are true.
