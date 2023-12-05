@@ -1,3 +1,28 @@
 format: yamanifest
 version: 1.0
---- {}
+---
+work/INPUT/MOM.res.nc:
+  fullpath: /scratch/x77/ab8992/mom6/archive/excavated-alltides-blank-20/restart000/MOM.res.nc
+  hashes:
+    binhash: 5d9a1d83fcb4448e40c90bfd636eded5
+    md5: 35257a6245b38b4419464939fefd2883
+work/INPUT/MOM.res_1.nc:
+  fullpath: /scratch/x77/ab8992/mom6/archive/excavated-alltides-blank-20/restart000/MOM.res_1.nc
+  hashes:
+    binhash: b7d94fefac4a86239277c4245129eba4
+    md5: 8a022ff407f84af80c09aa8f6fb7a4cd
+work/INPUT/MOM.res_2.nc:
+  fullpath: /scratch/x77/ab8992/mom6/archive/excavated-alltides-blank-20/restart000/MOM.res_2.nc
+  hashes:
+    binhash: 1214b17c53ebeabc03d2ee104c6c607c
+    md5: 096904032693b78090d1e4c8da7e184c
+work/INPUT/coupler.res:
+  fullpath: /scratch/x77/ab8992/mom6/archive/excavated-alltides-blank-20/restart000/coupler.res
+  hashes:
+    binhash: 6ea4eef068022a8fe0c4068b0fd0bdd0
+    md5: 4f24feacee606da0b0e48060e9dbe035
+work/INPUT/ice_model.res.nc:
+  fullpath: /scratch/x77/ab8992/mom6/archive/excavated-alltides-blank-20/restart000/ice_model.res.nc
+  hashes:
+    binhash: 1f6b46183a23abba1897b54a81e6a15f
+    md5: 91d266cf5f9ca83e0db720cda70f38cd
