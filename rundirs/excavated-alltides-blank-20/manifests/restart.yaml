@@ -2,27 +2,27 @@ format: yamanifest
 version: 1.0
 ---
 work/INPUT/MOM.res.nc:
-  fullpath: /scratch/x77/ab8992/mom6/archive/excavated-alltides-blank-20/restart001/MOM.res.nc
+  fullpath: /scratch/x77/ab8992/mom6/archive/excavated-alltides-blank-20/restart002/MOM.res.nc
   hashes:
-    binhash: 4336e85b7197dc1f41e196573419be1c
-    md5: 6111df50771a2d480c0cbeaea65e2415
+    binhash: c196ea25aa51c5b579b613badaccd36a
+    md5: 568d7501b8f16d44b5c98ec55100f5e9
 work/INPUT/MOM.res_1.nc:
-  fullpath: /scratch/x77/ab8992/mom6/archive/excavated-alltides-blank-20/restart001/MOM.res_1.nc
+  fullpath: /scratch/x77/ab8992/mom6/archive/excavated-alltides-blank-20/restart002/MOM.res_1.nc
   hashes:
-    binhash: 5e07810bbd5e57fd61ec1e379e0aa6e0
-    md5: 059be1850545c17ca6f04a5334fd93bf
+    binhash: b565904d8c11599079da247e87abd660
+    md5: cd72c6c982d80e4beba01fb8a3246ee7
 work/INPUT/MOM.res_2.nc:
-  fullpath: /scratch/x77/ab8992/mom6/archive/excavated-alltides-blank-20/restart001/MOM.res_2.nc
+  fullpath: /scratch/x77/ab8992/mom6/archive/excavated-alltides-blank-20/restart002/MOM.res_2.nc
   hashes:
-    binhash: 537405a67c1752e85661712f83f1f9d2
-    md5: 405448ed4e99785e80302bf14f027381
+    binhash: 640260c4cc7b5091cd8aa205270d5176
+    md5: 224c7dbdb5ec3eb5e473ca338882af16
 work/INPUT/coupler.res:
-  fullpath: /scratch/x77/ab8992/mom6/archive/excavated-alltides-blank-20/restart001/coupler.res
+  fullpath: /scratch/x77/ab8992/mom6/archive/excavated-alltides-blank-20/restart002/coupler.res
   hashes:
-    binhash: a992e5236308f7547ee6b3dda5e61581
-    md5: 2cdb7e6ad3911c3aebac53c103c6edc1
+    binhash: 7421aa32f1640325442a94c1ad96ea47
+    md5: 52aa1f7028989706da82a5593d692d8b
 work/INPUT/ice_model.res.nc:
-  fullpath: /scratch/x77/ab8992/mom6/archive/excavated-alltides-blank-20/restart001/ice_model.res.nc
+  fullpath: /scratch/x77/ab8992/mom6/archive/excavated-alltides-blank-20/restart002/ice_model.res.nc
   hashes:
-    binhash: 9cbc202069436570820fb3d47c7bc95c
-    md5: f5a5bc4e32a646feb144c65c2ac4d4f7
+    binhash: cc5954d1c7c5324d95ef0c3873b40df2
+    md5: 7cae2d1430bcccdbce757a17d47ffb0b
