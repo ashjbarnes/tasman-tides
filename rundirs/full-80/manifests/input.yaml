@@ -54,18 +54,18 @@ work/INPUT/forcing/forcing_obc_segment_004.nc:
 work/INPUT/forcing/init_eta.nc:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/full-80/forcing/init_eta.nc
   hashes:
-    binhash: 0a1778c2062c260bd7e1dc14edc32eee
+    binhash: f66feb6e5f82e5a5a29842f95dc0013d
     md5: fc23ddb66aaa845944c6213942592c95
 work/INPUT/forcing/init_tracers.nc:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/full-80/forcing/init_tracers.nc
   hashes:
-    binhash: 2488f84340118964571b1f1ebf6588c5
-    md5: 37d7a5e22cc5b229a992b9e72422000b
+    binhash: 867475f65985a4973a2b720fd321e116
+    md5: cc8628bfa314cf2fa73493780cee73ef
 work/INPUT/forcing/init_vel.nc:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/full-80/forcing/init_vel.nc
   hashes:
-    binhash: f63a2f23d5b3db9f8ca58e17b57b3fdf
-    md5: 440ebbe676f56aeb68a7cd6bc80c0309
+    binhash: a2b6002f3b8bc72fcf3e97f0b3df282b
+    md5: 0f347d4eb4a93517b939e98eb5f969b4
 work/INPUT/forcing/q_ERA5:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/full-80/forcing/q_ERA5
   hashes:
@@ -144,7 +144,7 @@ work/INPUT/grid_spec.nc:
 work/INPUT/hgrid.nc:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/full-80/hgrid.nc
   hashes:
-    binhash: 562ceb826c38314711f8696394d460e4
+    binhash: e774ba612d5c6f2a84d473320992ee65
     md5: 3a6e94bd0f0f79e5eb939d6992c22878
 work/INPUT/land_mask.nc:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/full-80/land_mask.nc
@@ -184,7 +184,7 @@ work/INPUT/topog_raw.nc:
 work/INPUT/vcoord.nc:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/full-80/vcoord.nc
   hashes:
-    binhash: eb21a84609fc43ab9af7fc7249d06005
+    binhash: 387354341816feee64c44f0241dab1d3
     md5: f842cced8cc9990939d7c9c9009197a2
 work/INPUT/weights/bilinear_velocity_weights_east.nc:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/full-80/weights/bilinear_velocity_weights_east.nc
