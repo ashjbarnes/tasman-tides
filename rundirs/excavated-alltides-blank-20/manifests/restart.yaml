@@ -2,27 +2,27 @@ format: yamanifest
 version: 1.0
 ---
 work/INPUT/MOM.res.nc:
-  fullpath: /scratch/x77/ab8992/mom6/archive/excavated-alltides-blank-20/restart007/MOM.res.nc
+  fullpath: /scratch/x77/ab8992/mom6/archive/excavated-alltides-blank-20/restart008/MOM.res.nc
   hashes:
-    binhash: e51d14624691e1e4c5a66cf810cb2e8d
-    md5: e88e31084e963caba53f8d986bf588c1
+    binhash: 3a33c6d8058b8c00888c9abde8cb226d
+    md5: 2480050874e69732c5c3ff3e5a392cdc
 work/INPUT/MOM.res_1.nc:
-  fullpath: /scratch/x77/ab8992/mom6/archive/excavated-alltides-blank-20/restart007/MOM.res_1.nc
+  fullpath: /scratch/x77/ab8992/mom6/archive/excavated-alltides-blank-20/restart008/MOM.res_1.nc
   hashes:
-    binhash: b7aef193c9201bb883fb662d21ba8397
-    md5: 9b111fc8676d5fe042a2001dcf9f751d
+    binhash: 3c27feaac3558f355d9c7d1a4d9630f3
+    md5: 8e3d9785454b85d4b0138939c5f2a8f0
 work/INPUT/MOM.res_2.nc:
-  fullpath: /scratch/x77/ab8992/mom6/archive/excavated-alltides-blank-20/restart007/MOM.res_2.nc
+  fullpath: /scratch/x77/ab8992/mom6/archive/excavated-alltides-blank-20/restart008/MOM.res_2.nc
   hashes:
-    binhash: d457c672dc121d669c2a1c1b60133ae4
-    md5: 696a2d77ec82cb94e5f55a4ed824babe
+    binhash: 3c90839b26f884a4feffcc56aec7cb82
+    md5: 35b6397908bd89b86f0f9b7c4e6d2bef
 work/INPUT/coupler.res:
-  fullpath: /scratch/x77/ab8992/mom6/archive/excavated-alltides-blank-20/restart007/coupler.res
+  fullpath: /scratch/x77/ab8992/mom6/archive/excavated-alltides-blank-20/restart008/coupler.res
   hashes:
-    binhash: 722c85ba28b1090fe13c36a8744075da
-    md5: 5978d9718c6367f0a64955718677b9ee
+    binhash: e0d19f01b6e8100a78a8cc1226808617
+    md5: 476ac067c2dcebd5b8a489783e0a05b5
 work/INPUT/ice_model.res.nc:
-  fullpath: /scratch/x77/ab8992/mom6/archive/excavated-alltides-blank-20/restart007/ice_model.res.nc
+  fullpath: /scratch/x77/ab8992/mom6/archive/excavated-alltides-blank-20/restart008/ice_model.res.nc
   hashes:
-    binhash: 4de6ca91177ea00afdd0ffe6502dc2d0
-    md5: 89ac6688d6ce4ff90d620126741e2788
+    binhash: 854fcad89f29b09afa1f88c1f3319ea5
+    md5: 979ee78238e5566a0ef1589f41b839d9
