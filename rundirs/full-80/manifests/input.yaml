@@ -16,6 +16,11 @@ work/INPUT/bathy_original.nc:
   hashes:
     binhash: d9d69d7f1fd2e9a8121008a99a2fcae2
     md5: 7f039b1c777f315b1863ab57104192cd
+work/INPUT/diag_rho2.nc:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/full-80/diag_rho2.nc
+  hashes:
+    binhash: 7c09fb90f495c36271e37c0f9ca21510
+    md5: f2c98102749b170ce8ac3a7ccd3932fc
 work/INPUT/forcing/10u_ERA5:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/full-80/forcing/10u_ERA5
   hashes:
