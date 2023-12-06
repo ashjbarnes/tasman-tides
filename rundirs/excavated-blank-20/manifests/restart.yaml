@@ -1,3 +1,28 @@
 format: yamanifest
 version: 1.0
---- {}
+---
+work/INPUT/MOM.res.nc:
+  fullpath: /scratch/x77/ab8992/mom6/archive/excavated-blank-20/restart000/MOM.res.nc
+  hashes:
+    binhash: 0e6bd910179238a82158e17bc422106d
+    md5: 9461006b1a603f915e4d4bd921cbfad7
+work/INPUT/MOM.res_1.nc:
+  fullpath: /scratch/x77/ab8992/mom6/archive/excavated-blank-20/restart000/MOM.res_1.nc
+  hashes:
+    binhash: 3c18303afc1176b344b2c755099a1159
+    md5: 259bd9225385c446fad7f54d39ad8d78
+work/INPUT/MOM.res_2.nc:
+  fullpath: /scratch/x77/ab8992/mom6/archive/excavated-blank-20/restart000/MOM.res_2.nc
+  hashes:
+    binhash: 8e2400ddec7c5228f5076029b4db8e99
+    md5: 2ce5241d8c6197f2f407ea245471ff3c
+work/INPUT/coupler.res:
+  fullpath: /scratch/x77/ab8992/mom6/archive/excavated-blank-20/restart000/coupler.res
+  hashes:
+    binhash: b03cfe5650bddf83daae89b194edb958
+    md5: 4f24feacee606da0b0e48060e9dbe035
+work/INPUT/ice_model.res.nc:
+  fullpath: /scratch/x77/ab8992/mom6/archive/excavated-blank-20/restart000/ice_model.res.nc
+  hashes:
+    binhash: add442eab7f9f878fb2aef9588a30254
+    md5: 68d1331097044a351817e0c42d6362a7
