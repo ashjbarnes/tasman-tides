@@ -46,7 +46,7 @@ def vorticity_movie(experiment, outputs):
     """
     startdask()
 
-    data = tt.collect_data(experiment,data=["vorticity_surface","vorticity_transect"],chunks = {"time":1},outputs=outputs,bathy=True)
+    data = tt.collect_data(experiment,ppdata=["vorticity_surface","vorticity_transect"],chunks = {"time":1},outputs=outputs,bathy=True)
     print("loaded data")
     print(data)
     fig = plt.figure(figsize=(20, 12))
@@ -126,14 +126,17 @@ def save_filtered_vels(experiment,outputs):
             m2f)
         
         mid_time = data.time[round(i + 0.5 * averaging_window) ] ## Middle of time window time
-        UU = (U * U).mean("time").expand_dims("time").assign_coords(time = [mid_time])
-        VV = (V * V).mean("time").expand_dims("time").assign_coords(time = [mid_time])
-        UV = (U * V).mean("time").expand_dims("time").assign_coords(time = [mid_time])
+        UU = (U * U).mean("time").expand_dims("time").assign_coords(time = [mid_time]).rename("UU")
+        VV = (V * V).mean("time").expand_dims("time").assign_coords(time = [mid_time]).rename("VV")
+        UV = (U * V).mean("time").expand_dims("time").assign_coords(time = [mid_time]).rename("UV")
 
-        UU.to_netcdf(outpath / "UU" / f"UU_{str(i).zfill(3)}.nc")
-        VV.to_netcdf(outpath / "VV"/ f"VV_{str(i).zfill(3)}.nc")
-        UV.to_netcdf(outpath / "UV"/ f"UV_{str(i).zfill(3)}.nc")
+        ## Save vertical sum
+        UU.integrate("zl").to_netcdf(outpath / "UU" / f"UU_{str(i).zfill(3)}.nc")
+        VV.integrate("zl").to_netcdf(outpath / "VV"/ f"VV_{str(i).zfill(3)}.nc")
+        UV.integrate("zl").to_netcdf(outpath / "UV"/ f"UV_{str(i).zfill(3)}.nc")
 
+        ## Save the transect about yb = 0
+        UU.sel(yb = 0,method = "nearest").to_netcdf(outpath / "UU" / f"UU_transect{str(i).zfill(3)}_transect.nc")
 
     return 
 
