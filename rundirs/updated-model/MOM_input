@@ -446,7 +446,12 @@ SMAG_BI_CONST = 0.060
 SMAG_LAP_CONST = 2.0            !   [nondim] default = 0.0   
 SMAGORINSKY_KH = False          !   [Boolean] default = False                            
                                 ! If true, use a Smagorinsky nonlinear eddy viscosity. 
-
+! === module MOM_vert_friction ===
+HMIX_FIXED = 0.5                !   [m]
+                                ! The prescribed depth over which the near-surface viscosity and diffusivity are
+                                ! elevated when the bulk mixed layer is not used.
+MAXVEL = 6.0                    !   [m s-1] default = 3.0E+08
+                                ! The maximum velocity allowed before the velocity components are truncated.
 ! === module MOM_barotropic ===
 BOUND_BT_CORRECTION = True      !   [Boolean] default = False
                                 ! If true, the corrective pseudo mass-fluxes into the barotropic solver are
