@@ -26,16 +26,31 @@ work/INPUT/forcing/10u_ERA5:
   hashes:
     binhash: 28e90981e8c03d39bed5b03056b457a4
     md5: c48fde53d7d0320bb0def52c94fc13d4
+work/INPUT/forcing/10u_ERA5.nc:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/full-40/forcing/10u_ERA5.nc
+  hashes:
+    binhash: 6b63f2c3fa89931ba8de86fe1733900a
+    md5: 70aadf0ebbb3d5cffeb37f956cdf4647
 work/INPUT/forcing/10v_ERA5:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/full-40/forcing/10v_ERA5
   hashes:
     binhash: 0cec5be9434c3510b5b33a3f679e973e
     md5: afbfe969631ceb7cc169c19166482f49
+work/INPUT/forcing/10v_ERA5.nc:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/full-40/forcing/10v_ERA5.nc
+  hashes:
+    binhash: 914ed9ce339facaa4d9f1cc1ee6006f0
+    md5: 55637ca36c63150181dcd74b98cfe00d
 work/INPUT/forcing/2t_ERA5:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/full-40/forcing/2t_ERA5
   hashes:
     binhash: 5b71226c2392919ac933cad6eb292915
     md5: 2dbefd913a49a8eeb2b39481e516803c
+work/INPUT/forcing/2t_ERA5.nc:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/full-40/forcing/2t_ERA5.nc
+  hashes:
+    binhash: 2c48ba982fddde8f650519b148ef90fc
+    md5: ad5bc6ecdf16bdc00c0e767e8c7def30
 work/INPUT/forcing/backup_initvel:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/full-40/forcing/backup_initvel
   hashes:
@@ -86,6 +101,11 @@ work/INPUT/forcing/q_ERA5:
   hashes:
     binhash: 143c993334383a766ea9c09358727144
     md5: a49d77c1ed607d2e227946f62abb7baf
+work/INPUT/forcing/q_ERA5.nc:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/full-40/forcing/q_ERA5.nc
+  hashes:
+    binhash: c7787ee88dc2ff9323da5aeff9c6ae82
+    md5: dfaa54b419e268a775d58d0cae02e56f
 work/INPUT/forcing/regrid_segment_001_tidal_elev.nc:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/full-40/forcing/regrid_segment_001_tidal_elev.nc
   hashes:
@@ -111,6 +131,11 @@ work/INPUT/forcing/sp_ERA5:
   hashes:
     binhash: 77cf1d0cca72f18d22b2a667dfed54c4
     md5: e1236d0db5d92516d735e5d6cbd949e3
+work/INPUT/forcing/sp_ERA5.nc:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/full-40/forcing/sp_ERA5.nc
+  hashes:
+    binhash: 4c38b96da9c6594c6519e5cefdfb8510
+    md5: 02c53199aff4ee6c25d97b5f525a466a
 work/INPUT/forcing/tu_001.nc:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/full-40/forcing/tu_001.nc
   hashes:
