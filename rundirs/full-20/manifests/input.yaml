@@ -21,20 +21,20 @@ work/INPUT/diag_rho2.nc:
   hashes:
     binhash: 49a10ff566945bea423fa9c5933de472
     md5: f2c98102749b170ce8ac3a7ccd3932fc
-work/INPUT/forcing/10u_ERA5:
-  fullpath: /g/data/nm03/ab8992/ttide-inputs/full-20/forcing/10u_ERA5
+work/INPUT/forcing/10u_ERA5.nc:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/full-20/forcing/10u_ERA5.nc
   hashes:
-    binhash: 1673d2e0a160bd480a78333e0dcc56de
+    binhash: aca018ef7607e88ddffd78e7b2279f4f
     md5: 70aadf0ebbb3d5cffeb37f956cdf4647
-work/INPUT/forcing/10v_ERA5:
-  fullpath: /g/data/nm03/ab8992/ttide-inputs/full-20/forcing/10v_ERA5
+work/INPUT/forcing/10v_ERA5.nc:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/full-20/forcing/10v_ERA5.nc
   hashes:
-    binhash: 6543ed6e9a566315870942c23564bbd7
+    binhash: 7070604066a658c4153c9a094e1e93eb
     md5: 55637ca36c63150181dcd74b98cfe00d
-work/INPUT/forcing/2t_ERA5:
-  fullpath: /g/data/nm03/ab8992/ttide-inputs/full-20/forcing/2t_ERA5
+work/INPUT/forcing/2t_ERA5.nc:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/full-20/forcing/2t_ERA5.nc
   hashes:
-    binhash: 2db000f93333a165fc8dbad2ba5894b1
+    binhash: ec48a0469f9c9ae72483cfabb493b669
     md5: ad5bc6ecdf16bdc00c0e767e8c7def30
 work/INPUT/forcing/forcing_obc_segment_001.nc:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/full-20/forcing/forcing_obc_segment_001.nc
@@ -76,10 +76,10 @@ work/INPUT/forcing/init_vel.nc:
   hashes:
     binhash: 0c7d507c0361c4b5ebba4faeecd29b66
     md5: aa18b0d43baac144683d4800fc174ef1
-work/INPUT/forcing/q_ERA5:
-  fullpath: /g/data/nm03/ab8992/ttide-inputs/full-20/forcing/q_ERA5
+work/INPUT/forcing/q_ERA5.nc:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/full-20/forcing/q_ERA5.nc
   hashes:
-    binhash: 8f702dfd2a38bfa2918ad586233c2be2
+    binhash: ee459397ac9109ffc6bb7c1da456b82a
     md5: dfaa54b419e268a775d58d0cae02e56f
 work/INPUT/forcing/regrid_segment_001_tidal_elev.nc:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/full-20/forcing/regrid_segment_001_tidal_elev.nc
@@ -111,10 +111,10 @@ work/INPUT/forcing/regrid_segment_004_tidal_elev.nc:
   hashes:
     binhash: c9669fb38bee36d10fe5086a3deb79e8
     md5: 7b433524759c959f021656b38110ddbd
-work/INPUT/forcing/sp_ERA5:
-  fullpath: /g/data/nm03/ab8992/ttide-inputs/full-20/forcing/sp_ERA5
+work/INPUT/forcing/sp_ERA5.nc:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/full-20/forcing/sp_ERA5.nc
   hashes:
-    binhash: a2930828b9f78ee44badbc77dc147cdf
+    binhash: 5bc4893193290ca895d7235392f1aa06
     md5: 02c53199aff4ee6c25d97b5f525a466a
 work/INPUT/forcing/tu_001.nc:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/full-20/forcing/tu_001.nc
