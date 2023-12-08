@@ -1,7 +1,7 @@
 project: x77
 queue: normal
-walltime: 06:00:00
-jobname: mom6_ttide
+walltime: 05:00:00
+jobname: full-20
 ncpus: 454
 jobfs: 10GB
 shortpath: /scratch/x77
@@ -10,7 +10,7 @@ model: mom6
 input:
     - /g/data/nm03/ab8992/ttide-inputs/full-20/
 
-exe: /g/data/v45/ab8992/mom_executables/angus_fms
+exe: /g/data/v45/ab8992/mom_executables/dec-23-build
 collate: false
 #runlog: true
 storage:
