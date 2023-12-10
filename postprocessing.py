@@ -28,7 +28,7 @@ yb_chunksize = int(args.yb_chunksize)
 hourly_diags = {
     "rho":
     {"x":"xh","y":"yh","z":"z_l"},
-    "khh":
+    "ahh":
     {"x":"xh","y":"yh","z":"z_l"},
     "e":
     {"x":"xh","y":"yh","z":"rho2_i"}
