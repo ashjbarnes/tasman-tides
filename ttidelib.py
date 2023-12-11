@@ -215,18 +215,25 @@ def collect_data(exptname,rawdata = None,ppdata = None,surface_data = None,bathy
     data = {}
     if type(rawdata) != type(None):
         for var in rawdata:
-            data[var] = xr.open_mfdataset(str(rawdata_path / var / "*"),chunks = chunks,decode_times = False).sel(time = slice(timerange[0],timerange[1]))
+            data[var] = xr.open_mfdataset(str(rawdata_path / var / "*"),chunks = chunks,decode_times = False).sel(time = slice(timerange[0],timerange[1])
+            )
 
     if type(ppdata) != type(None):
         for var in ppdata:
-            data[var + "_topdown"] = xr.open_mfdataset(str(ppdata_path / var / "topdown" / "*.nc"),chunks = chunks,decode_times = False).sel(time = slice(timerange[0],timerange[1]))
-            data[var + "_transect"] = xr.open_mfdataset(str(ppdata_path / var / "transect" / "*.nc"),chunks = chunks,decode_times = False).sel(time = slice(timerange[0],timerange[1]))
+            data[var + "_topdown"] = xr.open_mfdataset(
+                str(ppdata_path / var / "topdown" / "*.nc"),chunks = chunks,decode_times = False).rename({var:var + "_topdown"}).sel(time = slice(timerange[0],timerange[1])
+            )
+            data[var + "_transect"] = xr.open_mfdataset(
+                str(ppdata_path / var / "transect" / "*.nc"),chunks = chunks,decode_times = False).rename({var:var + "_transect"}).sel(time = slice(timerange[0],timerange[1])
+            )
 
-    if type(surface_data) != type(None):
-        for var in surface_data:
-            data[var] = xr.open_mfdataset(str(rawdata_path / "surface_transect.nc"),chunks = {"time":timechunk},decode_times = False).sel(time = slice(timerange[0],timerange[1]))
     if bathy == True:
-        data["bathy"] = xr.open_mfdataset(str(rawdata_path.parent / "bathy_transect.nc")).elevation
+        data["bathy"] = xr.open_mfdataset(str(rawdata_path.parent / "bathy_transect.nc")).rename({"elevation":"bathy"})
+
+
+    ## Merge data into dataset
+    data = xr.merge([data[i] for i in data])
+
     return data
 
 
@@ -282,35 +289,74 @@ def plot_vorticity(data):
     return fig
 
 def plot_ke(data):
+    fig = plt.figure(figsize=(20, 12))
+    ax = fig.subplots(2,1)
 
-    """
-    Plot the kinetic energy at both surface and a transect. Requires ppdata: vorticity_surface, vorticity_transect, bathy.
-    """
-    fig,ax = plt.subplots(2,1,figsize = (20,12))
+    cmap = matplotlib.cm.get_cmap('plasma')
+
+    ## HORIZONTAL PLOTS FIRST
+
+    data["vorticity_topdown"].plot.contour(ax = ax[0],levels = [-0.075,-0.025,0.025,0.075],cmap = "binary",linestyle = "solid")
+    (1032*(data["UU_topdown"] + data["VV_topdown"])).plot(ax = ax[0],cmap = cmap,cbar_kwargs={'label': "Kinetic Energy"},vmax = 40)
+
+    ## Add bathymetry plot
+    plot_topo(ax[0],data["bathy"])
 
 
-    data["vorticity_surface"].plot(vmin = - 0.075,vmax = 0.075,cmap = "RdBu",ax = ax[0])
-    data["vorticity_transect"].plot(vmin = - 0.05,vmax = 0.05,cmap = "RdBu",ax = ax[1])
+    ## Second axis: vertical transect
+    data["vorticity_transect"].plot.contour(ax = ax[1],levels = [-0.075,-0.025,0.025,0.075],cmap = "binary",linestyle = "solid")
+    (data["UU_transect"] + data["VV_transect"]).plot(ax = ax[1],cmap = cmap,cbar_kwargs={'label': "Kinetic Energy"},vmax = 0.02)
+    plot_topo(ax[1],data["bathy"],transect=0)
 
-    ax[0].set_title("")
-    ax[1].set_title("")
+    # fig.suptitle(exptname)
     ax[1].invert_yaxis()
-    plot_topo(ax[0],bathy = data["bathy"])
-    plot_topo(ax[1],bathy = data["bathy"],transect = 0)
-    ax[1].set_xlabel('km from Tas')
+    ax[0].set_xlabel('km from Tas')
     ax[0].set_ylabel('km S to N')
-    ax[0].set_xlabel('')
+    ax[0].set_title('Kinetic Energy with Surface Speed contours')
+    ## put gridlines on plot
+    # ax[0].grid(True, which='both')
+    ax[0].hlines(y = 0,xmin = 100,xmax = 1450,linestyles = "dashed")
+    ax[1].set_xlabel('')
     ax[1].set_ylabel('km S to N')
     ax[1].set_title('Transect along middle of beam')
-    ax[0].set_title('Relative Vorticity')
-    ax[0].hlines(y = 0,xmin = 100,xmax = 1450,linestyles = "dashed",color = "black")
-
-    # Add text to the top right corner of the figure
-    ax[0].text(0.95, 0.95, data.time.values, transform=ax[0].transAxes, fontsize=10, va="top", ha="right")
+    ax[0].text(0.95, 0.95, data["UU_transect"].time.values, transform=ax[0].transAxes, fontsize=10, va="top", ha="right")
 
     return fig
 
-    return 1032 * (uf**2 + vf**2).mean("time")
+def plot_dissipation(data):
+    fig = plt.figure(figsize=(20, 12))
+    ax = fig.subplots(2,1)
+
+    cmap = matplotlib.cm.get_cmap('plasma')
+
+    ## HORIZONTAL PLOTS FIRST
+
+    data["vorticity_topdown"].plot.contour(ax = ax[0],levels = [-0.075,-0.025,0.025,0.075],cmap = "binary",linestyle = "solid")
+    data["dissipation_topdown"].plot(ax = ax[0],cmap = cmap,cbar_kwargs={'label': "Dissipation"},vmax = 40)
+
+    ## Add bathymetry plot
+    plot_topo(ax[0],data["bathy"])
+
+
+    ## Second axis: vertical transect
+    data["vorticity_transect"].plot.contour(ax = ax[1],levels = [-0.075,-0.025,0.025,0.075],cmap = "binary",linestyle = "solid")
+    data["dissipation_topdown"].plot(ax = ax[1],cmap = cmap,cbar_kwargs={'label': "Dissipation"},vmax = 0.02)
+    plot_topo(ax[1],data["bathy"],transect=0)
+
+    # fig.suptitle(exptname)
+    ax[1].invert_yaxis()
+    ax[0].set_xlabel('km from Tas')
+    ax[0].set_ylabel('km S to N')
+    ax[0].set_title('Dissipation of M2 energy with vorticity contours')
+    ## put gridlines on plot
+    # ax[0].grid(True, which='both')
+    ax[0].hlines(y = 0,xmin = 100,xmax = 1450,linestyles = "dashed")
+    ax[1].set_xlabel('')
+    ax[1].set_ylabel('km S to N')
+    ax[1].set_title('Transect along middle of beam')
+    ax[0].text(0.95, 0.95, data["vorticity_transect"].time.values, transform=ax[0].transAxes, fontsize=10, va="top", ha="right")
+
+    return fig
 
 def calculate_vorticity(rawdata):
     """

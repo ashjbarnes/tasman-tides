@@ -63,6 +63,53 @@ def vorticity_movie(experiment, outputs):
 
     return
 
+def ke_movie(experiment, outputs):
+    """
+    Make a movie of the vorticity for the given experiment and outputs
+    """
+    startdask()
+
+    data = tt.collect_data("full-20",ppdata = ["vorticity","UU","VV"],outputs = outputs,bathy = True)
+
+    print("loaded data")
+    print(data)
+    fig = plt.figure(figsize=(20, 12))
+
+    print("Start making movie...")
+    tt.make_movie(data,
+                tt.plot_ke,
+                experiment,
+                "M2 Kinetic Energy",
+                framerate=5,
+                parallel=True)
+
+    return
+
+def dissipation_movie(experiment, outputs):
+    """
+    Make a movie of the m2 dissipation anomalies for the given experiment and outputs
+    """
+    startdask()
+
+    data = tt.collect_data("full-20",ppdata = ["vorticity","dissipation"],outputs = outputs,bathy = True)
+
+    data["dissipation"] = data["dissipation"] - data["dissipation"].mean("time")
+
+    print("loaded data")
+    print(data)
+    fig = plt.figure(figsize=(20, 12))
+
+    print("Start making movie...")
+    tt.make_movie(data,
+                tt.plot_dissipation,
+                experiment,
+                "M2 dissipation",
+                framerate=5,
+                parallel=True)
+
+    return
+
+
 def save_ppdata(transect_data,topdown_data,basepath,recompute = False):
     """
     Save the postprocessed data to gdata. Takes computed topdown and transect data and saves each time slice to postprocessed folders
@@ -125,8 +172,9 @@ def save_filtered_vels(experiment,outputs,recompute = False):
         bathy=False,
         chunks = {"time": -1,"xb":-1,"zl":10}
         )
+    
     for i in range(0,len(data.time) // averaging_window):
-        mid_time =  data.time[np.floor((i + 0.5) * averaging_window) ] ## Middle of time window time
+        mid_time =  data.time[int(np.ceil((i + 0.5) * averaging_window)) ] ## Middle of time window time
 
         print("Processing time slice",f"{i} = {mid_time}")
         u_ = data.u.isel(
@@ -158,14 +206,13 @@ def save_filtered_vels(experiment,outputs,recompute = False):
         }
 
         for key in data_to_save:
-            if key == "dissipation":
-                basepath = gdata / "postprocessed" / experiment / key
-                save_ppdata(
-                    data_to_save[key].sel(yb = 0,method = "nearest"),
-                    data_to_save[key].integrate("zl"),
-                    basepath,
-                    recompute=recompute
-                )
+            basepath = gdata / "postprocessed" / experiment / key
+            save_ppdata(
+                data_to_save[key].sel(yb = 0,method = "nearest"),
+                data_to_save[key].integrate("zl"),
+                basepath,
+                recompute=recompute
+            )
 
     return 
 
