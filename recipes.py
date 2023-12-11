@@ -72,21 +72,13 @@ def save_ppdata(transect_data,topdown_data,basepath,recompute = False):
         if not os.path.exists(basepath / i):
             os.makedirs(basepath / i)
 
-    print("Saving surface snapshots")
-
-    for i in len(topdown_data.time.values):
+    for i in range(len(topdown_data.time.values)):
         time = topdown_data.time.values[i]
-        out = topdown_data.isel(time = i).expand_dims("time").assign_coords(time = [time])
         if not os.path.exists(basepath / "topdown" / f"vorticity_time-{str(i).zfill(3)}.nc") or recompute:
-            out.to_netcdf(basepath / "topdown" / f"vorticity_time-{str(i).zfill(3)}.nc")
+            topdown_data.isel(time = i).expand_dims("time").assign_coords(time = [time]).to_netcdf(basepath / "topdown" / f"vorticity_time-{str(i).zfill(3)}.nc")
 
-    print("Saving transect snapshots")
-
-    for i in range(len(transect_data.time.values)):
-        time = transect_data.time.values[i]
-        out = transect_data.isel(time = i).expand_dims("time").assign_coords(time = [time])
         if not os.path.exists(basepath / "transect" / f"vorticity_time-{str(i).zfill(3)}.nc") or recompute:
-            out.to_netcdf(basepath / "transect" / f"vorticity_time-{str(i).zfill(3)}.nc")
+            transect_data.isel(time = i).expand_dims("time").assign_coords(time = [time]).to_netcdf(basepath / "transect" / f"vorticity_time-{str(i).zfill(3)}.nc")
 
     return
 
