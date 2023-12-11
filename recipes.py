@@ -48,7 +48,7 @@ def vorticity_movie(experiment, outputs):
     """
     startdask()
 
-    data = tt.collect_data(experiment,ppdata=["vorticity_surface","vorticity_transect"],chunks = {"time":1},outputs=outputs,bathy=True)
+    data = tt.collect_data(experiment,ppdata=["vorticity"],chunks = {"time":1},outputs=outputs,bathy=True)
     print("loaded data")
     print(data)
     fig = plt.figure(figsize=(20, 12))
