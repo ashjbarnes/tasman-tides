@@ -219,8 +219,8 @@ def collect_data(exptname,rawdata = None,ppdata = None,surface_data = None,bathy
 
     if type(ppdata) != type(None):
         for var in ppdata:
-            data[var + "topdown"] = xr.open_mfdataset(str(ppdata_path / var / "topdown" / "*.nc"),chunks = chunks,decode_times = False).to_array()
-            data[var + "transect"] = xr.open_mfdataset(str(ppdata_path / var / "transect" / "*.nc"),chunks = chunks,decode_times = False).to_array()
+            data[var + "_topdown"] = xr.open_mfdataset(str(ppdata_path / var / "topdown" / "*.nc"),chunks = chunks,decode_times = False).to_array()
+            data[var + "_transect"] = xr.open_mfdataset(str(ppdata_path / var / "transect" / "*.nc"),chunks = chunks,decode_times = False).to_array()
 
     if type(surface_data) != type(None):
         for var in surface_data:
