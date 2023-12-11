@@ -100,7 +100,6 @@ def save_vorticity(experiment,outputs,recompute = False):
         experiment,
         outputs=outputs,
         rawdata = ["u","v"],
-        bathy=True,
         chunks = {"time": -1,"xb":-1,"zl":10}
         )
 
