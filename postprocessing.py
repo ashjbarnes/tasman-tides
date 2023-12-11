@@ -194,3 +194,11 @@ if __name__ == "__main__":
         del taux
         del tauy
         del surface_transect
+
+        ## Finally copy across ocean stats
+        print("Copying ocean.stats")
+        try:
+            shutil.copy(str(mom6out / 'ocean.stats.nc'),str(gdataout / "ocean_stats.nc"))        
+        except Exception as e:
+            print("Couldn't move ocean.stats")
+            print(e)
