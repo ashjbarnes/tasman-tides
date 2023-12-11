@@ -124,6 +124,9 @@ def save_filtered_vels(experiment,outputs,recompute = False):
         chunks = {"time": -1,"xb":-1,"zl":10}
         )
     for i in range(0,len(data.time) // averaging_window):
+        mid_time =  data.time[round((i + 0.5) * averaging_window) ] ## Middle of time window time
+
+        print("Processing time slice",f"{i} = {mid_time}")
         u_ = data.u.isel(
                 time = slice(i * averaging_window, (i + 1) * averaging_window)
                 ).chunk({"time":-1}).drop(["lat","lon"]).fillna(0)
@@ -136,7 +139,6 @@ def save_filtered_vels(experiment,outputs,recompute = False):
         V = tt.m2filter(
             v_,
             m2f).persist()
-        mid_time =  data.time[round((i + 0.5) * averaging_window) ] ## Middle of time window time
         
         data_to_save = {
             "UU" : (U * U).mean("time").expand_dims("time").assign_coords(time = [mid_time]).rename("UU"),
