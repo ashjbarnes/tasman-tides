@@ -121,7 +121,7 @@ def save_filtered_vels(experiment,outputs,recompute = False):
     data = tt.collect_data(
         experiment,
         outputs=outputs,
-        rawdata = ["u","v"],
+        rawdata = ["u","v","ahh"],
         bathy=False,
         chunks = {"time": -1,"xb":-1,"zl":10}
         )
@@ -135,6 +135,9 @@ def save_filtered_vels(experiment,outputs,recompute = False):
         v_ = data.v.isel(
                 time = slice(i * averaging_window, (i + 1) * averaging_window)
                 ).chunk({"time":-1}).drop(["lat","lon"]).fillna(0)
+        ahh = data.ahh.isel(
+                time = slice(i * averaging_window, (i + 1) * averaging_window)
+                ).chunk({"time":-1}).drop(["lat","lon"]).fillna(0)
         U = tt.m2filter(
             u_,
             m2f).persist()
@@ -142,23 +145,26 @@ def save_filtered_vels(experiment,outputs,recompute = False):
             v_,
             m2f).persist()
         
+        laplacian2 = (U.differentiate("xb").differentiate("xb") + V.differentiate("yb").differentiate("yb")
+                )**2
+        dissipation = (laplacian2 * ahh).mean("time").expand_dims("time").assign_coords(time = [mid_time]).rename("velocity_laplacian")
+
         data_to_save = {
             "UU" : (U * U).mean("time").expand_dims("time").assign_coords(time = [mid_time]).rename("UU"),
             "VV" : (V * V).mean("time").expand_dims("time").assign_coords(time = [mid_time]).rename("VV"),
             "UV" : (U * V).mean("time").expand_dims("time").assign_coords(time = [mid_time]).rename("UV"),
-            "laplacian" : (
-                U.differentiate("xb").differentiate("xb") + V.differentiate("yb").differentiate("yb")
-                ).mean("time").expand_dims("time").assign_coords(time = [mid_time]).rename("velocity_laplacian")
+            "dissipation" : dissipation
         }
 
         for key in data_to_save:
-            basepath = gdata / "postprocessed" / experiment / key
-            save_ppdata(
-                data_to_save[key].sel(yb = 0,method = "nearest"),
-                data_to_save[key].integrate("zl"),
-                basepath,
-                recompute=recompute
-            )
+            if key == "dissipation":
+                basepath = gdata / "postprocessed" / experiment / key
+                save_ppdata(
+                    data_to_save[key].sel(yb = 0,method = "nearest"),
+                    data_to_save[key].integrate("zl"),
+                    basepath,
+                    recompute=recompute
+                )
 
     return 
 

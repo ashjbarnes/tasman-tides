@@ -112,7 +112,13 @@ if __name__ == "__main__":
         except Exception as e:
             print("Couldn't move surface.nc")
             print(e)
-
+        ## Finally copy across ocean stats
+        print("Copying ocean.stats")
+        try:
+            shutil.copy(str(mom6out / 'ocean.stats.nc'),str(gdataout / "ocean_stats.nc"))        
+        except Exception as e:
+            print("Couldn't move ocean.stats")
+            print(e)
         # Now we do the biggest ones, the hourly diagnostics. These are output in their own folder, chunked along y dimension
         # First do the velocities together, as these need to be summed along and against the beam
 
@@ -195,10 +201,3 @@ if __name__ == "__main__":
         del tauy
         del surface_transect
 
-        ## Finally copy across ocean stats
-        print("Copying ocean.stats")
-        try:
-            shutil.copy(str(mom6out / 'ocean.stats.nc'),str(gdataout / "ocean_stats.nc"))        
-        except Exception as e:
-            print("Couldn't move ocean.stats")
-            print(e)
