@@ -9,7 +9,7 @@ from matplotlib import pyplot as plt
 from pathlib import Path
 home = Path("/home/149/ab8992/tasman-tides")
 gdata = Path("/g/data/nm03/ab8992")
-
+import numpy as np
 
 def startdask():
     try:
@@ -126,7 +126,7 @@ def save_filtered_vels(experiment,outputs,recompute = False):
         chunks = {"time": -1,"xb":-1,"zl":10}
         )
     for i in range(0,len(data.time) // averaging_window):
-        mid_time =  data.time[round((i + 0.5) * averaging_window) ] ## Middle of time window time
+        mid_time =  data.time[np.floor((i + 0.5) * averaging_window) ] ## Middle of time window time
 
         print("Processing time slice",f"{i} = {mid_time}")
         u_ = data.u.isel(
