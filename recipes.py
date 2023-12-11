@@ -61,18 +61,40 @@ def vorticity_movie(experiment, outputs):
 
     return
 
+def save_ppdata(transect_data,topdown_data,basepath,recompute = False):
+    """
+    Save the postprocessed data to gdata. Takes computed topdown and transect data and saves each time slice to postprocessed folders
+    """
 
-def save_vorticity(experiment,outputs):
+    for i in ["topdown","transect"]:
+        if not os.path.exists(basepath / i):
+            os.makedirs(basepath / i)
+
+    print("Saving surface snapshots")
+
+    for i in len(topdown_data.time.values):
+        time = topdown_data.time.values[i]
+        out = topdown_data.isel(time = i).expand_dims("time").assign_coords(time = [time])
+        if not os.path.exists(basepath / "topdown" / f"vorticity_time-{str(i).zfill(3)}.nc") or recompute:
+            out.to_netcdf(basepath / "topdown" / f"vorticity_time-{str(i).zfill(3)}.nc")
+
+    print("Saving transect snapshots")
+
+    for i in len(transect_data.time.values):
+        time = transect_data.time.values[i]
+        out = transect_data.isel(time = i).expand_dims("time").assign_coords(time = [time])
+        if not os.path.exists(basepath / "transect" / f"vorticity_time-{str(i).zfill(3)}.nc") or recompute:
+            out.to_netcdf(basepath / "transect" / f"vorticity_time-{str(i).zfill(3)}.nc")
+
+    return
+
+def save_vorticity(experiment,outputs,recompute = False):
     """
     Save the relative vorticity for the given experiment and outputs
     """
-
+    basepath = gdata / "postprocessed" / experiment 
     startdask()
-    outpath_topdown = gdata / "postprocessed" / experiment / "topdown"
-    outpath_transect = gdata / "postprocessed" / experiment / "transect"
-    for i in [outpath_topdown,outpath_transect]:
-        if not os.path.exists(i):
-            os.makedirs(i)
+
 
     rawdata = tt.collect_data(
         experiment,
@@ -85,20 +107,7 @@ def save_vorticity(experiment,outputs):
     vorticity_topdown = tt.calculate_vorticity(rawdata).coarsen(time = 149,boundary = "trim").mean().drop("lat").drop("lon").rename("vorticity").isel(zl = 2)
     vorticity_transect = tt.calculate_vorticity(rawdata).coarsen(time = 149,boundary = "trim").mean().drop("lat").drop("lon").rename("vorticity").sel(yb = 0,method = "nearest")
 
-    print("Computing vorticity surface")
-
-    for i in len(vorticity_topdown.time.values):
-        time = vorticity_topdown.time.values[i]
-        out = vorticity_topdown.isel(time = i).expand_dims("time").assign_coords(time = [time])
-        if not os.path.exists(outpath_topdown / f"vorticity_time-{str(i).zfill(3)}.nc"):
-            out.to_netcdf(outpath_topdown / f"vorticity_time-{str(i).zfill(3)}.nc")
-
-    print("Computing voricity transect")
-    for i in len(vorticity_transect.time.values):
-        time = vorticity_transect.time.values[i]
-        out = vorticity_transect.isel(time = i).expand_dims("time").assign_coords(time = [time])
-        if not os.path.exists(outpath_transect / f"vorticity_time-{str(i).zfill(3)}.nc"):
-            out.to_netcdf(outpath_transect / f"vorticity_time-{str(i).zfill(3)}.nc")
+    save_ppdata(vorticity_transect,vorticity_topdown,basepath,recompute=False)
 
     return 
 
