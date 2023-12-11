@@ -219,7 +219,8 @@ def collect_data(exptname,rawdata = None,ppdata = None,surface_data = None,bathy
 
     if type(ppdata) != type(None):
         for var in ppdata:
-            data[var] = xr.open_mfdataset(str(ppdata_path / var / "*"),chunks = chunks,decode_times = False).to_array()
+            data[var + "topdown"] = xr.open_mfdataset(str(ppdata_path / var / "topdown" / "*.nc"),chunks = chunks,decode_times = False).to_array()
+            data[var + "transect"] = xr.open_mfdataset(str(ppdata_path / var / "transect" / "*.nc"),chunks = chunks,decode_times = False).to_array()
 
     if type(surface_data) != type(None):
         for var in surface_data:
@@ -280,25 +281,34 @@ def plot_vorticity(data):
 
     return fig
 
-def calculate_ke(u,v,time):
+def plot_ke(data):
 
-    u = u.fillna(0)
-    v = v.fillna(0)
+    """
+    Plot the kinetic energy at both surface and a transect. Requires ppdata: vorticity_surface, vorticity_transect, bathy.
+    """
+    fig,ax = plt.subplots(2,1,figsize = (20,12))
 
-    u_ = u.sel(
-            time = slice(time -  0.5 * averaging_window, time + 0.5 *  averaging_window)
-            ).chunk({"time":-1}).drop(["lat","lon"])
-    v_ = v.sel(
-            time = slice(time -  0.5 * averaging_window, time + 0.5 *  averaging_window)
-            ).chunk({"time":-1}).drop(["lat","lon"])
 
-    uf = m2filter(
-        u_,
-        m2f)
-    vf = m2filter(
-        v_,
-        m2f)
+    data["vorticity_surface"].plot(vmin = - 0.075,vmax = 0.075,cmap = "RdBu",ax = ax[0])
+    data["vorticity_transect"].plot(vmin = - 0.05,vmax = 0.05,cmap = "RdBu",ax = ax[1])
 
+    ax[0].set_title("")
+    ax[1].set_title("")
+    ax[1].invert_yaxis()
+    plot_topo(ax[0],bathy = data["bathy"])
+    plot_topo(ax[1],bathy = data["bathy"],transect = 0)
+    ax[1].set_xlabel('km from Tas')
+    ax[0].set_ylabel('km S to N')
+    ax[0].set_xlabel('')
+    ax[1].set_ylabel('km S to N')
+    ax[1].set_title('Transect along middle of beam')
+    ax[0].set_title('Relative Vorticity')
+    ax[0].hlines(y = 0,xmin = 100,xmax = 1450,linestyles = "dashed",color = "black")
+
+    # Add text to the top right corner of the figure
+    ax[0].text(0.95, 0.95, data.time.values, transform=ax[0].transAxes, fontsize=10, va="top", ha="right")
+
+    return fig
 
     return 1032 * (uf**2 + vf**2).mean("time")
 
