@@ -40,6 +40,8 @@ def surfacespeed_movie(experiment, outputs):
 
     return
 
+
+
 def vorticity_movie(experiment, outputs):
     """
     Make a movie of the surface speed for the given experiment and outputs
@@ -80,7 +82,7 @@ def save_ppdata(transect_data,topdown_data,basepath,recompute = False):
 
     print("Saving transect snapshots")
 
-    for i in len(transect_data.time.values):
+    for i in range(len(transect_data.time.values)):
         time = transect_data.time.values[i]
         out = transect_data.isel(time = i).expand_dims("time").assign_coords(time = [time])
         if not os.path.exists(basepath / "transect" / f"vorticity_time-{str(i).zfill(3)}.nc") or recompute:

@@ -302,6 +302,21 @@ def calculate_ke(u,v,time):
 
     return 1032 * (uf**2 + vf**2).mean("time")
 
+def calculate_vorticity(rawdata):
+    """
+    Calculate the relative vorticity from the raw data
+    """
+    u = rawdata["u"]
+    v = rawdata["v"]
+    u = u.fillna(0)
+    v = v.fillna(0)
+
+    dvx = v.differentiate("xb")
+    duy = u.differentiate("yb")
+
+
+    return (dvx - duy)
+
 def calculate_hef(u,v,time,total_only = True):
     """
     Calculate the horizontal energy fluxes from the u and v velocities and ith time index. Time window is 12 m2 periods
