@@ -68,10 +68,11 @@ def save_vorticity(experiment,outputs):
     """
 
     startdask()
-    outpath = gdata / "postprocessed" / experiment
-    for i in ["vorticity_surface","vorticity_transect"]:
-        if not os.path.exists(outpath / i):
-            os.makedirs(outpath / i)
+    outpath_topdown = gdata / "postprocessed" / experiment / "topdown"
+    outpath_transect = gdata / "postprocessed" / experiment / "transect"
+    for i in [outpath_topdown,outpath_transect]:
+        if not os.path.exists(i):
+            os.makedirs(i)
 
     rawdata = tt.collect_data(
         experiment,
@@ -81,15 +82,25 @@ def save_vorticity(experiment,outputs):
         chunks = {"time": -1,"xb":-1,"zl":10}
         )
 
-    vorticity = tt.calculate_vorticity(rawdata).coarsen(time = 149,boundary = "trim").mean().drop("lat").drop("lon").rename("vorticity")
-    print("Computing voricity transect")
-    vorticity_transect = vorticity.sel(yb = 0,method = "nearest")
-    print("Computing vorticity surface")
-    vorticity_surface = vorticity.isel(zl = 2)
+    vorticity_topdown = tt.calculate_vorticity(rawdata).coarsen(time = 149,boundary = "trim").mean().drop("lat").drop("lon").rename("vorticity").isel(zl = 2)
+    vorticity_transect = tt.calculate_vorticity(rawdata).coarsen(time = 149,boundary = "trim").mean().drop("lat").drop("lon").rename("vorticity").sel(yb = 0,method = "nearest")
 
-    vorticity_surface.to_netcdf(outpath / "vorticity_surface" / "vorticity_surface.nc")
-    vorticity_transect.to_netcdf(outpath / "vorticity_transect" / "vorticity_transect.nc")
-    return vorticity
+    print("Computing vorticity surface")
+
+    for i in len(vorticity_topdown.time.values):
+        time = vorticity_topdown.time.values[i]
+        out = vorticity_topdown.isel(time = i).expand_dims("time").assign_coords(time = [time])
+        if not os.path.exists(outpath_topdown / f"vorticity_time-{str(i).zfill(3)}.nc"):
+            out.to_netcdf(outpath_topdown / f"vorticity_time-{str(i).zfill(3)}.nc")
+
+    print("Computing voricity transect")
+    for i in len(vorticity_transect.time.values):
+        time = vorticity_transect.time.values[i]
+        out = vorticity_transect.isel(time = i).expand_dims("time").assign_coords(time = [time])
+        if not os.path.exists(outpath_transect / f"vorticity_time-{str(i).zfill(3)}.nc"):
+            out.to_netcdf(outpath_transect / f"vorticity_time-{str(i).zfill(3)}.nc")
+
+    return 
 
 def save_filtered_vels(experiment,outputs):
     """
