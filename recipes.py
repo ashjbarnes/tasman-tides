@@ -66,6 +66,7 @@ def vorticity_movie(experiment, outputs):
 def save_ppdata(transect_data,topdown_data,basepath,recompute = False):
     """
     Save the postprocessed data to gdata. Takes computed topdown and transect data and saves each time slice to postprocessed folders
+    Time index override is used when processing one time slice at a time. That way the index can be used to name the file correctly
     """
 
     for i in ["topdown","transect"]:
@@ -75,10 +76,11 @@ def save_ppdata(transect_data,topdown_data,basepath,recompute = False):
     for i in range(len(topdown_data.time.values)):
         time = topdown_data.time.values[i]
         if not os.path.exists(basepath / "topdown" / f"vorticity_time-{str(i).zfill(3)}.nc") or recompute:
-            topdown_data.isel(time = i).expand_dims("time").assign_coords(time = [time]).to_netcdf(basepath / "topdown" / f"vorticity_time-{str(i).zfill(3)}.nc")
+            topdown_data.isel(time = i).expand_dims("time").assign_coords(time = [time]).to_netcdf(basepath / "topdown" / f"vorticity_time-{str(time)}.nc")
 
         if not os.path.exists(basepath / "transect" / f"vorticity_time-{str(i).zfill(3)}.nc") or recompute:
-            transect_data.isel(time = i).expand_dims("time").assign_coords(time = [time]).to_netcdf(basepath / "transect" / f"vorticity_time-{str(i).zfill(3)}.nc")
+            transect_data.isel(time = i).expand_dims("time").assign_coords(time = [time]).to_netcdf(basepath / "transect" / f"vorticity_time-{str(time)}.nc")
+
 
     return
 
@@ -86,7 +88,7 @@ def save_vorticity(experiment,outputs,recompute = False):
     """
     Save the relative vorticity for the given experiment and outputs
     """
-    basepath = gdata / "postprocessed" / experiment 
+    basepath = gdata / "postprocessed" / experiment / "vorticity"
     startdask()
 
 
@@ -100,22 +102,19 @@ def save_vorticity(experiment,outputs,recompute = False):
     vorticity_topdown = tt.calculate_vorticity(rawdata).coarsen(time = 149,boundary = "trim").mean().drop("lat").drop("lon").rename("vorticity").isel(zl = 2)
     vorticity_transect = tt.calculate_vorticity(rawdata).coarsen(time = 149,boundary = "trim").mean().drop("lat").drop("lon").rename("vorticity").sel(yb = 0,method = "nearest")
 
-    save_ppdata(vorticity_transect,vorticity_topdown,basepath,recompute=False)
+    save_ppdata(vorticity_transect,vorticity_topdown,basepath,recompute=recompute)
 
     return 
 
-def save_filtered_vels(experiment,outputs):
+def save_filtered_vels(experiment,outputs,recompute = False):
     """
     Calculate the filtered velocities over 149 hours and save u'u', v'v', u'v' all averaged over 149 hours as separate files
     """
+    startdask()
+
     m2 = 360 / 28.984104 ## Period of m2 in hours
     averaging_window = int(12 * m2) ## this comes out to be 149.0472 hours, so close enough to a multiple of tidal periods
     m2f = 1/ m2    ## Frequency of m2 in radians per hour
-
-    outpath = gdata / "postprocessed" / experiment 
-    for i in ["UU","VV","UV"]:
-        if not os.path.exists(outpath / i):
-            os.makedirs(outpath / i)
 
     data = tt.collect_data(
         experiment,
@@ -127,29 +126,35 @@ def save_filtered_vels(experiment,outputs):
     for i in range(0,len(data.time) // averaging_window):
         u_ = data.u.isel(
                 time = slice(i * averaging_window, (i + 1) * averaging_window)
-                ).chunk({"time":-1}).drop(["lat","lon"])
+                ).chunk({"time":-1}).drop(["lat","lon"]).fillna(0)
         v_ = data.v.isel(
                 time = slice(i * averaging_window, (i + 1) * averaging_window)
-                ).chunk({"time":-1}).drop(["lat","lon"])
+                ).chunk({"time":-1}).drop(["lat","lon"]).fillna(0)
         U = tt.m2filter(
             u_,
-            m2f)
+            m2f).persist()
         V = tt.m2filter(
             v_,
-            m2f)
+            m2f).persist()
+        mid_time =  data.time[round((i + 0.5) * averaging_window) ] ## Middle of time window time
         
-        mid_time = data.time[round(i + 0.5 * averaging_window) ] ## Middle of time window time
-        UU = (U * U).mean("time").expand_dims("time").assign_coords(time = [mid_time]).rename("UU")
-        VV = (V * V).mean("time").expand_dims("time").assign_coords(time = [mid_time]).rename("VV")
-        UV = (U * V).mean("time").expand_dims("time").assign_coords(time = [mid_time]).rename("UV")
+        data_to_save = {
+            "UU" : (U * U).mean("time").expand_dims("time").assign_coords(time = [mid_time]).rename("UU"),
+            "VV" : (V * V).mean("time").expand_dims("time").assign_coords(time = [mid_time]).rename("VV"),
+            "UV" : (U * V).mean("time").expand_dims("time").assign_coords(time = [mid_time]).rename("UV"),
+            "laplacian" : (
+                U.differentiate("xb").differentiate("xb") + V.differentiate("yb").differentiate("yb")
+                ).mean("time").expand_dims("time").assign_coords(time = [mid_time]).rename("velocity_laplacian")
+        }
 
-        ## Save vertical sum
-        UU.integrate("zl").to_netcdf(outpath / "UU" / f"UU_{str(i).zfill(3)}.nc")
-        VV.integrate("zl").to_netcdf(outpath / "VV"/ f"VV_{str(i).zfill(3)}.nc")
-        UV.integrate("zl").to_netcdf(outpath / "UV"/ f"UV_{str(i).zfill(3)}.nc")
-
-        ## Save the transect about yb = 0
-        UU.sel(yb = 0,method = "nearest").to_netcdf(outpath / "UU" / f"UU_transect{str(i).zfill(3)}_transect.nc")
+        for key in data_to_save:
+            basepath = gdata / "postprocessed" / experiment / key
+            save_ppdata(
+                data_to_save[key].sel(yb = 0,method = "nearest"),
+                data_to_save[key].integrate("zl"),
+                basepath,
+                recompute=recompute
+            )
 
     return 
 
@@ -212,6 +217,7 @@ if __name__ == "__main__":
     parser.add_argument("-e", "--experiment", help="Specify the experiment to apply the recipe to")
     parser.add_argument("-o", "--outputs", help="Specify the outputs to use",default = "output*")
     parser.add_argument("-q", "--qsub", default=1,type=int, help="Choose whether to execute directly or as qsub job")
+    parser.add_argument("-c", "--recompute", default=False,type=bool, help="Choose whether to execute directly or as qsub job")
     args = parser.parse_args()
 
     print(args)
@@ -222,6 +228,6 @@ if __name__ == "__main__":
     elif args.recipe == "surfacespeed":
         surfacespeed_movie(args.experiment, args.outputs)
     elif args.recipe == "save_vorticity":
-        save_vorticity(args.experiment, args.outputs)
+        save_vorticity(args.experiment, args.outputs,args.recompute)
     elif args.recipe == "save_filtered_vels":
-        save_filtered_vels(args.experiment, args.outputs)
+        save_filtered_vels(args.experiment, args.outputs,args.recompute)
