@@ -401,7 +401,7 @@ def plot_topo(ax,bathy = None,transect = None):
 
 
 
-def make_movie(data,plot_function,runname,plotname,framerate = 10,parallel = False,plot_kwargs = {}):
+def make_movie(data,plot_function,runname,plotname,framerate = 5,parallel = False,plot_kwargs = {}):
     """
     Custom function to make a movie of a plot function. Saves to a folder in dropbox. Intermediate frames are saved to /tmp
     data_list : dictionary of dataarrays required by plot function

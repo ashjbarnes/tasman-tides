@@ -44,7 +44,7 @@ def surfacespeed_movie(experiment, outputs):
 
 def vorticity_movie(experiment, outputs):
     """
-    Make a movie of the surface speed for the given experiment and outputs
+    Make a movie of the vorticity for the given experiment and outputs
     """
     startdask()
 
@@ -58,7 +58,7 @@ def vorticity_movie(experiment, outputs):
                 tt.plot_vorticity,
                 experiment,
                 "surface_speed",
-                framerate=10,
+                framerate=5,
                 parallel=True)
 
     return
@@ -145,9 +145,10 @@ def save_filtered_vels(experiment,outputs,recompute = False):
             v_,
             m2f).persist()
         
+        # Calculate dissipation as viscosity * laplacian(u)^2 
         laplacian2 = (U.differentiate("xb").differentiate("xb") + V.differentiate("yb").differentiate("yb")
                 )**2
-        dissipation = (laplacian2 * ahh).mean("time").expand_dims("time").assign_coords(time = [mid_time]).rename("velocity_laplacian")
+        dissipation = (laplacian2.mean("time") * ahh.mean("time")).expand_dims("time").assign_coords(time = [mid_time]).rename("velocity_laplacian")
 
         data_to_save = {
             "UU" : (U * U).mean("time").expand_dims("time").assign_coords(time = [mid_time]).rename("UU"),
