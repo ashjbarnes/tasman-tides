@@ -236,6 +236,28 @@ def collect_data(exptname,rawdata = None,ppdata = None,surface_data = None,bathy
 
     return data
 
+def save_ppdata(transect_data,topdown_data,basepath,recompute = False):
+    """
+    Save the postprocessed data to gdata. Takes computed topdown and transect data and saves each time slice to postprocessed folders
+    Time index override is used when processing one time slice at a time. That way the index can be used to name the file correctly
+    """
+    print(basepath)
+    print(basepath.name)
+    print(str(type(basepath.name)))
+    for i in ["topdown","transect"]:
+        if not os.path.exists(basepath / i):
+            os.makedirs(basepath / i)
+
+    for i in range(len(topdown_data.time.values)):
+        time = topdown_data.time.values[i]
+        if not os.path.exists(basepath / "topdown" / f"vorticity_time-{str(i).zfill(3)}.nc") or recompute:
+            topdown_data.isel(time = i).expand_dims("time").assign_coords(time = [time]).to_netcdf(basepath / "topdown" / str(basepath.name + f"_time-{str(round(time))}.nc"))
+
+        if not os.path.exists(basepath / "transect" / f"vorticity_time-{str(i).zfill(3)}.nc") or recompute:
+            transect_data.isel(time = i).expand_dims("time").assign_coords(time = [time]).to_netcdf(basepath / "transect" / str(basepath.name + f"_time-{str(round(time))}.nc"))
+
+
+    return
 
 ##### FILTERING AND DIAGNOSTICS #####
 
