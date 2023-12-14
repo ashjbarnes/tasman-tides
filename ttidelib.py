@@ -215,19 +215,49 @@ def collect_data(exptname,rawdata = None,ppdata = None,surface_data = None,bathy
     data = {}
     if type(rawdata) != type(None):
         for var in rawdata:
-            data[var] = xr.open_mfdataset(str(rawdata_path / var / "*"),chunks = chunks,decode_times = False)[var]
+            data[var] = xr.open_mfdataset(str(rawdata_path / var / "*"),chunks = chunks,decode_times = False).sel(time = slice(timerange[0],timerange[1])
+            )
 
     if type(ppdata) != type(None):
         for var in ppdata:
-            data[var] = xr.open_mfdataset(str(ppdata_path / var / "*"),chunks = chunks,decode_times = False).to_array()
+            data[var + "_topdown"] = xr.open_mfdataset(
+                str(ppdata_path / var / "topdown" / "*.nc"),chunks = chunks,decode_times = False).rename({var:var + "_topdown"}).sel(time = slice(timerange[0],timerange[1])
+            )
+            data[var + "_transect"] = xr.open_mfdataset(
+                str(ppdata_path / var / "transect" / "*.nc"),chunks = chunks,decode_times = False).rename({var:var + "_transect"}).sel(time = slice(timerange[0],timerange[1])
+            )
 
-    if type(surface_data) != type(None):
-        for var in surface_data:
-            data[var] = xr.open_mfdataset(str(rawdata_path / "surface_transect.nc"),chunks = {"time":timechunk},decode_times = False)[var].isel(time = slice(timerange[0],timerange[1]))
     if bathy == True:
-        data["bathy"] = xr.open_mfdataset(str(rawdata_path.parent / "bathy_transect.nc")).elevation
-    return xr.Dataset(data)
+        data["bathy"] = xr.open_mfdataset(str(rawdata_path.parent / "bathy_transect.nc")).rename({"elevation":"bathy"})
 
+
+    ## Merge data into dataset
+    data = xr.merge([data[i] for i in data])
+
+    return data
+
+def save_ppdata(transect_data,topdown_data,basepath,recompute = False):
+    """
+    Save the postprocessed data to gdata. Takes computed topdown and transect data and saves each time slice to postprocessed folders
+    Time index override is used when processing one time slice at a time. That way the index can be used to name the file correctly
+    """
+    print(basepath)
+    print(basepath.name)
+    print(str(type(basepath.name)))
+    for i in ["topdown","transect"]:
+        if not os.path.exists(basepath / i):
+            os.makedirs(basepath / i)
+
+    for i in range(len(topdown_data.time.values)):
+        time = topdown_data.time.values[i]
+        if not os.path.exists(basepath / "topdown" / f"vorticity_time-{str(i).zfill(3)}.nc") or recompute:
+            topdown_data.isel(time = i).expand_dims("time").assign_coords(time = [time]).to_netcdf(basepath / "topdown" / str(basepath.name + f"_time-{str(round(time))}.nc"))
+
+        if not os.path.exists(basepath / "transect" / f"vorticity_time-{str(i).zfill(3)}.nc") or recompute:
+            transect_data.isel(time = i).expand_dims("time").assign_coords(time = [time]).to_netcdf(basepath / "transect" / str(basepath.name + f"_time-{str(round(time))}.nc"))
+
+
+    return
 
 ##### FILTERING AND DIAGNOSTICS #####
 
@@ -280,27 +310,75 @@ def plot_vorticity(data):
 
     return fig
 
-def calculate_ke(u,v,time):
+def plot_ke(data):
+    fig = plt.figure(figsize=(20, 12))
+    ax = fig.subplots(2,1)
 
-    u = u.fillna(0)
-    v = v.fillna(0)
+    cmap = matplotlib.cm.get_cmap('plasma')
 
-    u_ = u.sel(
-            time = slice(time -  0.5 * averaging_window, time + 0.5 *  averaging_window)
-            ).chunk({"time":-1}).drop(["lat","lon"])
-    v_ = v.sel(
-            time = slice(time -  0.5 * averaging_window, time + 0.5 *  averaging_window)
-            ).chunk({"time":-1}).drop(["lat","lon"])
+    ## HORIZONTAL PLOTS FIRST
 
-    uf = m2filter(
-        u_,
-        m2f)
-    vf = m2filter(
-        v_,
-        m2f)
+    data["vorticity_topdown"].plot.contour(ax = ax[0],levels = [-0.075,-0.025,0.025,0.075],cmap = "binary",linestyle = "solid")
+    (1032*(data["UU_topdown"] + data["VV_topdown"])).plot(ax = ax[0],cmap = cmap,cbar_kwargs={'label': "Kinetic Energy"},vmax = 40)
+
+    ## Add bathymetry plot
+    plot_topo(ax[0],data["bathy"])
 
 
-    return 1032 * (uf**2 + vf**2).mean("time")
+    ## Second axis: vertical transect
+    data["vorticity_transect"].plot.contour(ax = ax[1],levels = [-0.075,-0.025,0.025,0.075],cmap = "binary",linestyle = "solid")
+    (data["UU_transect"] + data["VV_transect"]).plot(ax = ax[1],cmap = cmap,cbar_kwargs={'label': "Kinetic Energy"},vmax = 0.02)
+    plot_topo(ax[1],data["bathy"],transect=0)
+
+    # fig.suptitle(exptname)
+    ax[1].invert_yaxis()
+    ax[0].set_xlabel('km from Tas')
+    ax[0].set_ylabel('km S to N')
+    ax[0].set_title('Kinetic Energy with Surface Speed contours')
+    ## put gridlines on plot
+    # ax[0].grid(True, which='both')
+    ax[0].hlines(y = 0,xmin = 100,xmax = 1450,linestyles = "dashed")
+    ax[1].set_xlabel('')
+    ax[1].set_ylabel('km S to N')
+    ax[1].set_title('Transect along middle of beam')
+    ax[0].text(0.95, 0.95, data["UU_transect"].time.values, transform=ax[0].transAxes, fontsize=10, va="top", ha="right")
+
+    return fig
+
+def plot_dissipation(data):
+    fig = plt.figure(figsize=(20, 12))
+    ax = fig.subplots(2,1)
+
+    cmap = matplotlib.cm.get_cmap('plasma')
+
+    ## HORIZONTAL PLOTS FIRST
+
+    data["vorticity_topdown"].plot.contour(ax = ax[0],levels = [-0.075,-0.025,0.025,0.075],cmap = "binary",linestyle = "solid")
+    data["dissipation_topdown"].plot(ax = ax[0],cmap = cmap,cbar_kwargs={'label': "Dissipation"},vmax = 40)
+
+    ## Add bathymetry plot
+    plot_topo(ax[0],data["bathy"])
+
+
+    ## Second axis: vertical transect
+    data["vorticity_transect"].plot.contour(ax = ax[1],levels = [-0.075,-0.025,0.025,0.075],cmap = "binary",linestyle = "solid")
+    data["dissipation_topdown"].plot(ax = ax[1],cmap = cmap,cbar_kwargs={'label': "Dissipation"},vmax = 0.02)
+    plot_topo(ax[1],data["bathy"],transect=0)
+
+    # fig.suptitle(exptname)
+    ax[1].invert_yaxis()
+    ax[0].set_xlabel('km from Tas')
+    ax[0].set_ylabel('km S to N')
+    ax[0].set_title('Dissipation of M2 energy with vorticity contours')
+    ## put gridlines on plot
+    # ax[0].grid(True, which='both')
+    ax[0].hlines(y = 0,xmin = 100,xmax = 1450,linestyles = "dashed")
+    ax[1].set_xlabel('')
+    ax[1].set_ylabel('km S to N')
+    ax[1].set_title('Transect along middle of beam')
+    ax[0].text(0.95, 0.95, data["vorticity_transect"].time.values, transform=ax[0].transAxes, fontsize=10, va="top", ha="right")
+
+    return fig
 
 def calculate_vorticity(rawdata):
     """
@@ -401,7 +479,7 @@ def plot_topo(ax,bathy = None,transect = None):
 
 
 
-def make_movie(data,plot_function,runname,plotname,framerate = 10,parallel = False,plot_kwargs = {}):
+def make_movie(data,plot_function,runname,plotname,framerate = 5,parallel = False,plot_kwargs = {}):
     """
     Custom function to make a movie of a plot function. Saves to a folder in dropbox. Intermediate frames are saved to /tmp
     data_list : dictionary of dataarrays required by plot function

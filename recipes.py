@@ -9,7 +9,8 @@ from matplotlib import pyplot as plt
 from pathlib import Path
 home = Path("/home/149/ab8992/tasman-tides")
 gdata = Path("/g/data/nm03/ab8992")
-
+import numpy as np
+import xarray as xr
 
 def startdask():
     try:
@@ -44,11 +45,11 @@ def surfacespeed_movie(experiment, outputs):
 
 def vorticity_movie(experiment, outputs):
     """
-    Make a movie of the surface speed for the given experiment and outputs
+    Make a movie of the vorticity for the given experiment and outputs
     """
     startdask()
 
-    data = tt.collect_data(experiment,ppdata=["vorticity_surface","vorticity_transect"],chunks = {"time":1},outputs=outputs,bathy=True)
+    data = tt.collect_data(experiment,ppdata=["vorticity"],chunks = {"time":1},outputs=outputs,bathy=True)
     print("loaded data")
     print(data)
     fig = plt.figure(figsize=(20, 12))
@@ -58,33 +59,59 @@ def vorticity_movie(experiment, outputs):
                 tt.plot_vorticity,
                 experiment,
                 "surface_speed",
-                framerate=10,
+                framerate=5,
                 parallel=True)
 
     return
 
-def save_ppdata(transect_data,topdown_data,basepath,recompute = False):
+def ke_movie(experiment, outputs):
     """
-    Save the postprocessed data to gdata. Takes computed topdown and transect data and saves each time slice to postprocessed folders
-    Time index override is used when processing one time slice at a time. That way the index can be used to name the file correctly
+    Make a movie of the vorticity for the given experiment and outputs
     """
-    print(basepath)
-    print(basepath.name)
-    print(str(type(basepath.name)))
-    for i in ["topdown","transect"]:
-        if not os.path.exists(basepath / i):
-            os.makedirs(basepath / i)
+    startdask()
 
-    for i in range(len(topdown_data.time.values)):
-        time = topdown_data.time.values[i]
-        if not os.path.exists(basepath / "topdown" / f"vorticity_time-{str(i).zfill(3)}.nc") or recompute:
-            topdown_data.isel(time = i).expand_dims("time").assign_coords(time = [time]).to_netcdf(basepath / "topdown" / str(basepath.name + f"_time-{str(round(time))}.nc"))
+    data = tt.collect_data("full-20",ppdata = ["vorticity","UU","VV"],outputs = outputs,bathy = True)
 
-        if not os.path.exists(basepath / "transect" / f"vorticity_time-{str(i).zfill(3)}.nc") or recompute:
-            transect_data.isel(time = i).expand_dims("time").assign_coords(time = [time]).to_netcdf(basepath / "transect" / str(basepath.name + f"_time-{str(round(time))}.nc"))
+    print("loaded data")
+    print(data)
+    fig = plt.figure(figsize=(20, 12))
 
+    print("Start making movie...")
+    tt.make_movie(data,
+                tt.plot_ke,
+                experiment,
+                "M2 Kinetic Energy",
+                framerate=5,
+                parallel=True)
 
     return
+
+def dissipation_movie(experiment, outputs):
+    """
+    Make a movie of the m2 dissipation anomalies for the given experiment and outputs
+    """
+    startdask()
+
+    data = tt.collect_data("full-20",ppdata = ["vorticity","dissipation"],outputs = outputs,bathy = True)
+
+    data["dissipation"] = data["dissipation"] - data["dissipation"].mean("time")
+
+    print("loaded data")
+    print(data)
+    fig = plt.figure(figsize=(20, 12))
+
+    print("Start making movie...")
+    tt.make_movie(data,
+                tt.plot_dissipation,
+                experiment,
+                "M2 dissipation",
+                framerate=5,
+                parallel=True)
+
+    return
+
+
+
 
 def save_vorticity(experiment,outputs,recompute = False):
     """
@@ -104,7 +131,7 @@ def save_vorticity(experiment,outputs,recompute = False):
     vorticity_topdown = tt.calculate_vorticity(rawdata).coarsen(time = 149,boundary = "trim").mean().drop("lat").drop("lon").rename("vorticity").isel(zl = 2)
     vorticity_transect = tt.calculate_vorticity(rawdata).coarsen(time = 149,boundary = "trim").mean().drop("lat").drop("lon").rename("vorticity").sel(yb = 0,method = "nearest")
 
-    save_ppdata(vorticity_transect,vorticity_topdown,basepath,recompute=recompute)
+    tt.save_ppdata(vorticity_transect,vorticity_topdown,basepath,recompute=recompute)
 
     return 
 
@@ -121,18 +148,22 @@ def save_filtered_vels(experiment,outputs,recompute = False):
     data = tt.collect_data(
         experiment,
         outputs=outputs,
-        rawdata = ["u","v"],
+        rawdata = ["u","v","ahh"],
         bathy=False,
         chunks = {"time": -1,"xb":-1,"zl":10}
         )
+    
     for i in range(0,len(data.time) // averaging_window):
-        mid_time =  data.time[round((i + 0.5) * averaging_window) ] ## Middle of time window time
+        mid_time =  data.time[int(np.ceil((i + 0.5) * averaging_window)) ] ## Middle of time window time
 
         print("Processing time slice",f"{i} = {mid_time}")
         u_ = data.u.isel(
                 time = slice(i * averaging_window, (i + 1) * averaging_window)
                 ).chunk({"time":-1}).drop(["lat","lon"]).fillna(0)
         v_ = data.v.isel(
+                time = slice(i * averaging_window, (i + 1) * averaging_window)
+                ).chunk({"time":-1}).drop(["lat","lon"]).fillna(0)
+        ahh = data.ahh.isel(
                 time = slice(i * averaging_window, (i + 1) * averaging_window)
                 ).chunk({"time":-1}).drop(["lat","lon"]).fillna(0)
         U = tt.m2filter(
@@ -142,18 +173,21 @@ def save_filtered_vels(experiment,outputs,recompute = False):
             v_,
             m2f).persist()
         
+        # Calculate dissipation as viscosity * laplacian(u)^2 
+        laplacian2 = (U.differentiate("xb").differentiate("xb") + V.differentiate("yb").differentiate("yb")
+                )**2
+        dissipation = (laplacian2.mean("time") * ahh.mean("time")).expand_dims("time").assign_coords(time = [mid_time]).rename("velocity_laplacian")
+
         data_to_save = {
             "UU" : (U * U).mean("time").expand_dims("time").assign_coords(time = [mid_time]).rename("UU"),
             "VV" : (V * V).mean("time").expand_dims("time").assign_coords(time = [mid_time]).rename("VV"),
             "UV" : (U * V).mean("time").expand_dims("time").assign_coords(time = [mid_time]).rename("UV"),
-            "laplacian" : (
-                U.differentiate("xb").differentiate("xb") + V.differentiate("yb").differentiate("yb")
-                ).mean("time").expand_dims("time").assign_coords(time = [mid_time]).rename("velocity_laplacian")
+            "dissipation" : dissipation
         }
 
         for key in data_to_save:
             basepath = gdata / "postprocessed" / experiment / key
-            save_ppdata(
+            tt.save_ppdata(
                 data_to_save[key].sel(yb = 0,method = "nearest"),
                 data_to_save[key].integrate("zl"),
                 basepath,
@@ -161,6 +195,22 @@ def save_filtered_vels(experiment,outputs,recompute = False):
             )
 
     return 
+
+def spinup_timeseries(experiment):
+    """
+    Timeseries of the total integrated kinetic energy in the domain of interest
+    """
+    u = xr.open_mfdataset(
+        f"/g/data/nm03/ab8992/outputs/{experiment}/output*/u/*",decode_times = False,parallel=True
+    ).fillna(0)
+    v = xr.open_mfdataset(
+        f"/g/data/nm03/ab8992/outputs/{experiment}/output*/v/*",decode_times = False,parallel=True
+    ).fillna(0)
+    print("Calculate ke")
+    ke = (u.u**2 * v.v**2).integrate("xb").integrate("yb").integrate("zl")
+    if not os.path.exists(f"/g/data/nm03/ab8992/postprocessed/{experiment}"):
+        os.makedirs(f"/g/data/nm03/ab8992/postprocessed/{experiment}")
+    ke.to_netcdf(f"/g/data/nm03/ab8992/postprocessed/{experiment}/ke_timeseries.nc")
 
 
 def qsub(recipe, experiment, outputs):
@@ -217,7 +267,7 @@ python3 /home/149/ab8992/tasman-tides/recipes.py -r {recipe} -e {experiment} -o 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Script to execute plotting functions from ttidelib")
-    parser.add_argument("-r", "--recipe", choices=["surfacespeed", "save_vorticity", "save_filtered_vels"], help="Select the recipe to execute")
+    parser.add_argument("-r", "--recipe", help="Select the recipe to execute")
     parser.add_argument("-e", "--experiment", help="Specify the experiment to apply the recipe to")
     parser.add_argument("-o", "--outputs", help="Specify the outputs to use",default = "output*")
     parser.add_argument("-q", "--qsub", default=1,type=int, help="Choose whether to execute directly or as qsub job")
@@ -229,9 +279,15 @@ if __name__ == "__main__":
     if args.qsub == 1:
         print(f"qsub {args.recipe}")
         qsub(args.recipe, args.experiment, args.outputs)
+
     elif args.recipe == "surfacespeed":
         surfacespeed_movie(args.experiment, args.outputs)
+
     elif args.recipe == "save_vorticity":
         save_vorticity(args.experiment, args.outputs,args.recompute)
+
     elif args.recipe == "save_filtered_vels":
         save_filtered_vels(args.experiment, args.outputs,args.recompute)
+
+    elif args.recipe == "spinup_timeseries":
+        spinup_timeseries(args.experiment)

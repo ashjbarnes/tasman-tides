@@ -12,15 +12,15 @@ ttide
 ## Instead of regional selection, split the variables of interest into separate files and slice afterwards in Python
 
 ## 3D Diagnostifcs on z*
-#"u", 1, "hours", 1, "hours", "time"
-#"v", 1, "hours", 1, "hours", "time"
-#"rho", 1, "hours", 1, "hours", "time"
-#"ahh", 1, "hours", 1, "hours", "time"
+"u", 1, "hours", 1, "hours", "time"
+"v", 1, "hours", 1, "hours", "time"
+"rho", 1, "hours", 1, "hours", "time"
+"ahh", 1, "hours", 1, "hours", "time"
 
-#"ocean_model_z","u",   "u",   "u","all",.false.,"none",2
-#"ocean_model_z","v",   "v",   "v","all",.false.,"none",2
-#"ocean_model_z","Ahh",   "ahh",   "ahh","all",.false.,"none",2
-#"ocean_model_z","rhopot2",   "rho",   "rho","all",.false.,"none",2
+"ocean_model_z","u",   "u",   "u","all",.false.,"none",2
+"ocean_model_z","v",   "v",   "v","all",.false.,"none",2
+"ocean_model_z","Ahh",   "ahh",   "ahh","all",.false.,"none",2
+"ocean_model_z","rhopot2",   "rho",   "rho","all",.false.,"none",2
 
 
 ## 3D Diagnostics on isopycnal surfaces
