@@ -201,3 +201,8 @@ if __name__ == "__main__":
         del tauy
         del surface_transect
 
+        for i in ["u","v","ahh","e","rho"]:
+            subprocess.run(
+            f"rm {str(mom6out) + "/*.{i}.nc"}",
+            shell=True
+            )
