@@ -166,7 +166,6 @@ if __name__ == "__main__":
             except Exception as e:
                 print(f"Failed to open {diag}")
                 print(e)
-                pass
 
             out = tt.beamgrid(ds,xname = hourly_diags[diag]["x"],yname = hourly_diags[diag]["y"]).persist()
 
@@ -201,8 +200,8 @@ if __name__ == "__main__":
         del tauy
         del surface_transect
 
-        for i in ["u","v","ahh","e","rho"]:
-            subprocess.run(
-            f"rm {str(mom6out) + "/*.{i}.nc"}",
-            shell=True
-            )
+        # for i in ["u","v","ahh","e","rho"]:
+        #     subprocess.run(
+        #     f"rm {str(mom6out) + '/*.{i}.nc'}",
+        #     shell=True
+        #     )
