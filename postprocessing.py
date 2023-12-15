@@ -11,7 +11,7 @@ sys.path.append("/home/149/ab8992/tasman-tides/")
 import ttidelib as tt
 import json
 import argparse
-
+import subprocess
 #TODO Allow python file to take arguments for chunking?
 
 
