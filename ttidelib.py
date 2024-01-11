@@ -592,7 +592,7 @@ def plot_hef(data,fig,i,framedim = "TIME",**kwargs):
 
 
 
-def plot_ke(data,fig,i,framedim = "TIME",**kwargs):
+def plot_ke(data,framedim = "TIME",**kwargs):
 
     ax = fig.subplots(2,1)
 
