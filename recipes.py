@@ -27,8 +27,7 @@ def surfacespeed_movie(experiment, outputs):
     startdask()
 
     data = tt.collect_data(experiment,surface_data=["speed"],chunks = {"time":1},outputs=outputs,bathy=True)
-    print("loaded data")
-    print(data)
+
     fig = plt.figure(figsize=(15, 12))
 
     print("Start making movie...")
@@ -58,7 +57,7 @@ def vorticity_movie(experiment, outputs):
     tt.make_movie(data,
                 tt.plot_vorticity,
                 experiment,
-                "surface_speed",
+                "vorticity",
                 framerate=5,
                 parallel=True)
 
@@ -92,11 +91,9 @@ def dissipation_movie(experiment, outputs):
     """
     startdask()
 
-    data = tt.collect_data("full-20",ppdata = ["vorticity","dissipation"],outputs = outputs,bathy = True)
-
+    data = tt.collect_data("full-20",ppdata = ["vorticity","dissipation"],outputs = outputs,bathy = True,chunks = {"time":1})
 
     print("loaded data")
-    print(data)
     fig = plt.figure(figsize=(20, 12))
 
     print("Start making movie...")
@@ -109,8 +106,8 @@ def dissipation_movie(experiment, outputs):
 
     plt.clf()
     print("Make dissipation anomaly movie")
-    data["dissipation_topdown"] =- data["dissipation_topdown"].mean("time")
-    data["dissipation_transect"] =- data["dissipation_transect"].mean("time")
+    data["dissipation_topdown"] -= data["dissipation_topdown"].mean("time")
+    data["dissipation_transect"] -= data["dissipation_transect"].mean("time")
 
     fig = plt.figure(figsize=(20, 12))
 
