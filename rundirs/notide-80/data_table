@@ -2,8 +2,8 @@
 "ATM", "p_bot",  "", "", "bilinear", 100410.25
 "ATM", "t_bot",  "", "", "bilinear", 289.9
 "ATM", "sphum_bot", "", "", "bilinear", 0.0083
-"ATM", "u_bot", "u10", "./INPUT/forcing/10u_ERA5", "bicubic", 1.0
-"ATM", "v_bot", "v10", "./INPUT/forcing/10v_ERA5", "bicubic", 1.0
+"ATM", "u_bot", "u10", "./INPUT/10u_ERA5", "bicubic", 1.0
+"ATM", "v_bot", "v10", "./INPUT/10v_ERA5", "bicubic", 1.0
 "ATM", "z_bot", "", "", "bilinear", 10.0
 "ATM", "gust", "", "", "bilinear", 1.0e-4
 "ICE", "lw_flux_dn", "", "", "bilinear", 1.0
