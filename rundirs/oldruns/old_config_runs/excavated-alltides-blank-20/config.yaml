@@ -8,6 +8,7 @@ shortpath: /scratch/x77
 
 model: mom6
 input:
+    - /g/data/nm03/ab8992/ttide-inputs/era5/
     - /g/data/nm03/ab8992/ttide-inputs/blank-20/
 
 exe: /g/data/v45/ab8992/mom_executables/angus_fms

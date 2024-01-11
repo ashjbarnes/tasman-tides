@@ -7,6 +7,7 @@ jobfs: 10GB
 shortpath: /scratch/nm03
 model: mom6
 input:
+    - /g/data/nm03/ab8992/ttide-inputs/era5/
     - /g/data/nm03/ab8992/ttide-inputs/blank-40
 
 exe: /g/data/v45/ab8992/mom_executables/angus_fms
