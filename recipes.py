@@ -80,7 +80,7 @@ def ke_movie(experiment, outputs):
     tt.make_movie(data,
                 tt.plot_ke,
                 experiment,
-                "M2 Kinetic Energy",
+                "M2_Kinetic_Energy",
                 framerate=5,
                 parallel=True)
 
@@ -94,7 +94,6 @@ def dissipation_movie(experiment, outputs):
 
     data = tt.collect_data("full-20",ppdata = ["vorticity","dissipation"],outputs = outputs,bathy = True)
 
-    data["dissipation"] = data["dissipation"] - data["dissipation"].mean("time")
 
     print("loaded data")
     print(data)
@@ -104,9 +103,25 @@ def dissipation_movie(experiment, outputs):
     tt.make_movie(data,
                 tt.plot_dissipation,
                 experiment,
-                "M2 dissipation",
+                "M2_dissipation",
                 framerate=5,
                 parallel=True)
+
+    plt.clf()
+    print("Make dissipation anomaly movie")
+    data["dissipation"] = data["dissipation"] - data["dissipation"].mean("time")
+
+    fig = plt.figure(figsize=(20, 12))
+
+    print("Start making movie...")
+    tt.make_movie(data,
+                tt.plot_dissipation,
+                experiment,
+                "M2_dissipation_anomaly",
+                framerate=5,
+                parallel=True,
+                plot_kwargs = {"anomaly":True}
+    )
 
     return
 
@@ -296,3 +311,6 @@ if __name__ == "__main__":
 
     elif args.recipe == "spinup_timeseries":
         spinup_timeseries(args.experiment)
+
+    elif args.recipe == "ke_movie":
+        ke_movie(args.experiment, args.outputs)

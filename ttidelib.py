@@ -345,7 +345,19 @@ def plot_ke(data):
 
     return fig
 
-def plot_dissipation(data,vmax = 1):
+def plot_dissipation(data,vmax_topdown = 5e5,anomaly = False):
+    vmax_topdown = 5e5
+    vmin_topdown = 0
+    vmax_transect = 500
+    vmin_transect = 0
+    if anomaly == True:
+        data["dissipation_topdown"] = data["dissipation_topdown"] - data["dissipation_topdown"].mean("time")
+        data["dissipation_transect"] = data["dissipation_transect"] - data["dissipation_transect"].mean("time")
+        vmax_topdown = 400000
+        vmin_topdown = -400000
+        vmax_transect = 200
+        vmin_transect = -200
+        cmap = "Rdbu"
     fig = plt.figure(figsize=(20, 12))
     ax = fig.subplots(2,1)
 
@@ -353,16 +365,16 @@ def plot_dissipation(data,vmax = 1):
 
     ## HORIZONTAL PLOTS FIRST
 
-    data["vorticity_topdown"].plot.contour(ax = ax[0],levels = [-0.075,-0.025,0.025,0.075],cmap = "binary",linestyle = "solid")
-    data["dissipation_topdown"].plot(ax = ax[0],cmap = cmap,cbar_kwargs={'label': "Dissipation"},vmax = vmax)
+    data["vorticity_topdown"].plot.contour(ax = ax[0],levels = [-0.075,-0.025,0.025,0.075],cmap = cmap,linestyle = "solid")
+    data["dissipation_topdown"].plot(ax = ax[0],cmap = cmap,cbar_kwargs={'label': "Dissipation"},vmax = vmax_topdown)
 
     ## Add bathymetry plot
     plot_topo(ax[0],data["bathy"])
 
 
     ## Second axis: vertical transect
-    data["vorticity_transect"].plot.contour(ax = ax[1],levels = [-0.075,-0.025,0.025,0.075],cmap = "binary",linestyle = "solid")
-    data["dissipation_transect"].plot(ax = ax[1],cmap = cmap,cbar_kwargs={'label': "Dissipation"},vmax = vmax)
+    data["vorticity_transect"].plot.contour(ax = ax[1],levels = [-0.075,-0.025,0.025,0.075],cmap = cmap,linestyle = "solid")
+    data["dissipation_transect"].plot(ax = ax[1],cmap = cmap,cbar_kwargs={'label': "Dissipation"},vmax = vmax_transect)
     plot_topo(ax[1],data["bathy"],transect=0)
 
     # fig.suptitle(exptname)
@@ -513,7 +525,7 @@ def make_movie(data,plot_function,runname,plotname,framerate = 5,parallel = Fals
     if parallel == True:
         @dask.delayed
         def process_chunk(data,i):
-            fig = plot_function(data.isel(time = i))
+            fig = plot_function(data.isel(time = i),**plot_kwargs)
             fig.savefig(tmppath / f"frame_{str(i).zfill(5)}.png")
             plt.close()
             return None
