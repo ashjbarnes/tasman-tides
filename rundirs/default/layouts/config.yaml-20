@@ -23,3 +23,8 @@ mpi:
   module: openmpi/4.1.2
 postscript:
   postprocessing.sh
+
+
+find rundirs -name 'data_table' -print0 | while IFS= read -r -d '' file
+do
+done
