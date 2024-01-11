@@ -140,6 +140,7 @@ def save_filtered_vels(experiment,outputs,recompute = False):
     Calculate the filtered velocities over 149 hours and save u'u', v'v', u'v' all averaged over 149 hours as separate files
     """
     startdask()
+    basepath = gdata / "postprocessed" / experiment
 
     m2 = 360 / 28.984104 ## Period of m2 in hours
     averaging_window = int(12 * m2) ## this comes out to be 149.0472 hours, so close enough to a multiple of tidal periods
@@ -157,7 +158,7 @@ def save_filtered_vels(experiment,outputs,recompute = False):
         mid_time =  data.time[int(np.floor((i + 0.5) * averaging_window)) ] ## Middle of time window time
 
         ## Here skip the time slice if it already exists and recompute is False
-        if os.path.exists(basepath / "topdown" / f"dissipation_time-{str(i).zfill(3)}.nc") and not recompute:
+        if os.path.exists(basepath / "dissipation" / "topdown" / f"dissipation_time-{str(i).zfill(3)}.nc") and not recompute:
             continue
 
 
@@ -191,11 +192,10 @@ def save_filtered_vels(experiment,outputs,recompute = False):
         }
 
         for key in data_to_save:
-            basepath = gdata / "postprocessed" / experiment / key
             tt.save_ppdata(
                 data_to_save[key].sel(yb = 0,method = "nearest"),
                 data_to_save[key].integrate("zl"),
-                basepath,
+                basepath / key,
                 recompute=recompute
             )
 
