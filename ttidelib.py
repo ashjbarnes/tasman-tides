@@ -284,12 +284,12 @@ def filter_velocities(data):
 
 def plot_vorticity(data):
     """
-    Plot the vorticity at both surface and a transect. Requires ppdata: vorticity_surface, vorticity_transect, bathy.
+    Plot the vorticity at both surface and a transect. Requires ppdata: vorticity_topdown, vorticity_transect, bathy.
     """
     fig,ax = plt.subplots(2,1,figsize = (20,12))
 
 
-    data["vorticity_surface"].plot(vmin = - 0.075,vmax = 0.075,cmap = "RdBu",ax = ax[0])
+    data["vorticity_topdown"].plot(vmin = - 0.075,vmax = 0.075,cmap = "RdBu",ax = ax[0])
     data["vorticity_transect"].plot(vmin = - 0.05,vmax = 0.05,cmap = "RdBu",ax = ax[1])
 
     ax[0].set_title("")
