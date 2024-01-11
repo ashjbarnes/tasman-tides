@@ -345,7 +345,7 @@ def plot_ke(data):
 
     return fig
 
-def plot_dissipation(data):
+def plot_dissipation(data,vmax = 1):
     fig = plt.figure(figsize=(20, 12))
     ax = fig.subplots(2,1)
 
@@ -354,7 +354,7 @@ def plot_dissipation(data):
     ## HORIZONTAL PLOTS FIRST
 
     data["vorticity_topdown"].plot.contour(ax = ax[0],levels = [-0.075,-0.025,0.025,0.075],cmap = "binary",linestyle = "solid")
-    data["dissipation_topdown"].plot(ax = ax[0],cmap = cmap,cbar_kwargs={'label': "Dissipation"},vmax = 40)
+    data["dissipation_topdown"].plot(ax = ax[0],cmap = cmap,cbar_kwargs={'label': "Dissipation"},vmax = vmax)
 
     ## Add bathymetry plot
     plot_topo(ax[0],data["bathy"])
@@ -362,7 +362,7 @@ def plot_dissipation(data):
 
     ## Second axis: vertical transect
     data["vorticity_transect"].plot.contour(ax = ax[1],levels = [-0.075,-0.025,0.025,0.075],cmap = "binary",linestyle = "solid")
-    data["dissipation_topdown"].plot(ax = ax[1],cmap = cmap,cbar_kwargs={'label': "Dissipation"},vmax = 0.02)
+    data["dissipation_transect"].plot(ax = ax[1],cmap = cmap,cbar_kwargs={'label': "Dissipation"},vmax = vmax)
     plot_topo(ax[1],data["bathy"],transect=0)
 
     # fig.suptitle(exptname)
