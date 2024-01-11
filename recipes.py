@@ -154,7 +154,12 @@ def save_filtered_vels(experiment,outputs,recompute = False):
         )
     
     for i in range(0,len(data.time) // averaging_window):
-        mid_time =  data.time[int(np.ceil((i + 0.5) * averaging_window)) ] ## Middle of time window time
+        mid_time =  data.time[int(np.floor((i + 0.5) * averaging_window)) ] ## Middle of time window time
+
+        ## Here skip the time slice if it already exists and recompute is False
+        if os.path.exists(basepath / "topdown" / f"dissipation_time-{str(i).zfill(3)}.nc") and not recompute:
+            continue
+
 
         print("Processing time slice",f"{i} = {mid_time}")
         u_ = data.u.isel(
