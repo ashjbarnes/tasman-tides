@@ -108,6 +108,8 @@ def dissipation_movie(experiment, outputs):
     plt.clf()
     print("Make dissipation anomaly movie")
 
+    data["dissipation_topdown"] -= data["dissipation_topdown"].mean("time")
+    data["dissipation_transect"] -= data["dissipation_transect"].mean("time")
     fig = plt.figure(figsize=(20, 12))
 
     print("Start making movie...")

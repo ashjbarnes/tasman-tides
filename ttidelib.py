@@ -351,8 +351,6 @@ def plot_dissipation(data,vmax_topdown = 5e5,anomaly = False):
     vmax_transect = 500
     vmin_transect = 0
     if anomaly == True:
-        data["dissipation_topdown"] -= data["dissipation_topdown"].mean("time")
-        data["dissipation_transect"] -= data["dissipation_transect"].mean("time")
         vmax_topdown = 400000
         vmin_topdown = -400000
         vmax_transect = 200
