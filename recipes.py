@@ -244,7 +244,7 @@ def qsub(recipe, experiment, outputs):
 #PBS -l mem=112gb
 #PBS -l walltime=6:00:00
 #PBS -l ncpus=28
-#PBS -l jobfs=2gb
+#PBS -l jobfs=100gb
 #PBS -l storage=gdata/v45+scratch/v45+scratch/x77+gdata/v45+gdata/nm03+gdata/hh5
 PYTHONNOUSERSITE=1
 module use /g/data/hh5/public/modules
