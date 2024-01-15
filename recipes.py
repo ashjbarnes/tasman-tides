@@ -11,6 +11,7 @@ home = Path("/home/149/ab8992/tasman-tides")
 gdata = Path("/g/data/nm03/ab8992")
 import numpy as np
 import xarray as xr
+from cftime import date2num,DatetimeJulian
 
 def startdask():
     try:
@@ -279,6 +280,46 @@ python3 /home/149/ab8992/tasman-tides/recipes.py -r {recipe} -e {experiment} -o 
 
     return
     
+def stocktake():
+    """
+    Parses all of the experiment folders in the 'gdata' directory and outputs a list of the experiments 
+    alongside the timestamp of the last output in both the 'postprocessed' and 'outputs' directories.
+    """
+    base_dirs = [
+        # Path('/g/data/nm03/ab8992/postprocessed'),
+        Path('/g/data/nm03/ab8992/outputs')
+    ]
+    expts = [
+        "full-20","full-40","full-80","notide-20","notide-40","notide-80","blank-20","blank-40","blank-80"
+    ]
+    print("Expt\t\t Last \t End Date \t Total Days")
+    for expt in expts:
+        for base_dir in base_dirs:
+            
+            # Get a list of all netCDF files in the directory
+            files = (base_dir / expt).glob("**/surface.nc")
+            lastfile = None
+            for file in files:
+                if "output" in file.parent.name and (lastfile == None or int(file.parent.name.split("output")[1]) > int(lastfile.parent.name.split("output")[1])):
+                    lastfile = file
+
+            ds = xr.open_dataset(lastfile)
+
+            # Get the 'time' variable
+            time = ds['time'].values[-1]
+            # Convert the 'time' variable to a Julian Day number
+            time_julian = date2num(time, 'days since 0001-01-01 00:00:00')
+
+            # Convert the specific date to a Julian Day number
+            date_julian = date2num(DatetimeJulian(2015, 1, 1), 'days since 0001-01-01 00:00:00')
+
+            # Find the number of days between the two dates
+            total_days = time_julian - date_julian
+            
+            # Get the last timestamp
+            last_timestamp = time
+            print(f"{expt} \t {lastfile.parent.name.split('output')[-1]} \t {last_timestamp.strftime('%Y-%m-%d')} \t {round(total_days)}")
+    
         
 
 if __name__ == "__main__":
@@ -316,3 +357,6 @@ if __name__ == "__main__":
 
     elif args.recipe == "vorticity_movie":
         vorticity_movie(args.experiment, args.outputs)
+
+    elif args.recipe == "stocktake":
+        stocktake()
