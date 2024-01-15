@@ -92,7 +92,7 @@ def dissipation_movie(experiment, outputs):
     """
     startdask()
 
-    data = tt.collect_data("full-20",ppdata = ["vorticity","dissipation"],outputs = outputs,bathy = True,chunks = {"time":1})
+    data = tt.collect_data(experiment,ppdata = ["vorticity","dissipation"],outputs = outputs,bathy = True,chunks = {"time":1})
 
     print("loaded data")
     fig = plt.figure(figsize=(20, 12))

@@ -350,6 +350,8 @@ def plot_dissipation(data,vmax_topdown = 5e5,anomaly = False):
     vmin_topdown = 0
     vmax_transect = 500
     vmin_transect = 0
+    cmap = matplotlib.cm.get_cmap('plasma')
+
     if anomaly == True:
         vmax_topdown = 400000
         vmin_topdown = -400000
@@ -359,7 +361,6 @@ def plot_dissipation(data,vmax_topdown = 5e5,anomaly = False):
     fig = plt.figure(figsize=(20, 12))
     ax = fig.subplots(2,1)
 
-    cmap = matplotlib.cm.get_cmap('plasma')
 
     ## HORIZONTAL PLOTS FIRST
 
