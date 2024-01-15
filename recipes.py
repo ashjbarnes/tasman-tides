@@ -333,9 +333,12 @@ if __name__ == "__main__":
     parser.add_argument("-c", "--recompute", default=False,type=bool, help="Choose whether to execute directly or as qsub job")
     args = parser.parse_args()
 
-    print(args)
 
-    if args.qsub == 1:
+    if args.recipe == "stocktake":
+        stocktake()
+        
+
+    elif args.qsub == 1:
         print(f"qsub {args.recipe}")
         qsub(args.recipe, args.experiment, args.outputs)
 
@@ -360,5 +363,3 @@ if __name__ == "__main__":
     elif args.recipe == "vorticity_movie":
         vorticity_movie(args.experiment, args.outputs)
 
-    elif args.recipe == "stocktake":
-        stocktake()
