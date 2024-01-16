@@ -1,6 +1,6 @@
-"ATM", "p_surf", "", "", "bilinear", 101325.0
-"ATM", "p_bot",  "", "", "bilinear", 101325.0
-"ATM", "t_bot",  "t2m", "./INPUT/forcing/2t_ERA5.nc", "bilinear", 1.0
+"ATM", "p_surf", "sp", "./INPUT/forcing/sp_ERA5.nc", "bilinear", 1.0
+"ATM", "p_bot",  "sp", "./INPUT/forcing/sp_ERA5.nc", "bilinear", 1.0
+"ATM", "t_bot",  "", "", "bilinear", 290.0
 "ATM", "sphum_bot", "q", "./INPUT/forcing/q_ERA5.nc", "bilinear", 1.0
 "ATM", "u_bot", "u10", "./INPUT/forcing/10u_ERA5.nc", "bicubic", 1.0
 "ATM", "v_bot", "v10", "./INPUT/forcing/10v_ERA5.nc", "bicubic", 1.0
