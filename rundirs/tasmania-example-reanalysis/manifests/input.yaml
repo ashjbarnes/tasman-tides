@@ -4,12 +4,12 @@ version: 1.0
 work/INPUT/atmos_mosaic_tile1Xland_mosaic_tile1.nc:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/tasmania-example-reanalysis/atmos_mosaic_tile1Xland_mosaic_tile1.nc
   hashes:
-    binhash: 2e5002c94072ce47675a09b2f7512cf6
+    binhash: 3df8da04e1f1cc8e15546656e0c7ee4a
     md5: 01e67ee3bd3fcd21d35662076633fe9b
 work/INPUT/atmos_mosaic_tile1Xocean_mosaic_tile1.nc:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/tasmania-example-reanalysis/atmos_mosaic_tile1Xocean_mosaic_tile1.nc
   hashes:
-    binhash: 7650e6a6ef89faa18663f41f55fec388
+    binhash: cffc1deef11c954bda40e316c6ca9826
     md5: f1e3a10d7347be25a41e9883ada98d4b
 work/INPUT/bathy_original.nc:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/tasmania-example-reanalysis/bathy_original.nc
@@ -21,95 +21,115 @@ work/INPUT/forcing/10u_ERA5:
   hashes:
     binhash: 76bd4e450a040c01df5163f83fefa340
     md5: c04206029acd3563dd6286952b945a92
+work/INPUT/forcing/10u_ERA5.nc:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/tasmania-example-reanalysis/forcing/10u_ERA5.nc
+  hashes:
+    binhash: b8ba56eeb178dd77e8251a3154b29293
+    md5: 4bbb49294c1243aafbc2fad6fa5ddba6
 work/INPUT/forcing/10v_ERA5:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/tasmania-example-reanalysis/forcing/10v_ERA5
   hashes:
     binhash: 1c4c014bbac1a1ed5fc122af05c6649f
     md5: f122291747a209a197b760c998c23321
+work/INPUT/forcing/10v_ERA5.nc:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/tasmania-example-reanalysis/forcing/10v_ERA5.nc
+  hashes:
+    binhash: 8272c9e8f53465d09527bb15da11eb3f
+    md5: eadc033492b0dc3f3aa3feb000ebd83d
 work/INPUT/forcing/2t_ERA5:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/tasmania-example-reanalysis/forcing/2t_ERA5
   hashes:
     binhash: ab35f8d4f75ca529805996dcf04e99b9
     md5: 419c1e3a3b752600073f9821e85fef41
+work/INPUT/forcing/2t_ERA5.nc:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/tasmania-example-reanalysis/forcing/2t_ERA5.nc
+  hashes:
+    binhash: 44413c2785d87a4dd82838585cbf1411
+    md5: eb8b3f480ce03997654f136f3cee7af9
 work/INPUT/forcing/forcing_obc_segment_001.nc:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/tasmania-example-reanalysis/forcing/forcing_obc_segment_001.nc
   hashes:
-    binhash: c612e52c0b7904bb4ab851e0f3c10b7a
+    binhash: 13923cd437f9d8ecf8024f6c66b55b48
     md5: 25e4c76d9ff7bdb657e0f1b3fa6bdb7d
 work/INPUT/forcing/forcing_obc_segment_002.nc:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/tasmania-example-reanalysis/forcing/forcing_obc_segment_002.nc
   hashes:
-    binhash: 4869b01e1bbbfcf22ebddba455078d66
+    binhash: ff64e35c5d6f9a4363dcd08a2e4e4a14
     md5: f801e8f49fb1379853bfff0ca1eba3cb
 work/INPUT/forcing/forcing_obc_segment_003.nc:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/tasmania-example-reanalysis/forcing/forcing_obc_segment_003.nc
   hashes:
-    binhash: 8caf7d4a428ad0a65e7a9f3bfbb2566c
+    binhash: 918b3afd74552f4e84b4fb88b8673cb7
     md5: 135b350d186c81f431383e189d940850
 work/INPUT/forcing/forcing_obc_segment_004.nc:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/tasmania-example-reanalysis/forcing/forcing_obc_segment_004.nc
   hashes:
-    binhash: 02589839adca29f3e35a227206737a53
+    binhash: d40c03deb1b885f1f764ace82f95b8c4
     md5: 1a0f3c101a89cff72c632675b54b3dfa
 work/INPUT/forcing/init_eta.nc:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/tasmania-example-reanalysis/forcing/init_eta.nc
   hashes:
-    binhash: 2257d499a866296ae2d5e1e70c861604
+    binhash: 06fbb5498b60d8c8bd5473c839ee8155
     md5: 60ddba9be996bda1b0af6802a49dd3a4
 work/INPUT/forcing/init_tracers.nc:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/tasmania-example-reanalysis/forcing/init_tracers.nc
   hashes:
-    binhash: 5b6440311daa331411fab89651c9980a
+    binhash: 6cd7349437eea689de5140330144cbe4
     md5: f6c1fab9e75f2bf48b12f58e61b38160
 work/INPUT/forcing/init_vel.nc:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/tasmania-example-reanalysis/forcing/init_vel.nc
   hashes:
-    binhash: 2bfd86538222c61b59d127fc1900d997
+    binhash: e75c15bf41b20af7eeca73cf2a64b0e1
     md5: 949ce360015a3e7dd013345ca03466d9
 work/INPUT/forcing/q_ERA5:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/tasmania-example-reanalysis/forcing/q_ERA5
   hashes:
-    binhash: 1a4bc811d73404e4ec14a8959b8bd7fa
-    md5: f34833654b036e9c2a374a0ec2466ce3
+    binhash: 2d66ca9cb57a72940bddfd357a2db140
+    md5: e095553f3cb2e44a54ecd1589005ca27
 work/INPUT/forcing/sp_ERA5:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/tasmania-example-reanalysis/forcing/sp_ERA5
   hashes:
     binhash: a5308d84b7270de8af86b57890e77ce2
     md5: fa7ef5f1d65a7ad03f6d4af510ceb7f4
+work/INPUT/forcing/sp_ERA5.nc:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/tasmania-example-reanalysis/forcing/sp_ERA5.nc
+  hashes:
+    binhash: 339093ac9eeabad42b3cbd94a1f9e79e
+    md5: 86e151944dc87aca028d22f3784a8e10
 work/INPUT/grid_spec.nc:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/tasmania-example-reanalysis/grid_spec.nc
   hashes:
-    binhash: 3eae617d9a2fbf9585c53908b3cb04dd
+    binhash: a7f51b8635037b7cabf8dad57558d059
     md5: 844422b6e25238923bb4395ef0f19040
 work/INPUT/hgrid.nc:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/tasmania-example-reanalysis/hgrid.nc
   hashes:
-    binhash: b7eb570fffa3d053eaab69a911593dc1
+    binhash: 68fe021ea33a10502442e891bd9412f9
     md5: 35caddc880d5a13c5be5bce667cf81dc
 work/INPUT/land_mask.nc:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/tasmania-example-reanalysis/land_mask.nc
   hashes:
-    binhash: 3d14c22a5ea6982710795ab8d08dcce8
+    binhash: 1bb719730b1b780acbfab29955eb5e67
     md5: 1887f6b4b0d0ab08df2c847bee8c8fbc
 work/INPUT/land_mosaic_tile1Xocean_mosaic_tile1.nc:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/tasmania-example-reanalysis/land_mosaic_tile1Xocean_mosaic_tile1.nc
   hashes:
-    binhash: 59b60082ec074522c5c81ec6d39ee4d5
+    binhash: 648a2e25ccf5c3adef48b66ae821f66b
     md5: 0f4c031bb9fd5550412c86c75e3b23dc
 work/INPUT/mask_table.2.10x10:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/tasmania-example-reanalysis/mask_table.2.10x10
   hashes:
-    binhash: 9767e1c870bc0b00f8d03ad984010212
+    binhash: 86a843f728315dfd3363076ee0a870e1
     md5: 6db57bcb3935e619d8ad53d96d40ad1d
 work/INPUT/ocean_mask.nc:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/tasmania-example-reanalysis/ocean_mask.nc
   hashes:
-    binhash: 7cdfdfb4d551b5fcfb0f389e06e50059
+    binhash: 7e599c53244cdf7d5af7145508e6ad3d
     md5: fd70a4de83b99e111945aa12a7f20ac0
 work/INPUT/ocean_mosaic.nc:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/tasmania-example-reanalysis/ocean_mosaic.nc
   hashes:
-    binhash: 02f4ce7d64efd952ca2e0d6e0c59cb60
+    binhash: 6230e6b8af1b07f334e4c02dfe508dbd
     md5: 3b63dee6974d13cd63617406d19d8946
 work/INPUT/topog.nc:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/tasmania-example-reanalysis/topog.nc
@@ -124,25 +144,25 @@ work/INPUT/topog_raw.nc:
 work/INPUT/vcoord.nc:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/tasmania-example-reanalysis/vcoord.nc
   hashes:
-    binhash: 9b4acd284e5d3b9423a5c16e8e3df123
+    binhash: 74484e1826e9709580deb8e648bff7ff
     md5: 4baa775b818c9d4ccdd1a2c23a634693
 work/INPUT/weights/bilinear_velocity_weights_east.nc:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/tasmania-example-reanalysis/weights/bilinear_velocity_weights_east.nc
   hashes:
-    binhash: 72ed1b6e3f6cc5926ef0e7d7b5c2dff5
+    binhash: 17cfc660614ea1b75711d6ce0c9e97eb
     md5: 7e4f5180a95335c6ec221619f6ad1e74
 work/INPUT/weights/bilinear_velocity_weights_north.nc:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/tasmania-example-reanalysis/weights/bilinear_velocity_weights_north.nc
   hashes:
-    binhash: 8f1769920265fcbf24223ea08ec75a70
+    binhash: bbf9df67a6425d2b39fb342608f47398
     md5: f39cf0350e5ac900dcb185e5cced7976
 work/INPUT/weights/bilinear_velocity_weights_south.nc:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/tasmania-example-reanalysis/weights/bilinear_velocity_weights_south.nc
   hashes:
-    binhash: 8a0043a66c1fcd876ec611504c598c17
+    binhash: 14053b88eca0072fef822c9c589708cd
     md5: d9343f0146afdd5efb4d80e93bd17563
 work/INPUT/weights/bilinear_velocity_weights_west.nc:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/tasmania-example-reanalysis/weights/bilinear_velocity_weights_west.nc
   hashes:
-    binhash: 8f025a8628d2c44f8bc2618e396887a1
+    binhash: 7057186110a33649b2052da6e3c236b1
     md5: c8dfcd8775e23c3255d2c5b4c708a297
