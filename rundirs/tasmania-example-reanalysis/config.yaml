@@ -10,7 +10,7 @@ model: mom6
 input:
     - /g/data/nm03/ab8992/ttide-inputs/tasmania-example-reanalysis
 
-exe: /g/data/v45/ab8992/mom_executables/dec-23-build
+exe: /g/data/v45/ab8992/mom_executables/angus_fms
 collate: false
 #runlog: true
 storage:
