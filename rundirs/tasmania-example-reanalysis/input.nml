@@ -77,6 +77,7 @@
     bulk_zu = 10.
     bulk_zt = 2.
     bulk_zq = 2.
+/
 
 &xgrid_nml
     make_exchange_reproduce = .false.
