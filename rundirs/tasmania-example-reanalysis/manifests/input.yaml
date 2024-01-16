@@ -81,10 +81,10 @@ work/INPUT/forcing/init_vel.nc:
   hashes:
     binhash: e75c15bf41b20af7eeca73cf2a64b0e1
     md5: 949ce360015a3e7dd013345ca03466d9
-work/INPUT/forcing/q_ERA5:
-  fullpath: /g/data/nm03/ab8992/ttide-inputs/tasmania-example-reanalysis/forcing/q_ERA5
+work/INPUT/forcing/q_ERA5.nc:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/tasmania-example-reanalysis/forcing/q_ERA5.nc
   hashes:
-    binhash: 2d66ca9cb57a72940bddfd357a2db140
+    binhash: 7d03e26cb714f428b33c0ad6376d5863
     md5: e095553f3cb2e44a54ecd1589005ca27
 work/INPUT/forcing/sp_ERA5:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/tasmania-example-reanalysis/forcing/sp_ERA5
