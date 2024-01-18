@@ -1,0 +1,253 @@
+format: yamanifest
+version: 1.0
+---
+work/INPUT/atmos_mosaic_tile1Xland_mosaic_tile1.nc:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/full-20/atmos_mosaic_tile1Xland_mosaic_tile1.nc
+  hashes:
+    binhash: 996aac02db3352eaffbc2f1dec2b67bf
+    md5: 12662b3d2a751954d649007d18a53cbe
+work/INPUT/atmos_mosaic_tile1Xocean_mosaic_tile1.nc:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/full-20/atmos_mosaic_tile1Xocean_mosaic_tile1.nc
+  hashes:
+    binhash: 52a85ebb97374dc2be26b6787427a74d
+    md5: ff5c8024acbbc07bf99b8498056edbc0
+work/INPUT/bathy_original.nc:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/full-20/bathy_original.nc
+  hashes:
+    binhash: 42d6cac7c7b8380f7b55fe7e5c0d4f9b
+    md5: 7f039b1c777f315b1863ab57104192cd
+work/INPUT/diag_rho2.nc:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/full-20/diag_rho2.nc
+  hashes:
+    binhash: 49a10ff566945bea423fa9c5933de472
+    md5: f2c98102749b170ce8ac3a7ccd3932fc
+work/INPUT/forcing/10u_ERA5.nc:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/full-20/forcing/10u_ERA5.nc
+  hashes:
+    binhash: aca018ef7607e88ddffd78e7b2279f4f
+    md5: 70aadf0ebbb3d5cffeb37f956cdf4647
+work/INPUT/forcing/10v_ERA5.nc:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/full-20/forcing/10v_ERA5.nc
+  hashes:
+    binhash: 7070604066a658c4153c9a094e1e93eb
+    md5: 55637ca36c63150181dcd74b98cfe00d
+work/INPUT/forcing/2t_ERA5.nc:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/full-20/forcing/2t_ERA5.nc
+  hashes:
+    binhash: ec48a0469f9c9ae72483cfabb493b669
+    md5: ad5bc6ecdf16bdc00c0e767e8c7def30
+work/INPUT/forcing/forcing_obc_segment_001.nc:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/full-20/forcing/forcing_obc_segment_001.nc
+  hashes:
+    binhash: f7e531ebcc01e360943f6de9c60abbbb
+    md5: dfebd07a2075bbebc7e5f8fe79b79779
+work/INPUT/forcing/forcing_obc_segment_002.nc:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/full-20/forcing/forcing_obc_segment_002.nc
+  hashes:
+    binhash: 5012561620ebd23d478f3217aede23df
+    md5: 71d6411b816c0ba3fb998c44739b0358
+work/INPUT/forcing/forcing_obc_segment_003.nc:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/full-20/forcing/forcing_obc_segment_003.nc
+  hashes:
+    binhash: c367f04987f6bdbaf35df9c049dfd428
+    md5: 037642c56770f05d097ffc0f0c02db2a
+work/INPUT/forcing/forcing_obc_segment_004.nc:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/full-20/forcing/forcing_obc_segment_004.nc
+  hashes:
+    binhash: addc64e8868810c2d0bade90fba3e00e
+    md5: 0a712a15bec2c4b11353f065016745f1
+work/INPUT/forcing/ic_unprocessed:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/full-20/forcing/ic_unprocessed
+  hashes:
+    binhash: 5bbec18b6a03a3fdfabb2d1213f519c0
+    md5: 09ef8a953c7dafed3965fb38f9249a13
+work/INPUT/forcing/init_eta.nc:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/full-20/forcing/init_eta.nc
+  hashes:
+    binhash: d5f3529abddd730d7cb8feb3a4748bab
+    md5: b58d9ca0406135b53e328a57e98d8ed9
+work/INPUT/forcing/init_tracers.nc:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/full-20/forcing/init_tracers.nc
+  hashes:
+    binhash: 56811cd6c69e106e4439975b1034b366
+    md5: 12874d0117b1c612880c954a328d8b3f
+work/INPUT/forcing/init_vel.nc:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/full-20/forcing/init_vel.nc
+  hashes:
+    binhash: 0c7d507c0361c4b5ebba4faeecd29b66
+    md5: aa18b0d43baac144683d4800fc174ef1
+work/INPUT/forcing/q_ERA5.nc:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/full-20/forcing/q_ERA5.nc
+  hashes:
+    binhash: ee459397ac9109ffc6bb7c1da456b82a
+    md5: dfaa54b419e268a775d58d0cae02e56f
+work/INPUT/forcing/regrid_segment_001_tidal_elev.nc:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/full-20/forcing/regrid_segment_001_tidal_elev.nc
+  hashes:
+    binhash: 117febc7fbb367de554badfcfa08b354
+    md5: 320256428182a44cf76194447944e4f7
+work/INPUT/forcing/regrid_segment_001_tidal_u.nc:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/full-20/forcing/regrid_segment_001_tidal_u.nc
+  hashes:
+    binhash: 829b75cd8130e5842d9fb07fc57e79a8
+    md5: d5a7819509c97ff6985bd3eed54e1ffd
+work/INPUT/forcing/regrid_segment_001_tidal_v.nc:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/full-20/forcing/regrid_segment_001_tidal_v.nc
+  hashes:
+    binhash: 95db11fe2e32667e38b39549bcb900f1
+    md5: 5a9999d886d3c6ee660dc6c05102efb2
+work/INPUT/forcing/regrid_segment_002_tidal_elev.nc:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/full-20/forcing/regrid_segment_002_tidal_elev.nc
+  hashes:
+    binhash: e361ed070c9d037910d9621fd9e2d41b
+    md5: 1a79e3f36e40d5cd08a4b38347e2320d
+work/INPUT/forcing/regrid_segment_003_tidal_elev.nc:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/full-20/forcing/regrid_segment_003_tidal_elev.nc
+  hashes:
+    binhash: 58a96479c24cfd1a9bc2bb7e29a96b66
+    md5: 101d35920282b5a7639b49322b9b4cce
+work/INPUT/forcing/regrid_segment_004_tidal_elev.nc:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/full-20/forcing/regrid_segment_004_tidal_elev.nc
+  hashes:
+    binhash: c9669fb38bee36d10fe5086a3deb79e8
+    md5: 7b433524759c959f021656b38110ddbd
+work/INPUT/forcing/sp_ERA5.nc:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/full-20/forcing/sp_ERA5.nc
+  hashes:
+    binhash: 5bc4893193290ca895d7235392f1aa06
+    md5: 02c53199aff4ee6c25d97b5f525a466a
+work/INPUT/forcing/tu_001.nc:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/full-20/forcing/tu_001.nc
+  hashes:
+    binhash: ed8e5001893d8c0ce52023ab6c7b8777
+    md5: b696d25dfe751edf1f05ae7c527e46cb
+work/INPUT/forcing/tu_002.nc:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/full-20/forcing/tu_002.nc
+  hashes:
+    binhash: 1da045a583d20092e16baa54af175773
+    md5: 4280470e7697d07ca25e951543d1ddfe
+work/INPUT/forcing/tu_003.nc:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/full-20/forcing/tu_003.nc
+  hashes:
+    binhash: 472cc6462aeb65326f696fd142d89623
+    md5: 124087a8dffa806688cd012e2b4a2f0d
+work/INPUT/forcing/tu_004.nc:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/full-20/forcing/tu_004.nc
+  hashes:
+    binhash: 95f772652350b16e7c7eeb90d060fe74
+    md5: 19dca9bee1aee3cf405d6e8f07e48662
+work/INPUT/forcing/tz_001.nc:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/full-20/forcing/tz_001.nc
+  hashes:
+    binhash: 042d2b236874bf7d65704ca909858fb3
+    md5: 19a4b0d06477a3850c96a08f14bcef23
+work/INPUT/forcing/tz_002.nc:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/full-20/forcing/tz_002.nc
+  hashes:
+    binhash: f8afafbda4e1e6305df60ed3b408de69
+    md5: e260c40ea1433853effce215bedcd246
+work/INPUT/forcing/tz_003.nc:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/full-20/forcing/tz_003.nc
+  hashes:
+    binhash: f9e8681f3a9b15084473ae8a99b2aeda
+    md5: 648cfcd57374573668b755382edf2656
+work/INPUT/forcing/tz_004.nc:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/full-20/forcing/tz_004.nc
+  hashes:
+    binhash: 86f3d74a5fd4e4102bafd69963f304a7
+    md5: 9c27ea792812a88df55fd46ccc4c2173
+work/INPUT/frecommand.sh:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/full-20/frecommand.sh
+  hashes:
+    binhash: d699b7cdfdf34cf8af742f8b5591c519
+    md5: 36026934d8e487deb06821e325dba1ea
+work/INPUT/grid.nc:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/full-20/grid.nc
+  hashes:
+    binhash: 112a4164a162f3a4cd7d15cc1019fadc
+    md5: 6c685d9677371e75fe2aec8476430436
+work/INPUT/grid_spec.nc:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/full-20/grid_spec.nc
+  hashes:
+    binhash: 5c89d354645106254e25f2d052320ba7
+    md5: 03a2af01cfcf811b9cc0336730c2bb10
+work/INPUT/hgrid.nc:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/full-20/hgrid.nc
+  hashes:
+    binhash: d59d8fbeafd1e0c93545f0cab024271e
+    md5: 6db5741eb9d7adb65905da4f6914bb88
+work/INPUT/land_mask.nc:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/full-20/land_mask.nc
+  hashes:
+    binhash: 0231883ca86367cb3b116c0565d34fa8
+    md5: e2c15bfc0f554043aaf0018faa35e488
+work/INPUT/land_mosaic_tile1Xocean_mosaic_tile1.nc:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/full-20/land_mosaic_tile1Xocean_mosaic_tile1.nc
+  hashes:
+    binhash: 7b2f879c8128843b7f7340b304f3156b
+    md5: a1606a5d2bff9854018e218ec4b7cadf
+work/INPUT/mask_table.44.20x25:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/full-20/mask_table.44.20x25
+  hashes:
+    binhash: b9a64f3684199f9b095eb1c4fef950a8
+    md5: eb96749d708f798bd01d29460ada9003
+work/INPUT/mask_table.46.25x20:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/full-20/mask_table.46.25x20
+  hashes:
+    binhash: 42a3b1dd4c2e3094d5013c83e4c4386b
+    md5: 2f967186d214efa63ad7dbd1d25cb389
+work/INPUT/ocean_mask.nc:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/full-20/ocean_mask.nc
+  hashes:
+    binhash: 87c972afbc6adc8f77fc3e86ee543adf
+    md5: 5564645f16d0d8a678feaea87d4d6b5e
+work/INPUT/ocean_mosaic.nc:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/full-20/ocean_mosaic.nc
+  hashes:
+    binhash: 72ece2ab92ec0c02956224aab3b0d276
+    md5: 3b63dee6974d13cd63617406d19d8946
+work/INPUT/runoff_regrid.nc:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/full-20/runoff_regrid.nc
+  hashes:
+    binhash: 6fdbeec02d244be732e88647ab38bbc5
+    md5: 50b2a05755c37a064e20ece279be5827
+work/INPUT/tgrid.nc:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/full-20/tgrid.nc
+  hashes:
+    binhash: 71b0506fce5c8e9774b4c5fb93bbc1d3
+    md5: a804f61e2fde312e122f519978e92a5d
+work/INPUT/topog.nc:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/full-20/topog.nc
+  hashes:
+    binhash: 40de8cdc25911f6dd1122f42618081dc
+    md5: ed461e5e8c355be027fcfed67c41a002
+work/INPUT/topog_raw.nc:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/full-20/topog_raw.nc
+  hashes:
+    binhash: 1be0a56cfdae7fd4de6e84fec5017dd5
+    md5: 16fab14629724bbcd66b869798db05d9
+work/INPUT/vcoord.nc:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/full-20/vcoord.nc
+  hashes:
+    binhash: b315363d656a26a98cffff7068033282
+    md5: f842cced8cc9990939d7c9c9009197a2
+work/INPUT/weights/bilinear_velocity_weights_east.nc:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/full-20/weights/bilinear_velocity_weights_east.nc
+  hashes:
+    binhash: 59606c549e1d815fafd31dc3e311d8ec
+    md5: d4223844bc1b401cf23499f216f1fe50
+work/INPUT/weights/bilinear_velocity_weights_north.nc:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/full-20/weights/bilinear_velocity_weights_north.nc
+  hashes:
+    binhash: 55a9ebfe67897ad80a2c6c06c0d5508d
+    md5: b4e76627ca21e0427e80423ed6b9b8b5
+work/INPUT/weights/bilinear_velocity_weights_south.nc:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/full-20/weights/bilinear_velocity_weights_south.nc
+  hashes:
+    binhash: 5471df24add2e5237c2b541c0b5733d6
+    md5: f792d817bc776c965c1c418f849c734d
+work/INPUT/weights/bilinear_velocity_weights_west.nc:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/full-20/weights/bilinear_velocity_weights_west.nc
+  hashes:
+    binhash: c988fee26e7f38d29f69dab6774b3d5f
+    md5: 4c54c474d4841cc10860330bd69319eb
