@@ -202,6 +202,6 @@ if __name__ == "__main__":
 
         for i in ["u","v","ahh","e","rho"]:
             subprocess.run(
-            f"rm {str(mom6out) + '/*.{i}.nc'}",
+            f"rm {str(mom6out)}/*.{i}.nc",
             shell=True
             )
