@@ -28,7 +28,7 @@
 
 &coupler_nml
 	months = 0,
-	days = 15,
+	days = 5,
 	hours = 0,
 	current_date = 2015,1,1,0,0,0,
 	calendar = 'JULIAN',
@@ -73,8 +73,10 @@
 /
 
 &surface_flux_nml
-	ncar_ocean_flux = .true.,
-	raoult_sat_vap = .true.
+    ncar_ocean_flux_multilevel = .true.
+    bulk_zu = 10.
+    bulk_zt = 2.
+    bulk_zq = 2.
 /
 
 &xgrid_nml

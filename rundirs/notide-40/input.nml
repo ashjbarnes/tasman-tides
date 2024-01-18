@@ -73,8 +73,10 @@
 /
 
 &surface_flux_nml
-	ncar_ocean_flux = .true.,
-	raoult_sat_vap = .true.
+    ncar_ocean_flux_multilevel = .true.
+    bulk_zu = 10.
+    bulk_zt = 2.
+    bulk_zq = 2.
 /
 
 &xgrid_nml
