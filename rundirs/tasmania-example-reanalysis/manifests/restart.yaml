@@ -2,17 +2,17 @@ format: yamanifest
 version: 1.0
 ---
 work/INPUT/MOM.res.nc:
-  fullpath: /scratch/nm03/ab8992/mom6/archive/tasmania-example-reanalysis/restart001/MOM.res.nc
+  fullpath: /scratch/nm03/ab8992/mom6/archive/tasmania-example-reanalysis/restart002/MOM.res.nc
   hashes:
-    binhash: 5e637c94c8e34da89894672c081f60a0
-    md5: 98167e46f32f00a73ae2a4da6c90b301
+    binhash: dbec5989e6632c44f303459b2b554d38
+    md5: 892fc65001b272db82dfa496feb6e480
 work/INPUT/coupler.res:
-  fullpath: /scratch/nm03/ab8992/mom6/archive/tasmania-example-reanalysis/restart001/coupler.res
+  fullpath: /scratch/nm03/ab8992/mom6/archive/tasmania-example-reanalysis/restart002/coupler.res
   hashes:
-    binhash: c7ffdd8695876e3c54802343ec696421
-    md5: d1bedf16f4af419b656297fa6d70f690
+    binhash: 819895436539114346803f2423577304
+    md5: 6b012e87de05fa786295e5e6ecbc7983
 work/INPUT/ice_model.res.nc:
-  fullpath: /scratch/nm03/ab8992/mom6/archive/tasmania-example-reanalysis/restart001/ice_model.res.nc
+  fullpath: /scratch/nm03/ab8992/mom6/archive/tasmania-example-reanalysis/restart002/ice_model.res.nc
   hashes:
-    binhash: bfb7a08f16ef14e9fee5c4be6cd586a9
-    md5: 972cdbffb1b154bab6c9203ff84994f6
+    binhash: b95aa63a7759db734677cfba77d5cc4e
+    md5: 3db303d994b480f05f4b58c8e6d418ef
