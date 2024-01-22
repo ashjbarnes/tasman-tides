@@ -11,7 +11,7 @@
 "ICE", "sw_flux_vis_dif_dn", "msdwswrf", "./INPUT/msdwswrf_ERA5.nc", "bilinear", 0.0
 "ICE", "sw_flux_nir_dir_dn", "msdwlwrf", "./INPUT/msdwlwrf_ERA5.nc", "bilinear", 0.0
 "ICE", "sw_flux_nir_dif_dn", "msdwlwrf", "./INPUT/msdwlwrf_ERA5.nc", "bilinear", 0.0
-"ICE", "lprec", "trr", "", "bilinear", 0.0
+"ICE", "lprec", "trr", "./INPUT/trr_ERA5.nc", "bilinear", 0.0
 "ICE", "fprec", "", "", "bilinear", 0.0
 "ICE", "runoff", "", "", "none", 0.0
 "ICE", "dhdt", "", "", "none", 80.0
