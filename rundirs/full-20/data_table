@@ -1,7 +1,7 @@
 "ATM", "p_surf", "", "", "bilinear", 101325
 "ATM", "p_bot",  "", "", "bilinear", 101325
-"ATM", "t_bot",  "t2m", "", "bilinear", 290
-"ATM", "sphum_bot", "q", "./INPUT/q_ERA5.nc", "bilinear", 1.0
+"ATM", "t_bot",  "", "", "bilinear", 290
+"ATM", "sphum_bot", "", "", "bilinear", 0.0083
 "ATM", "u_bot", "", "", "bicubic", 0.0
 "ATM", "v_bot", "", "", "bicubic", 0.0
 "ATM", "z_bot", "", "", "bilinear", 10.0
