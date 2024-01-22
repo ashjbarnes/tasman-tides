@@ -5,7 +5,7 @@ ttide
 "surface",            1, "hours",   1, "hours", "time"
 
 "ocean_model",   "zos",          "zos",              "surface",         "all", "mean", "none",2
-#"ocean_model",   "mlotst",       "mlotst",           "surface",         "all", "mean", "none",2
+"ocean_model",   "tos",       "tos",           "surface",         "all", "mean", "none",2
 "ocean_model",   "speed",        "speed",            "surface",         "all", "mean", "none",2
 "ocean_model","taux",   "taux",   "surface","all","mean","none",2
 "ocean_model","tauy",   "tauy",   "surface","all","mean","none",2
