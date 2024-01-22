@@ -206,6 +206,16 @@ work/INPUT/mask_table.46.25x20:
   hashes:
     binhash: 42a3b1dd4c2e3094d5013c83e4c4386b
     md5: 2f967186d214efa63ad7dbd1d25cb389
+work/INPUT/msdwlwrf_ERA5.nc:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/era5/msdwlwrf_ERA5.nc
+  hashes:
+    binhash: fab6c233d550d4c36fd5634342f81f1d
+    md5: 9ea209cc667f9c2a3643c721d6371a47
+work/INPUT/msdwswrf_ERA5.nc:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/era5/msdwswrf_ERA5.nc
+  hashes:
+    binhash: 7b1439f6ea40ba5fc8b4cbc58e8f0ebf
+    md5: a812765a593033f317a3f600a6da8443
 work/INPUT/ocean_mask.nc:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/full-20/ocean_mask.nc
   hashes:
@@ -246,6 +256,11 @@ work/INPUT/topog_raw.nc:
   hashes:
     binhash: 1be0a56cfdae7fd4de6e84fec5017dd5
     md5: 16fab14629724bbcd66b869798db05d9
+work/INPUT/trr_ERA5.nc:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/era5/trr_ERA5.nc
+  hashes:
+    binhash: 58bbd8aa05b383f29c8ee302d7ff2881
+    md5: f198ddd57b68dc67a7325ea0d6125a45
 work/INPUT/vcoord.nc:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/full-20/vcoord.nc
   hashes:

@@ -1,1 +1,0 @@
-/home/149/ab8992/cosima_regional/regional-mom6/regional_mom6/regional_mom6.py
