@@ -28,8 +28,8 @@
 
 &coupler_nml
 	months = 0,
-	days = 2,
-	hours = 0,
+	days = 0,
+	hours = 12,
 	current_date = 2015,1,1,0,0,0,
 	calendar = 'JULIAN',
 	dt_cpld = 3600,
