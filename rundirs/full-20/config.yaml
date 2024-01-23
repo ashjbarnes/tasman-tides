@@ -11,8 +11,8 @@ input:
     - /g/data/nm03/ab8992/ttide-inputs/era5/
     - /g/data/nm03/ab8992/ttide-inputs/full-20/
 
-#exe: /g/data/v45/ab8992/mom_executables/jan2024-latest-everything
-exe: /g/data/v45/ab8992/mom_executables/angus_fms
+exe: /g/data/v45/ab8992/mom_executables/jan2024-latest-everything
+#exe: /g/data/v45/ab8992/mom_executables/angus_fms
 collate: false
 #runlog: true
 storage:
