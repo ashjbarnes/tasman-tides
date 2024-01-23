@@ -7,6 +7,9 @@ ttide
 "ocean_model",   "zos",          "zos",              "surface",         "all", "mean", "none",2
 "ocean_model",   "tos",       "tos",           "surface",         "all", "mean", "none",2
 "ocean_model",   "speed",        "speed",            "surface",         "all", "mean", "none",2
+"ocean_model",	 "sst_global", "sst_global", "surface", "all", "mean", "none",2
+"ocean_model",	 "sss_global", "sss_global", "surface",	"all", "mean", "none",2
+"ocean_model",	 "sss", "sss", "surface",	"all", "mean", "none",2
 "ocean_model","taux",   "taux",   "surface","all","mean","none",2
 "ocean_model","tauy",   "tauy",   "surface","all","mean","none",2
 ## Instead of regional selection, split the variables of interest into separate files and slice afterwards in Python
