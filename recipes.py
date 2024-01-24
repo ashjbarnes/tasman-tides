@@ -226,7 +226,7 @@ def spinup_timeseries(experiment):
         f"/g/data/nm03/ab8992/outputs/{experiment}/output*/v/*",decode_times = False,parallel=True
     ).fillna(0)
     print("Calculate ke")
-    ke = (u.u**2 * v.v**2).integrate("xb").integrate("yb").integrate("zl")
+    ke = (u.u**2 + v.v**2).integrate("xb").integrate("yb").integrate("zl")
     if not os.path.exists(f"/g/data/nm03/ab8992/postprocessed/{experiment}"):
         os.makedirs(f"/g/data/nm03/ab8992/postprocessed/{experiment}")
     ke.to_netcdf(f"/g/data/nm03/ab8992/postprocessed/{experiment}/ke_timeseries.nc")
