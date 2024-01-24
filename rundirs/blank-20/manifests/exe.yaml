@@ -1,8 +1,8 @@
 format: yamanifest
 version: 1.0
 ---
-work/ocean_only_jan_2024:
-  fullpath: /g/data/v45/ab8992/mom_executables/ocean_only_jan_2024
+work/MOM6:
+  fullpath: /home/149/ab8992/tools/updated-mom6-ninja/setup-mom6/mom6_sis2_symmetric/MOM6
   hashes:
-    binhash: 31126a5b7ee514837517886f3a5fee48
-    md5: 16cac75ebf05e38dca24ce4391bdbccd
+    binhash: 76bdf4a78d44d3bcd6f7ecad0fd3a88b
+    md5: f60f1f15c65a86ccfe37e9b42759ed2e
