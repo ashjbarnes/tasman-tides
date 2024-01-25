@@ -10,10 +10,10 @@ ttide
 "ocean_model",	 "sst_global", "sst_global", "surface", "all", "mean", "none",2
 "ocean_model",	 "sss_global", "sss_global", "surface",	"all", "mean", "none",2
 "ocean_model",	 "sss", "sss", "surface",	"all", "mean", "none",2
-"ocean_model","taux",   "taux",   "surface","all","mean","none",2
-"ocean_model","tauy",   "tauy",   "surface","all","mean","none",2
+#"ocean_model","taux",   "taux",   "surface","all","mean","none",2
+#"ocean_model","tauy",   "tauy",   "surface","all","mean","none",2
 #"ocean_model","net_heat_surface",   "net_heat_surface",   "surface","all","mean","none",2
-"ocean_model","net_heat_surface_ga",   "net_heat_surface_ga",   "surface","all","mean","none",2
+#"ocean_model","net_heat_surface_ga",   "net_heat_surface_ga",   "surface","all","mean","none",2
 #"ocean_model","SW",   "SW",   "surface","all","mean","none",2
 #"ocean_model","LW",   "LW",   "surface","all","mean","none",2
 #"ocean_model","net_heat_coupler",   "net_heat_coupler",   "surface","all","mean","none",2
