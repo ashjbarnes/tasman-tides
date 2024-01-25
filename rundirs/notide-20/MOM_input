@@ -29,7 +29,8 @@ CHECK_BAD_SURFACE_VALS = True   !   [Boolean] default = False
 BAD_VAL_SST_MIN = -3.0          !   [deg C] default = -2.1
                                 ! The value of SST below which a bad value message is triggered, if
                                 ! CHECK_BAD_SURFACE_VALS is true.
-        
+BAD_VAL_SSH_MAX = 4
+BAD_VAL_SSH_MIN = -4        
 ! === module MOM_fixed_initialization ===
 INPUTDIR = "INPUT"              ! default = "."
                                 ! The directory in which input files are found.
