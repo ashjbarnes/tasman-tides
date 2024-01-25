@@ -1,4 +1,4 @@
-"ATM", "p_surf", "sp", "./INPUT/sp*", "bilinear", 1.0
+"ATM", "p_surf", "sp", "./INPUT/sp_ERA5.nc*", "bilinear", 1.0
 "ATM", "p_bot",  "sp", "./INPUT/sp_ERA5.nc", "bilinear", 1.0
 "ATM", "t_bot",  "t2m", "./INPUT/2t_ERA5.nc", "bilinear", 1.0
 "ATM", "sphum_bot", "q", "./INPUT/q_ERA5.nc", "bilinear", 1.0
