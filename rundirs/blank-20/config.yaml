@@ -11,7 +11,7 @@ input:
     - /g/data/nm03/ab8992/ttide-inputs/blank-20/
 
 #exe: /g/data/v45/ab8992/mom_executables/ocean_only_jan_2024
-exe: /home/149/ab8992/tools/updated-mom6-ninja/mom6-ninja-nci/ocean_only_symmetric
+exe: /home/149/ab8992/tools/updated-mom6-ninja/mom6-ninja-nci/ocean_only_symmetric/MOM6
 collate: false
 #runlog: true
 storage:
