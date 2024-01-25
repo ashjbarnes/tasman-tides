@@ -5,5 +5,5 @@
 !#override OBC_SEGMENT_003 = "J=0,I=0:N,ORLANSKI" !
 !#override OBC_SEGMENT_004 = "J=0,I=0:N,ORLANSKI" !
  
-#override DT=300
-#override DT_THERM=1200
+#override DT=600
+#override DT_THERM=2400
