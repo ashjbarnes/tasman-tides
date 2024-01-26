@@ -11,4 +11,4 @@ PYTHONNOUSERSITE=1
 module use /g/data/hh5/public/modules
 module load conda/analysis3-unstable
 module list
-python3 /home/149/ab8992/tasman-tides/postprocess_ahhonly.py -p "all" -c 6
+python3 /home/149/ab8992/tasman-tides/postprocessing.py -p "2-23" -c 6
