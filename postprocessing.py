@@ -206,11 +206,11 @@ if __name__ == "__main__":
             shell=True
             )
         ## Now move all of the output and error files to the same folder as the outputs.
-        subprocess.run(
-        f"mv *.e* {str(mom6out)}/",
-        shell=True
-        )
-        subprocess.run(
-        f"mv *.o* {str(mom6out)}/",
-        shell=True
-        )
+#        subprocess.run(
+#        f"mv *.e* {str(mom6out)}/",
+#        shell=True
+#        )
+#        subprocess.run(
+#        f"mv *.o* {str(mom6out)}/",
+#        shell=True
+#        )
