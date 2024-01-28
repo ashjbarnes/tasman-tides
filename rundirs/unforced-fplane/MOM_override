@@ -9,7 +9,7 @@
 #override TIDES = FALSE
 
  
-#override DT=800
-#override DT_THERM=3200
+override DT=800
+override DT_THERM=3200
 
 ROTATION = "f-plane"
