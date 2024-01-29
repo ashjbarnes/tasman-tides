@@ -14,5 +14,5 @@
 
 
 #override KD = 0
-#override USE_JACKSON_PARAM = False
-#override ENERGETICS_SFC_PBL = True
+!#override USE_JACKSON_PARAM = False
+!#override ENERGETICS_SFC_PBL = True
