@@ -12,5 +12,7 @@
 #override DT=800
 #override DT_THERM=3200
 
-#override ROTATION = "betaplane"
-#override beta = 0
+
+#override KD = 0
+#override USE_JACKSON_PARAM = False
+#override ENERGETICS_SFC_PBL = True
