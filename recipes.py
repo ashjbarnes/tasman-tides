@@ -221,8 +221,8 @@ def save_filtered_vels(experiment,outputs,recompute = False):
 
         ## Here skip the time slice if it already exists and recompute is False
         if os.path.exists(basepath / "UU" / "topdown" / f"UU_time-{int(mid_time.values)}.nc") and not recompute:
+            print("Skipping time",f"{i} = {mid_time}")
             continue
-
 
         print("Processing time slice",f"{i} = {mid_time}")
         u_ = data.u.isel(
