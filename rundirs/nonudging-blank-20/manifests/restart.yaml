@@ -1,3 +1,23 @@
 format: yamanifest
 version: 1.0
---- {}
+---
+work/INPUT/MOM.res.nc:
+  fullpath: /scratch/nm03/ab8992/mom6/archive/nonudging-blank-20/restart000/MOM.res.nc
+  hashes:
+    binhash: 18e1457dd093fa060076cb75ff6609c6
+    md5: 95bceafde0d34b252f1bd532c3387bab
+work/INPUT/MOM.res_1.nc:
+  fullpath: /scratch/nm03/ab8992/mom6/archive/nonudging-blank-20/restart000/MOM.res_1.nc
+  hashes:
+    binhash: d931cf2748a9b73dbb7fd764610dc048
+    md5: 5b169783fa64d4a1ab970c11e312611d
+work/INPUT/MOM.res_2.nc:
+  fullpath: /scratch/nm03/ab8992/mom6/archive/nonudging-blank-20/restart000/MOM.res_2.nc
+  hashes:
+    binhash: 9633a76289fd22221b2574f19b5ae49b
+    md5: 302fa83178ea0031b8b22ed726dc907f
+work/INPUT/ocean_solo.res:
+  fullpath: /scratch/nm03/ab8992/mom6/archive/nonudging-blank-20/restart000/ocean_solo.res
+  hashes:
+    binhash: 1727afbce60d59aeb863d36abbdbeba4
+    md5: a884cdd1cdba285016318bd09f5fb04b
