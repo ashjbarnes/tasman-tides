@@ -655,6 +655,8 @@ def plot_surfacespeed(data,**kwargs):
     ax.set_title("Surface Speed")
     ax.set_xlabel("Longitude")
     ax.set_ylabel("Latitude")
+
+    ax.text(0.95, 0.95, f"Day {int(data.time.values//24)}", transform=ax.transAxes, fontsize=15, va="top", ha="right",color = "linen")
     return fig
 
 
