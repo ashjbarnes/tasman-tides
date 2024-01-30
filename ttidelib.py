@@ -644,9 +644,11 @@ def plot_ke(data,framedim = "TIME",**kwargs):
 
 def plot_surfacespeed(data,**kwargs):
 
-    cmap = cmocean.cm.dense
+    cmap = cmocean.cm.dense_r
     earth_cmap = matplotlib.cm.get_cmap("gist_earth")
     fig,ax = plt.subplots(1,figsize = (15,12))
+    # Set the background colour to the plot to the lowest value in the cmap
+    ax.set_facecolor(cmap(0))
     
     data["speed"].plot(vmax = 4,vmin = 0,ax = ax,cmap = cmap,add_colorbar = False)
     data["bathy"].plot(cmap = earth_cmap,vmin = -1000,vmax = 1500,ax = ax,add_colorbar = False)

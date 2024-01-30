@@ -388,7 +388,7 @@ if __name__ == "__main__":
         qsub(args.recipe, args.experiment, args.outputs)
 
     elif args.recipe == "surface_speed_movie":
-        surface_speed_movie(args.experiment, args.outputs)
+        surface_speed_movie(args.experiment)
 
     elif args.recipe == "save_vorticity":
         save_vorticity(args.experiment, args.outputs,args.recompute)
