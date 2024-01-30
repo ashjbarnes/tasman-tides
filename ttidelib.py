@@ -542,13 +542,13 @@ def make_movie(data,plot_function,runname,plotname,framerate = 5,parallel = Fals
     ## Make each frame of the movie and save to tmpdir
     if parallel == True:
         @dask.delayed
-        def process_chunk(data,i):
-            fig = plot_function(data.isel(time = i),**plot_kwargs)
+        def process_chunk(_data,i):
+            fig = plot_function(_data,**plot_kwargs)
             fig.savefig(tmppath / f"frame_{str(i).zfill(5)}.png")
             plt.close()
             return None
         
-        frames = [process_chunk(data,i) for i in range(len(data.time))]
+        frames = [process_chunk(data.isel(time = i)) for i in range(len(data.time))]
         dask.compute(*frames)
 
     ## Do the same thing but in serial
