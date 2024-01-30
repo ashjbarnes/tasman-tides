@@ -28,7 +28,10 @@ def surface_speed_movie(experiment):
     resolution = experiment.split("-")[-1]
     startdask()
 
-    speed = xr.open_mfdataset(f"/g/data/nm03/ab8992/outputs/{experiment}/**/surface.nc",decode_times=False,chunks = {"time":1},parallel = True).speed
+    speed = xr.open_mfdataset(f"/g/data/nm03/ab8992/outputs/{experiment}/**/surface.nc",decode_times=False,parallel = True).speed
+
+    speed = speed.chunk({"time":1,"xh":-1,"yh":-1})
+
     # interpolate the xq and yq onto xh and yh using xarray built in method
     bathy = xr.open_mfdataset(f"/g/data/nm03/ab8992/ttide-inputs/full-{resolution}/topog_raw.nc",decode_times = False).elevation
     bathy = bathy.rename({"lat":"yh","lon":"xh"})
