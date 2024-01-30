@@ -310,6 +310,24 @@ def plot_vorticity(data):
 
     return fig
 
+
+## PLOTTING
+
+def plot_ekman_pumping(data):
+    """
+    Plot the ekman pumping for the given data
+    """
+    cmap = cmocean.cm.curl
+    earth_cmap = matplotlib.cm.get_cmap("gist_earth")
+    fig,ax = plt.subplots(1,figsize = (15,12))
+    
+    data["curl"].plot(vmax = 0.5,vmin = - 0.5,ax = ax,cmap = cmap,add_colorbar = False)
+    data["bathy"].plot(cmap = earth_cmap,vmin = -1000,vmax = 1500,ax = ax,add_colorbar = False)
+    ax.set_title("Curl of Wind Stress")
+    ax.set_xlabel("Longitude")
+    ax.set_ylabel("Latitude")
+    return fig
+
 def plot_ke(data):
     fig = plt.figure(figsize=(20, 12))
     ax = fig.subplots(2,1)
@@ -626,19 +644,14 @@ def plot_ke(data,framedim = "TIME",**kwargs):
 
 def plot_surfacespeed(data,**kwargs):
 
-    fig,ax = plt.subplots(1,figsize=(15, 12))
-    # time = data["speed"].time.values[i]
-    exptname = "full-20" #TODO make this a kwarg
-
     cmap = cmocean.cm.speed
-    data["speed"].plot(ax = ax,cmap = cmap,cbar_kwargs={'label': "Surface speed (m/s)"},vmin = 0,vmax = 1.5)
-
-    ## Add bathymetry plot
-    plot_topo(ax,data["bathy"])
-
-    fig.suptitle(exptname)
-    ax.set_xlabel('km from Tas')
-    ax.set_ylabel('km S to N')
-    ax.set_title('Surface speed')
+    earth_cmap = matplotlib.cm.get_cmap("gist_earth")
+    fig,ax = plt.subplots(1,figsize = (15,12))
+    
+    data["speed"].plot(vmax = 4,vmin = 0,ax = ax,cmap = cmap,add_colorbar = False)
+    data["bathy"].plot(cmap = earth_cmap,vmin = -1000,vmax = 1500,ax = ax,add_colorbar = False)
+    ax.set_title("Surface Speed")
+    ax.set_xlabel("Longitude")
+    ax.set_ylabel("Latitude")
     return fig
 
