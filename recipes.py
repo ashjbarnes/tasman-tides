@@ -387,8 +387,8 @@ if __name__ == "__main__":
         print(f"qsub {args.recipe}")
         qsub(args.recipe, args.experiment, args.outputs)
 
-    elif args.recipe == "surfacespeed":
-        surfacespeed_movie(args.experiment, args.outputs)
+    elif args.recipe == "surface_speed_movie":
+        surface_speed_movie(args.experiment, args.outputs)
 
     elif args.recipe == "save_vorticity":
         save_vorticity(args.experiment, args.outputs,args.recompute)
