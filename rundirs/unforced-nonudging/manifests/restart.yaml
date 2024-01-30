@@ -1,3 +1,23 @@
 format: yamanifest
 version: 1.0
---- {}
+---
+work/INPUT/MOM.res.nc:
+  fullpath: /scratch/nm03/ab8992/mom6/archive/unforced-nonudging/restart000/MOM.res.nc
+  hashes:
+    binhash: e1ea9f7562c01949f384bfc7f90e7754
+    md5: f36a6d3f78865026b64658440170819e
+work/INPUT/MOM.res_1.nc:
+  fullpath: /scratch/nm03/ab8992/mom6/archive/unforced-nonudging/restart000/MOM.res_1.nc
+  hashes:
+    binhash: 4f22f6f820e59c4d38a8e793720f6d2a
+    md5: cbe93b9b6eecfc46cccdf881e7dc4173
+work/INPUT/MOM.res_2.nc:
+  fullpath: /scratch/nm03/ab8992/mom6/archive/unforced-nonudging/restart000/MOM.res_2.nc
+  hashes:
+    binhash: 523d9a36e5825565cb448d98e2fe8e6c
+    md5: 2315773e7e6f8f49a0cb5b01f207fef8
+work/INPUT/ocean_solo.res:
+  fullpath: /scratch/nm03/ab8992/mom6/archive/unforced-nonudging/restart000/ocean_solo.res
+  hashes:
+    binhash: 9947f1cec8e782cbab88cdf4c9f79265
+    md5: a884cdd1cdba285016318bd09f5fb04b
