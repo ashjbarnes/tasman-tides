@@ -342,7 +342,7 @@ def stocktake():
     expts = [
         "full-20","full-40","full-80","notide-20","notide-40","notide-80","blank-20","blank-40","blank-80"
     ]
-    print("Expt\t\t Last \t End Date \t Total Days")
+    outstr = "Expt\t\t Last \t End Date \t Total Days\n"
     for expt in expts:
         for base_dir in base_dirs:
             
@@ -368,8 +368,11 @@ def stocktake():
             
             # Get the last timestamp
             last_timestamp = time
-            print(f"{expt} \t {lastfile.parent.name.split('output')[-1]} \t {last_timestamp.strftime('%Y-%m-%d')} \t {round(total_days)}")
+            outstr += f"{expt} \t {lastfile.parent.name.split('output')[-1]} \t {last_timestamp.strftime('%Y-%m-%d')} \t {round(total_days)}\n"
     
+    ## Save the output string to a file located in path
+    with open("/home/149/ab8992/tasman-tides/stocktake.txt", "w+") as f:
+        f.write(outstr)
         
 
 if __name__ == "__main__":
