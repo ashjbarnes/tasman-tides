@@ -21,15 +21,27 @@ def startdask():
         # If there's no existing client, create a new one
         client = Client()
 
-def surfacespeed_movie(experiment, outputs):
+def surface_speed_movie(experiment):
     """
-    Make a movie of the surface speed for the given experiment and outputs
+    Make a movie of the surface speed
     """
+    resolution = experiment.split("-")[-1]
     startdask()
 
-    data = tt.collect_data(experiment,surface_data=["speed"],chunks = {"time":1},outputs=outputs,bathy=True)
+    speed = xr.open_mfdataset(f"/g/data/nm03/ab8992/outputs/{experiment}/**/surface.nc",decode_times=False,chunks = {"time":1}).speed
+    # interpolate the xq and yq onto xh and yh using xarray built in method
+    bathy = xr.open_mfdataset(f"/g/data/nm03/ab8992/ttide-inputs/full-{resolution}/topog_raw.nc",decode_times = False).elevation
+    bathy = bathy.rename({"lat":"yh","lon":"xh"})
+    bathy = bathy.where(bathy > 0).persist()
 
-    fig = plt.figure(figsize=(15, 12))
+
+    data = xr.Dataset(
+        {
+            "speed":speed,
+            "bathy":bathy
+        }
+    )
+
 
     print("Start making movie...")
     tt.make_movie(data,
@@ -37,10 +49,9 @@ def surfacespeed_movie(experiment, outputs):
                 experiment,
                 "surface_speed",
                 framerate=10,
-                parallel=True)
+                parallel=False)
 
     return
-
 
 
 def vorticity_movie(experiment, outputs):
@@ -61,6 +72,40 @@ def vorticity_movie(experiment, outputs):
                 "vorticity",
                 framerate=5,
                 parallel=True)
+
+    return
+
+def ekman_pumping_movie(experiment):
+    """
+    Make a movie of the ekman pumping
+    """
+    resolution = experiment.split("-")[-1]
+    startdask()
+
+    tau = xr.open_mfdataset(f"/g/data/nm03/ab8992/outputs/{experiment}/**/surface.nc",decode_times=False,chunks = {"time":1})[["taux","tauy"]]
+    # interpolate the xq and yq onto xh and yh using xarray built in method
+    tau = tau.interp(xq = tau.xh,yq = tau.yh)
+    bathy = xr.open_mfdataset(f"/g/data/nm03/ab8992/ttide-inputs/full-{resolution}/topog_raw.nc",decode_times = False).elevation
+    bathy = bathy.rename({"lat":"yh","lon":"xh"})
+    bathy = bathy.where(bathy > 0).persist()
+
+    curl = tau.tauy.differentiate("xh") - tau.taux.differentiate("yh")
+
+    data = xr.Dataset(
+        {
+            "curl":curl,
+            "bathy":bathy
+        }
+    )
+
+
+    print("Start making movie...")
+    tt.make_movie(data,
+                tt.plot_ekman_pumping,
+                experiment,
+                "ekman_pumping",
+                framerate=5,
+                parallel=False)
 
     return
 

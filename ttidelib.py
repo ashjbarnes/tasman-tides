@@ -644,7 +644,7 @@ def plot_ke(data,framedim = "TIME",**kwargs):
 
 def plot_surfacespeed(data,**kwargs):
 
-    cmap = cmocean.cm.speed
+    cmap = cmocean.cm.dense
     earth_cmap = matplotlib.cm.get_cmap("gist_earth")
     fig,ax = plt.subplots(1,figsize = (15,12))
     
@@ -654,4 +654,7 @@ def plot_surfacespeed(data,**kwargs):
     ax.set_xlabel("Longitude")
     ax.set_ylabel("Latitude")
     return fig
+
+
+
 
