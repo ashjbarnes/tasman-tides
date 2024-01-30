@@ -1,3 +1,4 @@
 ## Add override files here
-#override DT=100
-#override DT_THERM=400
+#override DT=500
+#override DT_THERM=2000
+DTBT = -0.75
