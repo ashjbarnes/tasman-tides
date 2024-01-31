@@ -377,15 +377,19 @@ def stocktake():
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Script to execute plotting functions from ttidelib")
-    parser.add_argument("-r", "--recipe", help="Select the recipe to execute")
+    parser.add_argument("-r", "--recipe", help="Select the recipe to execute",default=None)
     parser.add_argument("-e", "--experiment", help="Specify the experiment to apply the recipe to")
     parser.add_argument("-o", "--outputs", help="Specify the outputs to use",default = "output*")
     parser.add_argument("-q", "--qsub", default=1,type=int, help="Choose whether to execute directly or as qsub job")
     parser.add_argument("-c", "--recompute", default=False,type=bool, help="Choose whether to execute directly or as qsub job")
     args = parser.parse_args()
 
+    if args.recipe == None:
+        print("Available recipes:\nsurface_speed_movie\nsave_vorticity\nsave_filtered_vels\nspinup_timeseries\nke_movie\ndissipation_movie\nvorticity_movie")
+        
 
-    if args.recipe == "stocktake":
+	
+    elif args.recipe == "stocktake":
         stocktake()
         
 
