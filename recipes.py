@@ -1,4 +1,4 @@
-
+#!/usr/bin/env python3
 import argparse
 import ttidelib as tt
 import os
@@ -394,8 +394,10 @@ if __name__ == "__main__":
         
 
     elif args.qsub == 1:
-        print(f"qsub {args.recipe}")
-        qsub(args.recipe, args.experiment, args.outputs)
+        if  "+" in args.experiment:
+            [qsub(args.recipe,i,args.outputs) for i in args.experiment.split("+")]
+        else:
+            qsub(args.recipe, args.experiment, args.outputs)
 
     elif args.recipe == "surface_speed_movie":
         surface_speed_movie(args.experiment)
