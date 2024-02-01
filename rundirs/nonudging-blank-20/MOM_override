@@ -11,5 +11,5 @@
 #override OBC_SEGMENT_004 = "I=N,J=0:N,OBLIQUE,OBLIQUE_TAN" !
 
 
-#override DT=100
-#override DT_THERM=400
+#override DT=500
+#override DT_THERM=2000
