@@ -2,27 +2,27 @@ format: yamanifest
 version: 1.0
 ---
 work/INPUT/MOM.res.nc:
-  fullpath: /scratch/nm03/ab8992/mom6/archive/full-20/restart091/MOM.res.nc
+  fullpath: /scratch/nm03/ab8992/mom6/archive/full-20/restart092/MOM.res.nc
   hashes:
-    binhash: 7b9c59604159fef24a5540efde3ac340
-    md5: 752891d064747771800ea16ca201d871
+    binhash: 799be3c7669ca3d3b628936cb221f274
+    md5: 69bc49b0bc1a6230454fcd2947fa2ed2
 work/INPUT/MOM.res_1.nc:
-  fullpath: /scratch/nm03/ab8992/mom6/archive/full-20/restart091/MOM.res_1.nc
+  fullpath: /scratch/nm03/ab8992/mom6/archive/full-20/restart092/MOM.res_1.nc
   hashes:
-    binhash: 5c4da35f02a606c28130c6cfb8e3abef
-    md5: 8e88113f04cc681738e3aa08351a3f98
+    binhash: 4b15dcbfa8657ed7f37851460fb0573f
+    md5: 87e78b29cb1b6c25821e9e80eebd6949
 work/INPUT/MOM.res_2.nc:
-  fullpath: /scratch/nm03/ab8992/mom6/archive/full-20/restart091/MOM.res_2.nc
+  fullpath: /scratch/nm03/ab8992/mom6/archive/full-20/restart092/MOM.res_2.nc
   hashes:
-    binhash: 3bb08ab8afbc1ef08b217a4923d25c89
-    md5: 859d3799dd2148968c0cec8ddbb912ee
+    binhash: a210fe5605cbae482d338c71df56ced1
+    md5: 861103236fcb7387549f75f583fd0315
 work/INPUT/coupler.res:
-  fullpath: /scratch/nm03/ab8992/mom6/archive/full-20/restart091/coupler.res
+  fullpath: /scratch/nm03/ab8992/mom6/archive/full-20/restart092/coupler.res
   hashes:
-    binhash: 2b83c51183de23033ec48e1280760a71
-    md5: ba511b05c7982971a48c88000a5765f1
+    binhash: 31389692c4554f3aa34d8c186ab5a3de
+    md5: 5cca71f631f4b9e6a94f2e0185005c54
 work/INPUT/ice_model.res.nc:
-  fullpath: /scratch/nm03/ab8992/mom6/archive/full-20/restart091/ice_model.res.nc
+  fullpath: /scratch/nm03/ab8992/mom6/archive/full-20/restart092/ice_model.res.nc
   hashes:
-    binhash: 49f7312d602193c8884d5cd38e7355a9
-    md5: f12ee11b4e0708f3c2c67028935bdb7c
+    binhash: 96013bf82fecfd24091758c7a29e0a13
+    md5: 849cd8cea5a4be0c4dd494e4a312dfa6
