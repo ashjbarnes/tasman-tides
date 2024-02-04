@@ -11,6 +11,6 @@
 #override OBC_SEGMENT_004 = "I=N,J=0:N,FLATHER" !
 
 
-#override DT=200
-#override DT_THERM=800
-#override DT_BT = -0.5
+#override DT=400
+#override DT_THERM=1600
+#override DT_BT = -0.2
