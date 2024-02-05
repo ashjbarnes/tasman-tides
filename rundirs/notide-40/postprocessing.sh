@@ -1,5 +1,5 @@
 #!/bin/bash
-#PBS -N notide40-pprocess
+#PBS -N full40-pprocess
 #PBS -P v45
 #PBS -q normalbw
 #PBS -l mem=112gb
