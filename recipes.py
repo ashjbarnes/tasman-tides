@@ -280,7 +280,12 @@ def spinup_timeseries(experiment):
     ke.to_netcdf(f"/g/data/nm03/ab8992/postprocessed/{experiment}/ke_timeseries.nc")
 
 
-def qsub(recipe, experiment, outputs):
+def postprocess(experiment,outputs,chunksize,recompute = False):
+    print(startdask())
+    tt.postprocessing(outputs,experiment,chunksize,recompute)
+    return
+
+def qsub(recipe, experiment, outputs,recompute,chunks):
     tt.logmsg(f"Submitting {recipe} for {experiment}, {outputs} to qsub")
     if not os.path.exists(f"/home/149/ab8992/tasman-tides/logs/{recipe}"):
         os.makedirs(f"/home/149/ab8992/tasman-tides/logs/{recipe}")
@@ -298,7 +303,7 @@ PYTHONNOUSERSITE=1
 module use /g/data/hh5/public/modules
 module load conda/analysis3-unstable
 module list
-python3 /home/149/ab8992/tasman-tides/recipes.py -r {recipe} -e {experiment} -o {outputs} -q 0"""
+python3 /home/149/ab8992/tasman-tides/recipes.py -r {recipe} -e {experiment} -o {outputs} -q 0 -c {recompute} -y {chunks}"""
 
     with open(f"/home/149/ab8992/tasman-tides/logs/{recipe}/{recipe}-{experiment}.pbs", "w") as f:
         f.write(text)
@@ -381,7 +386,8 @@ if __name__ == "__main__":
     parser.add_argument("-e", "--experiment", help="Specify the experiment to apply the recipe to")
     parser.add_argument("-o", "--outputs", help="Specify the outputs to use",default = "output*")
     parser.add_argument("-q", "--qsub", default=1,type=int, help="Choose whether to execute directly or as qsub job")
-    parser.add_argument("-c", "--recompute", default=False,type=bool, help="Choose whether to execute directly or as qsub job")
+    parser.add_argument("-c", "--recompute", default=False,type=bool, help="Recompute completed calculations or not")
+    parser.add_argument("-y", "--chunks", default=12,type=bool, help="Y chunking for postprocessing")
     args = parser.parse_args()
 
     if args.recipe == None:
@@ -395,9 +401,9 @@ if __name__ == "__main__":
 
     elif args.qsub == 1:
         if  "+" in args.experiment:
-            [qsub(args.recipe,i,args.outputs) for i in args.experiment.split("+")]
+            [qsub(args.recipe,i,args.outputs,args.recompute, args.chunks) for i in args.experiment.split("+")]
         else:
-            qsub(args.recipe, args.experiment, args.outputs)
+            qsub(args.recipe, args.experiment, args.outputs,args.recompute, args.chunks)
 
     elif args.recipe == "surface_speed_movie":
         surface_speed_movie(args.experiment)
@@ -419,4 +425,10 @@ if __name__ == "__main__":
 
     elif args.recipe == "vorticity_movie":
         vorticity_movie(args.experiment, args.outputs)
+
+    elif args.recipe == "ekman_pumping_movie":
+        ekman_pumping_movie(args.experiment)
+
+    elif args.recipe == "postprocessing":
+        postprocess(args.experiment,args.outputs,args.chunk,args.)
 
