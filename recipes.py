@@ -289,6 +289,10 @@ def qsub(recipe, experiment, outputs,recompute,chunks):
     tt.logmsg(f"Submitting {recipe} for {experiment}, {outputs} to qsub")
     if not os.path.exists(f"/home/149/ab8992/tasman-tides/logs/{recipe}"):
         os.makedirs(f"/home/149/ab8992/tasman-tides/logs/{recipe}")
+    if recompute:
+        recompute = "-c "
+    else:
+        recompute = ""
     text = f"""
 #!/bin/bash
 #PBS -N {recipe}-{experiment}
@@ -303,7 +307,7 @@ PYTHONNOUSERSITE=1
 module use /g/data/hh5/public/modules
 module load conda/analysis3-unstable
 module list
-python3 /home/149/ab8992/tasman-tides/recipes.py -r {recipe} -e {experiment} -o {outputs} -q 0 -c {recompute} -y {chunks}"""
+python3 /home/149/ab8992/tasman-tides/recipes.py -r {recipe} -e {experiment} -o {outputs} -q 0 {recompute}-y {chunks}"""
 
     with open(f"/home/149/ab8992/tasman-tides/logs/{recipe}/{recipe}-{experiment}.pbs", "w") as f:
         f.write(text)
