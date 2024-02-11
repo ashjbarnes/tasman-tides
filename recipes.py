@@ -430,5 +430,5 @@ if __name__ == "__main__":
         ekman_pumping_movie(args.experiment)
 
     elif args.recipe == "postprocess":
-        postprocess(args.experiment,args.outputs,args.chunk,args.recompute)
+        postprocess(args.experiment,args.outputs,args.chunks,args.recompute)
 
