@@ -429,6 +429,6 @@ if __name__ == "__main__":
     elif args.recipe == "ekman_pumping_movie":
         ekman_pumping_movie(args.experiment)
 
-    elif args.recipe == "postprocessing":
+    elif args.recipe == "postprocess":
         postprocess(args.experiment,args.outputs,args.chunk,args.recompute)
 
