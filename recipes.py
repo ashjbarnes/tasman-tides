@@ -386,11 +386,10 @@ if __name__ == "__main__":
     parser.add_argument("-e", "--experiment", help="Specify the experiment to apply the recipe to")
     parser.add_argument("-o", "--outputs", help="Specify the outputs to use",default = "output*")
     parser.add_argument("-q", "--qsub", default=1,type=int, help="Choose whether to execute directly or as qsub job")
-    parser.add_argument("-c", "--recompute", default=0,type=int, help="Recompute completed calculations or not")
+    parser.add_argument("-c", "--recompute", default=False,type=bool, help="Recompute completed calculations or not")
     parser.add_argument("-y", "--chunks", default=12,type=bool, help="Y chunking for postprocessing")
     args = parser.parse_args()
 
-    args.recompute = args.recompute != 0
 
     if args.recipe == None:
         print("Available recipes:\nsurface_speed_movie\nsave_vorticity\nsave_filtered_vels\nspinup_timeseries\nke_movie\ndissipation_movie\nvorticity_movie")
