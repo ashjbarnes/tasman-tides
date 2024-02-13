@@ -280,9 +280,9 @@ def spinup_timeseries(experiment):
     ke.to_netcdf(f"/g/data/nm03/ab8992/postprocessed/{experiment}/ke_timeseries.nc")
 
 
-def postprocess(experiment,outputs,chunksize,recompute = False):
+def postprocess(experiment,outputs,recompute = False):
     print(startdask())
-    tt.postprocessing(outputs,experiment,chunksize,recompute)
+    tt.postprocessing(outputs,experiment,recompute)
     return
 
 def qsub(recipe, experiment, outputs,recompute):
@@ -405,9 +405,9 @@ if __name__ == "__main__":
 
     elif args.qsub == 1:
         if  "+" in args.experiment:
-            [qsub(args.recipe,i,args.outputs,args.recompute, args.chunks) for i in args.experiment.split("+")]
+            [qsub(args.recipe,i,args.outputs,args.recompute) for i in args.experiment.split("+")]
         else:
-            qsub(args.recipe, args.experiment, args.outputs,args.recompute, args.chunks)
+            qsub(args.recipe, args.experiment, args.outputs,args.recompute)
 
     elif args.recipe == "surface_speed_movie":
         surface_speed_movie(args.experiment)
