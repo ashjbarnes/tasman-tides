@@ -675,7 +675,7 @@ def save_chunked(data,name,chunks,gdataout):
                 ).to_netcdf(gdataout / f"{name}" / f"{name}_y{i:02d}.nc")
         i += 1
 
-def postprocessing(to_process,expt = "full-20",yb_chunksize = 1000,recompute = False):
+def postprocessing(to_process,expt = "full-20",recompute = False):
     hourly_diags = {
     "rho":
     {"x":"xh","y":"yh","z":"z_l"},
@@ -685,6 +685,7 @@ def postprocessing(to_process,expt = "full-20",yb_chunksize = 1000,recompute = F
     {"x":"xh","y":"yh","z":"rho2_i"}
     }
 
+    yb_chunksize = 6
     rundir = Path("/home/149/ab8992/tasman-tides/rundirs/") / expt
 
     if to_process == "last":

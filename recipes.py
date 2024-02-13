@@ -285,7 +285,7 @@ def postprocess(experiment,outputs,chunksize,recompute = False):
     tt.postprocessing(outputs,experiment,chunksize,recompute)
     return
 
-def qsub(recipe, experiment, outputs,recompute,chunks):
+def qsub(recipe, experiment, outputs,recompute):
     tt.logmsg(f"Submitting {recipe} for {experiment}, {outputs} to qsub")
     if not os.path.exists(f"/home/149/ab8992/tasman-tides/logs/{recipe}"):
         os.makedirs(f"/home/149/ab8992/tasman-tides/logs/{recipe}")
@@ -307,7 +307,7 @@ PYTHONNOUSERSITE=1
 module use /g/data/hh5/public/modules
 module load conda/analysis3-unstable
 module list
-python3 /home/149/ab8992/tasman-tides/recipes.py -r {recipe} -e {experiment} -o {outputs} -q 0 {recompute}-y {chunks}"""
+python3 /home/149/ab8992/tasman-tides/recipes.py -r {recipe} -e {experiment} -o {outputs} -q 0 {recompute}"""
 
     with open(f"/home/149/ab8992/tasman-tides/logs/{recipe}/{recipe}-{experiment}.pbs", "w") as f:
         f.write(text)
@@ -391,7 +391,6 @@ if __name__ == "__main__":
     parser.add_argument("-o", "--outputs", help="Specify the outputs to use",default = "output*")
     parser.add_argument("-q", "--qsub", default=1,type=int, help="Choose whether to execute directly or as qsub job")
     parser.add_argument("-c", "--recompute", action="store_true", help="Recompute completed calculations or not")
-    parser.add_argument("-y", "--chunks", default=12,type=bool, help="Y chunking for postprocessing")
     args = parser.parse_args()
 
 
@@ -435,5 +434,5 @@ if __name__ == "__main__":
         ekman_pumping_movie(args.experiment)
 
     elif args.recipe == "postprocess":
-        postprocess(args.experiment,args.outputs,args.chunks,args.recompute)
+        postprocess(args.experiment,args.outputs,args.recompute)
 
