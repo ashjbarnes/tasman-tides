@@ -215,7 +215,7 @@ def collect_data(exptname,rawdata = None,ppdata = None,surface_data = None,bathy
     data = {}
     if type(rawdata) != type(None):
         for var in rawdata:
-            data[var] = xr.open_mfdataset(str(rawdata_path / var / "*"),chunks = chunks,decode_times = False).sel(time = slice(timerange[0],timerange[1])
+            data[var] = xr.open_mfdataset(str(rawdata_path / var / "*.nc"),chunks = chunks,decode_times = False).sel(time = slice(timerange[0],timerange[1])
             )
 
     if type(ppdata) != type(None):
