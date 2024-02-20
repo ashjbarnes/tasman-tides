@@ -1,6 +1,6 @@
 ## Add override files here
 #override OBC_TIDE_N_CONSTITUENTS = 0
 #override TIDES = False
-#override DT = 120
-#override DT_THERM = 480
-#override DT_BT = -0.1
+#override DT = 100
+#override DT_THERM = 400
+#override DT_BT = -0.05
