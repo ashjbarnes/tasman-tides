@@ -215,16 +215,16 @@ def collect_data(exptname,rawdata = None,ppdata = None,surface_data = None,bathy
     data = {}
     if type(rawdata) != type(None):
         for var in rawdata:
-            data[var] = xr.open_mfdataset(str(rawdata_path / var / "*.nc"),chunks = chunks,decode_times = False).sel(time = slice(timerange[0],timerange[1])
+            data[var] = xr.open_mfdataset(str(rawdata_path / var / "*.nc"),chunks = chunks,decode_times = False,parallel = True).sel(time = slice(timerange[0],timerange[1])
             )
 
     if type(ppdata) != type(None):
         for var in ppdata:
             data[var + "_topdown"] = xr.open_mfdataset(
-                str(ppdata_path / var / "topdown" / "*.nc"),chunks = chunks,decode_times = False).rename({var:var + "_topdown"}).sel(time = slice(timerange[0],timerange[1])
+                str(ppdata_path / var / "topdown" / "*.nc"),chunks = chunks,decode_times = False,parallel = True).rename({var:var + "_topdown"}).sel(time = slice(timerange[0],timerange[1])
             )
             data[var + "_transect"] = xr.open_mfdataset(
-                str(ppdata_path / var / "transect" / "*.nc"),chunks = chunks,decode_times = False).rename({var:var + "_transect"}).sel(time = slice(timerange[0],timerange[1])
+                str(ppdata_path / var / "transect" / "*.nc"),chunks = chunks,decode_times = False,parallel = True).rename({var:var + "_transect"}).sel(time = slice(timerange[0],timerange[1])
             )
 
     if bathy == True:

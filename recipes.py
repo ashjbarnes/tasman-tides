@@ -217,7 +217,7 @@ def save_filtered_vels(experiment,outputs,recompute = False):
         outputs=outputs,
         rawdata = ["u","v","ahh"],
         bathy=False,
-        chunks = {"xb":-1,"zl":10}
+        # chunks = {"xb":-1,"zl":10}
         )
     print("Data loaded")
     for i in range(0,len(data.time) // averaging_window):
