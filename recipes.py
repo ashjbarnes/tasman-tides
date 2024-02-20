@@ -17,9 +17,13 @@ def startdask():
     try:
     # Try to get the existing Dask client
         client = default_client()
+        print("Startdask: found existing client")
+        print(client)
     except ValueError:
         # If there's no existing client, create a new one
+        print("Startdask: no client found. Creating a new one")
         client = Client()
+        print(client)
 
 def surface_speed_movie(experiment):
     """
@@ -213,9 +217,9 @@ def save_filtered_vels(experiment,outputs,recompute = False):
         outputs=outputs,
         rawdata = ["u","v","ahh"],
         bathy=False,
-        chunks = {"time": -1,"xb":-1,"zl":10}
+        chunks = {"xb":-1,"zl":10}
         )
-    
+    print("Data loaded")
     for i in range(0,len(data.time) // averaging_window):
         mid_time =  data.time[int(np.floor((i + 0.5) * averaging_window)) ] ## Middle of time window time
 
