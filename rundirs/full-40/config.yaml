@@ -26,3 +26,4 @@ postscript:
   postprocessing.sh
 userscripts:
   error: resub.sh
+  run: rm -f resubmit.count
