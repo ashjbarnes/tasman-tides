@@ -268,10 +268,10 @@ def spinup_timeseries(experiment):
     Timeseries of the total integrated kinetic energy in the domain of interest
     """
     u = xr.open_mfdataset(
-        f"/g/data/nm03/ab8992/outputs/{experiment}/output*/u/*",decode_times = False,parallel=True
+        f"/g/data/nm03/ab8992/outputs/{experiment}/output*/u/*.nc",decode_times = False,parallel=True
     ).fillna(0)
     v = xr.open_mfdataset(
-        f"/g/data/nm03/ab8992/outputs/{experiment}/output*/v/*",decode_times = False,parallel=True
+        f"/g/data/nm03/ab8992/outputs/{experiment}/output*/v/*.nc",decode_times = False,parallel=True
     ).fillna(0)
     print("Calculate ke")
     ke = (u.u**2 + v.v**2).integrate("xb").integrate("yb").integrate("zl")
