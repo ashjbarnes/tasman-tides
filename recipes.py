@@ -67,7 +67,7 @@ def vorticity_movie(experiment, outputs):
     """
     startdask()
 
-    data = tt.collect_data(experiment,ppdata=["vorticity"],chunks = {"time":1},outputs=outputs,bathy=True)
+    data = tt.collect_data(experiment,ppdata=["vorticity"],chunks = {"time":1},outputs=outputs)
     print("loaded data")
     print(data)
     fig = plt.figure(figsize=(20, 12))
@@ -122,7 +122,7 @@ def ke_movie(experiment, outputs):
     """
     startdask()
 
-    data = tt.collect_data("full-20",ppdata = ["vorticity","UU","VV"],outputs = outputs,bathy = True)
+    data = tt.collect_data("full-20",ppdata = ["vorticity","UU","VV"],outputs = outputs,)
 
     print("loaded data")
     print(data)
@@ -144,7 +144,7 @@ def dissipation_movie(experiment, outputs):
     """
     startdask()
 
-    data = tt.collect_data(experiment,ppdata = ["vorticity","dissipation"],outputs = outputs,bathy = True,chunks = {"time":1})
+    data = tt.collect_data(experiment,ppdata = ["vorticity","dissipation"],outputs = outputs,chunks = {"time":1})
 
     print("loaded data")
     fig = plt.figure(figsize=(20, 12))
