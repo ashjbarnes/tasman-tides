@@ -216,7 +216,6 @@ def save_filtered_vels(experiment,outputs,recompute = False):
         experiment,
         outputs=outputs,
         rawdata = ["u","v","ahh"],
-        bathy=False,
         # chunks = {"xb":-1,"zl":10}
         )
     print("Data loaded")
