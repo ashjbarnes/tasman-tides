@@ -224,11 +224,11 @@ def collect_data(exptname,rawdata = None,ppdata = None,surface_data = None,outpu
             print(f"loading {var} topdown...",end = "\t" )
             data[var + "_topdown"] = xr.open_mfdataset(
                 str(ppdata_path / var / "topdown" / "*.nc"),chunks = chunks,decode_times = False,parallel = True,decode_cf = False).sel(time = slice(timerange[0],timerange[1])
-            )[var].rename({var:var + "_topdown"})
+            )[var]
             print("done. loading transect...",end = "\t")
             data[var + "_transect"] = xr.open_mfdataset(
                 str(ppdata_path / var / "transect" / "*.nc"),chunks = chunks,decode_times = False,parallel = True,decode_cf = False).sel(time = slice(timerange[0],timerange[1])
-            )[var].rename({var:var + "_transect"})
+            )[var]
             print("done.")
 
 
