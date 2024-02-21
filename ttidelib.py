@@ -214,21 +214,30 @@ def collect_data(exptname,rawdata = None,ppdata = None,surface_data = None,bathy
 
     data = {}
     if type(rawdata) != type(None):
+        
         for var in rawdata:
+            print(f"loading {var}...",end = "\t" )
+
             data[var] = xr.open_mfdataset(str(rawdata_path / var / "*.nc"),chunks = chunks,decode_times = False,parallel = True,decode_cf = False).sel(time = slice(timerange[0],timerange[1])
-            )
+            )[var]
+            print("done.")
 
     if type(ppdata) != type(None):
         for var in ppdata:
+            print(f"loading {var} topdown...",end = "\t" )
             data[var + "_topdown"] = xr.open_mfdataset(
-                str(ppdata_path / var / "topdown" / "*.nc"),chunks = chunks,decode_times = False,parallel = True,decode_cf = False).rename({var:var + "_topdown"}).sel(time = slice(timerange[0],timerange[1])
+                str(ppdata_path / var / "topdown" / "*.nc"),chunks = chunks,decode_times = False,parallel = True,decode_cf = False).rename({var:var + "_topdown"}).sel(time = slice(timerange[0],timerange[1])[var]
             )
+            print("done. loading transect...",end = "\t")
             data[var + "_transect"] = xr.open_mfdataset(
-                str(ppdata_path / var / "transect" / "*.nc"),chunks = chunks,decode_times = False,parallel = True,decode_cf = False).rename({var:var + "_transect"}).sel(time = slice(timerange[0],timerange[1])
+                str(ppdata_path / var / "transect" / "*.nc"),chunks = chunks,decode_times = False,parallel = True,decode_cf = False).rename({var:var + "_transect"}).sel(time = slice(timerange[0],timerange[1])[var]
             )
+            print("done.")
 
-    if bathy == True:
-        data["bathy"] = xr.open_mfdataset(str(rawdata_path.parent / "bathy_transect.nc")).rename({"elevation":"bathy"})
+
+    data["bathy"] = xr.open_mfdataset(str(rawdata_path.parent / "bathy_transect.nc"))["elevation"].rename({"elevation":"bathy"})
+    data["lat"] = xr.open_mfdataset(str(rawdata_path.parent / "bathy_transect.nc"))["lat"].rename({"elevation":"bathy"})
+    data["lon"] = xr.open_mfdataset(str(rawdata_path.parent / "bathy_transect.nc"))["lon"].rename({"elevation":"bathy"})
 
 
     ## Merge data into dataset
