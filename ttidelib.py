@@ -189,7 +189,7 @@ def beamgrid(data,lat0 = -42.1,lon0 = 147.2,beamwidth = 400,beamlength = 1500,pl
         return out
     
 
-def collect_data(exptname,rawdata = None,ppdata = None,surface_data = None,bathy = False,outputs = "output*",chunks = "auto",timerange = (None,None)):
+def collect_data(exptname,rawdata = None,ppdata = None,surface_data = None,outputs = "output*",chunks = "auto",timerange = (None,None)):
     """
     Collect all data required for analysis into a single xarray.Dataset
     expname : str
@@ -208,9 +208,6 @@ def collect_data(exptname,rawdata = None,ppdata = None,surface_data = None,bathy
     rawdata_path = Path("/g/data/nm03/ab8992/outputs/") / exptname / outputs
     ppdata_path = Path("/g/data/nm03/ab8992/postprocessed/") / exptname
 
-    timechunk = -1
-    if "time" in chunks:
-        timechunk = chunks["time"]
 
     data = {}
     if type(rawdata) != type(None):
@@ -235,12 +232,10 @@ def collect_data(exptname,rawdata = None,ppdata = None,surface_data = None,bathy
             print("done.")
 
 
-    data["bathy"] = xr.open_mfdataset(str(rawdata_path.parent / "bathy_transect.nc"))["elevation"].rename({"elevation":"bathy"})
-    data["lat"] = xr.open_mfdataset(str(rawdata_path.parent / "bathy_transect.nc"))["lat"].rename({"elevation":"bathy"})
-    data["lon"] = xr.open_mfdataset(str(rawdata_path.parent / "bathy_transect.nc"))["lon"].rename({"elevation":"bathy"})
-
+    data["bathy"] = xr.open_mfdataset(str(rawdata_path.parent / "bathy_transect.nc")).rename({"elevation":"bathy"})
 
     ## Merge data into dataset
+    # return data
     data = xr.merge([data[i] for i in data])
 
     return data
