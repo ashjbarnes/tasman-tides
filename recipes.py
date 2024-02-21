@@ -216,7 +216,7 @@ def save_filtered_vels(experiment,outputs,recompute = False):
         experiment,
         outputs=outputs,
         rawdata = ["u","v","ahh"],
-        # chunks = {"xb":-1,"zl":10}
+        chunks = {"zl":10}
         )
     print("Data loaded")
     for i in range(0,len(data.time) // averaging_window):
@@ -239,10 +239,10 @@ def save_filtered_vels(experiment,outputs,recompute = False):
                 ).chunk({"time":-1}).drop(["lat","lon"]).fillna(0)
         U = tt.m2filter(
             u_,
-            m2f).persist()
+            m2f).compute()
         V = tt.m2filter(
             v_,
-            m2f).persist()
+            m2f).compute()
         
         # Calculate dissipation as viscosity * laplacian(u)^2 
         laplacian2 = (U.differentiate("xb").differentiate("xb") + V.differentiate("yb").differentiate("yb")
