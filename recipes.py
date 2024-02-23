@@ -32,7 +32,7 @@ def surface_speed_movie(experiment):
     resolution = experiment.split("-")[-1]
     startdask()
 
-    speed = xr.open_mfdataset(f"/g/data/nm03/ab8992/outputs/{experiment}/**/surface.nc",decode_times=False,parallel = True).speed
+    speed = xr.open_mfdataset(f"/g/data/nm03/ab8992/outputs/{experiment}/**/surface.nc",decode_times=False,parallel = True,decode_cf = False).speed.isel(time=slice(None, None, 10))
 
     speed = speed.chunk({"time":1,"xh":-1,"yh":-1})
 
@@ -55,7 +55,7 @@ def surface_speed_movie(experiment):
                 tt.plot_surfacespeed,
                 experiment,
                 "surface_speed",
-                framerate=10,
+                framerate=30,
                 parallel=True)
 
     return
