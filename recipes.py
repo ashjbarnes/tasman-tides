@@ -157,7 +157,19 @@ def dissipation_movie(experiment, outputs):
                 framerate=5,
                 parallel=True)
 
-    plt.clf()
+
+
+    return
+
+def dissipation_anomaly_movie(experiment, outputs):
+    """
+    Make a movie of the m2 dissipation anomalies for the given experiment and outputs
+    """
+    startdask()
+
+    data = tt.collect_data(experiment,ppdata = ["vorticity","dissipation"],outputs = outputs,chunks = {"time":1})
+
+    print("loaded data")
     print("Make dissipation anomaly movie")
 
     data["dissipation_topdown"] -= data["dissipation_topdown"].mean("time")
@@ -170,12 +182,11 @@ def dissipation_movie(experiment, outputs):
                 experiment,
                 "M2_dissipation_anomaly",
                 framerate=5,
-                parallel=True,
+                parallel=False,
                 plot_kwargs = {"anomaly":True}
     )
 
     return
-
 
 
 
@@ -427,7 +438,9 @@ if __name__ == "__main__":
     elif args.recipe == "ke_movie":
         ke_movie(args.experiment, args.outputs)
 
-    elif args.recipe == "dissipation_movie":
+    elif args.recipe == "dissipation_anomaly_movie":
+        dissipation_movie(args.experiment, args.outputs)
+    elif args.recipe == "dissipation_anomaly_movie":
         dissipation_movie(args.experiment, args.outputs)
 
     elif args.recipe == "vorticity_movie":
