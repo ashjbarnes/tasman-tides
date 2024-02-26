@@ -379,6 +379,8 @@ def plot_dissipation(data,vmax_topdown = 5e5,anomaly = False):
         vmax_transect = 200
         vmin_transect = -200
         cmap = "Rdbu"
+        data["vorticity_topdown"] -= data["vorticity_topdown_mean"]
+        data["vorticity_transect"] -= data["vorticity_transect_mean"]
     fig = plt.figure(figsize=(20, 12))
     ax = fig.subplots(2,1)
 
