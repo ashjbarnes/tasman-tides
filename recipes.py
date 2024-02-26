@@ -438,10 +438,10 @@ if __name__ == "__main__":
     elif args.recipe == "ke_movie":
         ke_movie(args.experiment, args.outputs)
 
-    elif args.recipe == "dissipation_anomaly_movie":
+    elif args.recipe == "dissipation_movie":
         dissipation_movie(args.experiment, args.outputs)
     elif args.recipe == "dissipation_anomaly_movie":
-        dissipation_movie(args.experiment, args.outputs)
+        dissipation_anomaly_movie(args.experiment, args.outputs)
 
     elif args.recipe == "vorticity_movie":
         vorticity_movie(args.experiment, args.outputs)
