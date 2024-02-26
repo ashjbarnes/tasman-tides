@@ -172,8 +172,9 @@ def dissipation_anomaly_movie(experiment, outputs):
     print("loaded data")
     print("Make dissipation anomaly movie")
 
-    data["dissipation_topdown"] -= data["dissipation_topdown"].mean("time")
-    data["dissipation_transect"] -= data["dissipation_transect"].mean("time")
+    data["dissipation_topdown_mean"] = data["dissipation_topdown"].mean("time").compute()
+    data["dissipation_trannsect_mean"] = data["dissipation_transect"].mean("time").compute()
+
     fig = plt.figure(figsize=(20, 12))
 
     print("Start making movie...")
@@ -182,7 +183,7 @@ def dissipation_anomaly_movie(experiment, outputs):
                 experiment,
                 "M2_dissipation_anomaly",
                 framerate=5,
-                parallel=False,
+                parallel=True,
                 plot_kwargs = {"anomaly":True}
     )
 
