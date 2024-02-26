@@ -78,7 +78,7 @@ def vorticity_movie(experiment, outputs):
                 experiment,
                 "vorticity",
                 framerate=5,
-                parallel=False)
+                parallel=True)
 
     return
 
