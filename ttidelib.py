@@ -847,15 +847,18 @@ def postprocessing(to_process,expt = "full-20",recompute = False):
             continue
         eta = beamgrid(ds.zos)
         speed = beamgrid(ds.speed)
-        taux = beamgrid(ds.taux,xname = "xq")
-        tauy = beamgrid(ds.tauy,yname = "yq")
-
-        surface_transect = xr.merge([eta,speed,taux,tauy])
+        if not "blank" in expt:
+            taux = beamgrid(ds.taux,xname = "xq")
+            tauy = beamgrid(ds.tauy,yname = "yq")
+            surface_transect = xr.merge([eta,speed,taux,tauy])
+        else:
+            surface_transect = xr.merge([eta,speed])
         surface_transect.to_netcdf(gdataout / "surface_transect.nc")
         del eta
         del speed
-        del taux
-        del tauy
+        if not "blank" in expt:
+            del taux
+            del tauy
         del surface_transect
 
         for i in ["u","v","ahh","e","rho"]:
