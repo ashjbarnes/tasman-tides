@@ -756,11 +756,12 @@ def postprocessing(to_process,expt = "full-20",recompute = False):
         ## Simply move the surface variables to gdata. These are unchunked and for the entire domain
 
         try:
-            surface_filename = list(mom6out.glob('*.surface.nc'))[0].name
+            surface_filename = list(mom6out.glob('*surface.nc'))[0].name
             shutil.copy(str(mom6out / surface_filename),str(gdataout / "surface.nc"))
         except Exception as e:
             print("Couldn't move surface.nc")
             print(e)
+            continue
         ## Finally copy across ocean stats
         print("Copying ocean.stats")
         try:
@@ -768,6 +769,7 @@ def postprocessing(to_process,expt = "full-20",recompute = False):
         except Exception as e:
             print("Couldn't move ocean.stats")
             print(e)
+            continue
         # Now we do the biggest ones, the hourly diagnostics. These are output in their own folder, chunked along y dimension
         # First do the velocities together, as these need to be summed along and against the beam
 
