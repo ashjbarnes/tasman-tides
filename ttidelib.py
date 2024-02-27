@@ -824,14 +824,23 @@ def postprocessing(to_process,expt = "full-20",recompute = False):
         ## Now do 2D surface diagnostics
         print(f"processing surface diagnostics over transect")
         try:
-            ds = xr.open_mfdataset(
-                str(mom6out / f"*surface.nc"),
-                chunks={"time":10},
-                decode_times=False,
-            ).sel({
-                "xh" : slice(144,170), "yh" : slice(-55,-40),
-                "xq" : slice(144,170), "yq" : slice(-55,-40),
-                })
+            if "blank" in expt: 
+                ds = xr.open_mfdataset(
+                    str(mom6out / f"*surface.nc"),
+                    chunks={"time":10},
+                    decode_times=False,
+                ).sel({
+                    "xh" : slice(144,170), "yh" : slice(-55,-40)
+                    })
+            else:
+                ds = xr.open_mfdataset(
+                    str(mom6out / f"*surface.nc"),
+                    chunks={"time":10},
+                    decode_times=False,
+                ).sel({
+                    "xh" : slice(144,170), "yh" : slice(-55,-40),
+                    "xq" : slice(144,170), "yq" : slice(-55,-40),
+                    })
         except Exception as e:
             print(f"Failed to open surface!")
             print(e)
