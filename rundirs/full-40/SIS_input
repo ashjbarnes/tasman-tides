@@ -59,3 +59,5 @@ FATAL_UNUSED_PARAMS = True
 
 ! from overrides:
 ADD_DIURNAL_SW = False
+
+RESTART_CHECKSUMS_REQUIRED = False
