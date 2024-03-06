@@ -189,7 +189,7 @@ def beamgrid(data,lat0 = -42.1,lon0 = 147.2,beamwidth = 400,beamlength = 1500,pl
         return out
     
 
-def collect_data(exptname,rawdata = None,ppdata = None,surface_data = None,outputs = "output*",chunks = "auto",timerange = (None,None)):
+def collect_data(exptname,rawdata = None,ppdata = None,surface_data = None,outputs = "output*",chunks = None,timerange = (None,None)):
     """
     Collect all data required for analysis into a single xarray.Dataset
     expname : str
