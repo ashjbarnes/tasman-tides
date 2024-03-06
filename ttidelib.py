@@ -14,11 +14,7 @@ import shutil
 import dask
 import cmocean
 from pathlib import Path
-from xmovie import Movie 
-import xrft
-import argparse
-import io
-import sys
+
 from dask.distributed import Client,default_client
 home = Path("/home/149/ab8992/tasman-tides")
 gdata = Path("/g/data/nm03/ab8992")
@@ -273,6 +269,7 @@ def m2filter(field,freq = m2f,tol = 0.015):
     """
     Filter about the m2 frequency. Just pass a field and it will return the real part of the filtered field
     """
+    import xrft
     FIELD = xrft.fft(field,dim = "time")
     FIELD_filtered = FIELD.where(np.abs(np.abs(FIELD.freq_time) - freq) < tol,0)
     return np.real(xrft.ifft(FIELD_filtered,dim = "freq_time"))
