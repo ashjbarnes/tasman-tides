@@ -15,7 +15,6 @@ import dask
 import cmocean
 from pathlib import Path
 
-from dask.distributed import Client,default_client
 home = Path("/home/149/ab8992/tasman-tides")
 gdata = Path("/g/data/nm03/ab8992")
 
@@ -519,13 +518,7 @@ def make_movie(data,plot_function,runname,plotname,framerate = 5,parallel = Fals
     plotname : name of the plot eg "h_energy_transfer"
     plot_kwargs : kwargs to pass to plot function
     """
-    try:
-    # Try to get the existing Dask client
-        client = default_client()
-    except ValueError:
-        # If there's no existing client, create a new one
-        client = Client()
-    print("client: ",client)
+
     print(f"Making movie {plotname} for {runname}")
     tmppath = Path(f"/g/data/v45/ab8992/movies_tmp/tasman-tides/{runname}/movies/{plotname}/")
     outpath = Path(f"/g/data/v45/ab8992/dropbox/tasman-tides/{runname}/movies/")
