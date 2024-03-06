@@ -4,7 +4,7 @@ logfile='resubmit.log'
 counterfile='resubmit.count'
 outfile='resub.err'
 
-MAX_RESUBMISSIONS=1
+MAX_RESUBMISSIONS=2
 date >> ${logfile}
 
 # Define errors from which a resubmit is appropriate
