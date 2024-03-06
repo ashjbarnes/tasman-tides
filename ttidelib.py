@@ -11,7 +11,6 @@ import xarray as xr
 import subprocess
 import matplotlib.pyplot as plt
 import shutil
-import xesmf
 import dask
 import cmocean
 from pathlib import Path
@@ -81,6 +80,7 @@ def beamgrid(data,lat0 = -42.1,lon0 = 147.2,beamwidth = 400,beamlength = 1500,pl
     Return a xarray.DataArray cut down to size on to the beam grid. The resolution is automatically determined from the base grid.
 
     """
+    import xesmf
 
     if plot == True:
         assert isinstance(data,xr.DataArray), "Data must be an xarray.DataArray"
