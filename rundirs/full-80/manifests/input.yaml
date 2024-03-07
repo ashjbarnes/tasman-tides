@@ -1,6 +1,21 @@
 format: yamanifest
 version: 1.0
 ---
+work/INPUT/10u_ERA5.nc:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/era5/10year/10u_ERA5.nc
+  hashes:
+    binhash: 0430d1cc94df568bd9990386a1d8afbb
+    md5: 2b15f5f1418ccb439adf9f4aaa08e4ac
+work/INPUT/10v_ERA5.nc:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/era5/10year/10v_ERA5.nc
+  hashes:
+    binhash: d13959cfe9edeb3c4f7e2a0ba791cffd
+    md5: 9f9c53301e782d2028bbed92e5312d25
+work/INPUT/2t_ERA5.nc:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/era5/10year/2t_ERA5.nc
+  hashes:
+    binhash: 61a4bb3424efb586d9305ffee400a6b8
+    md5: a316e67864f070534b46d6bef398dbc2
 work/INPUT/atmos_mosaic_tile1Xland_mosaic_tile1.nc:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/full-80/atmos_mosaic_tile1Xland_mosaic_tile1.nc
   hashes:
@@ -21,36 +36,6 @@ work/INPUT/diag_rho2.nc:
   hashes:
     binhash: 7c09fb90f495c36271e37c0f9ca21510
     md5: f2c98102749b170ce8ac3a7ccd3932fc
-work/INPUT/forcing/10u_ERA5:
-  fullpath: /g/data/nm03/ab8992/ttide-inputs/full-80/forcing/10u_ERA5
-  hashes:
-    binhash: ae125431b8586b3365dfe649f2cb216f
-    md5: 04ec57aa4d4ba19df7dcfab59baa74dd
-work/INPUT/forcing/10u_ERA5.nc:
-  fullpath: /g/data/nm03/ab8992/ttide-inputs/full-80/forcing/10u_ERA5.nc
-  hashes:
-    binhash: bc0f1e4ea3c796f29b9975ac903b6158
-    md5: 70aadf0ebbb3d5cffeb37f956cdf4647
-work/INPUT/forcing/10v_ERA5:
-  fullpath: /g/data/nm03/ab8992/ttide-inputs/full-80/forcing/10v_ERA5
-  hashes:
-    binhash: 113143b95f32e5cc1d98f2742e332fe1
-    md5: ba2151f37c54e23e5f56cccf18269961
-work/INPUT/forcing/10v_ERA5.nc:
-  fullpath: /g/data/nm03/ab8992/ttide-inputs/full-80/forcing/10v_ERA5.nc
-  hashes:
-    binhash: 04f3c6f539c18f97ef5e6c39bebc5238
-    md5: 55637ca36c63150181dcd74b98cfe00d
-work/INPUT/forcing/2t_ERA5:
-  fullpath: /g/data/nm03/ab8992/ttide-inputs/full-80/forcing/2t_ERA5
-  hashes:
-    binhash: 7fd9b9b85b6e43b8afc4b778215f04a4
-    md5: ed21d61860db2388f0a14b912167fd40
-work/INPUT/forcing/2t_ERA5.nc:
-  fullpath: /g/data/nm03/ab8992/ttide-inputs/full-80/forcing/2t_ERA5.nc
-  hashes:
-    binhash: 1338be35e9944470dac43c115bcb5921
-    md5: ad5bc6ecdf16bdc00c0e767e8c7def30
 work/INPUT/forcing/forcing_obc_segment_001.nc:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/full-80/forcing/forcing_obc_segment_001.nc
   hashes:
@@ -74,28 +59,18 @@ work/INPUT/forcing/forcing_obc_segment_004.nc:
 work/INPUT/forcing/init_eta.nc:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/full-80/forcing/init_eta.nc
   hashes:
-    binhash: f66feb6e5f82e5a5a29842f95dc0013d
-    md5: fc23ddb66aaa845944c6213942592c95
+    binhash: 6ebfd7cfbbe49d4463e3017dc3f24205
+    md5: 68667bdbd41341159b4956b2023f2b99
 work/INPUT/forcing/init_tracers.nc:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/full-80/forcing/init_tracers.nc
   hashes:
-    binhash: 867475f65985a4973a2b720fd321e116
-    md5: cc8628bfa314cf2fa73493780cee73ef
+    binhash: 7a5975ab5656ed6f25902e5f5aa6b5bd
+    md5: 19ac9a84a075bef194bb4934d2a3fb26
 work/INPUT/forcing/init_vel.nc:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/full-80/forcing/init_vel.nc
   hashes:
-    binhash: a2b6002f3b8bc72fcf3e97f0b3df282b
-    md5: 0f347d4eb4a93517b939e98eb5f969b4
-work/INPUT/forcing/q_ERA5:
-  fullpath: /g/data/nm03/ab8992/ttide-inputs/full-80/forcing/q_ERA5
-  hashes:
-    binhash: 231e4149a5aa28de2ce71d42c5f5f862
-    md5: a3cec1fa4535151d1b34c41a42df2ee2
-work/INPUT/forcing/q_ERA5.nc:
-  fullpath: /g/data/nm03/ab8992/ttide-inputs/full-80/forcing/q_ERA5.nc
-  hashes:
-    binhash: 9a3b2838c25df34de4db76a1dfaa9579
-    md5: dfaa54b419e268a775d58d0cae02e56f
+    binhash: 27408823baf60952ad247dcc2be1efe5
+    md5: 8e6aec5d762a9b79a474ad1ca33b1a2c
 work/INPUT/forcing/regrid_segment_001_tidal_elev.nc:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/full-80/forcing/regrid_segment_001_tidal_elev.nc
   hashes:
@@ -116,16 +91,6 @@ work/INPUT/forcing/regrid_segment_004_tidal_elev.nc:
   hashes:
     binhash: 94876ee9b48b2473e2d997da08a0aafe
     md5: 69d38bcdc436ee13db39196bf0173c41
-work/INPUT/forcing/sp_ERA5:
-  fullpath: /g/data/nm03/ab8992/ttide-inputs/full-80/forcing/sp_ERA5
-  hashes:
-    binhash: 50c6d97e025a2029952d2cdd959456e0
-    md5: 611b2ed0a64e4c9b8655c965bdab65c9
-work/INPUT/forcing/sp_ERA5.nc:
-  fullpath: /g/data/nm03/ab8992/ttide-inputs/full-80/forcing/sp_ERA5.nc
-  hashes:
-    binhash: 50574cf525294f8669e829aa3ce1a3ac
-    md5: 02c53199aff4ee6c25d97b5f525a466a
 work/INPUT/forcing/tu_001.nc:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/full-80/forcing/tu_001.nc
   hashes:
@@ -191,6 +156,16 @@ work/INPUT/mask_table.766.80x80:
   hashes:
     binhash: 40c41a2af3b2b50fe174e8645f9f80d4
     md5: 1ff60f94f315feaa5cd11b37bc6b52d8
+work/INPUT/msdwlwrf_ERA5.nc:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/era5/10year/msdwlwrf_ERA5.nc
+  hashes:
+    binhash: b481264ef6b234b4f6d231ccc0194aa9
+    md5: c53ea1e087cea76a55c6540775d5d622
+work/INPUT/msdwswrf_ERA5.nc:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/era5/10year/msdwswrf_ERA5.nc
+  hashes:
+    binhash: c6b587e340dd5b030976072de3915259
+    md5: f6267c071cc006a14869ae788f33b985
 work/INPUT/ocean_mask.nc:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/full-80/ocean_mask.nc
   hashes:
@@ -201,6 +176,16 @@ work/INPUT/ocean_mosaic.nc:
   hashes:
     binhash: e68ad41f54f764441097e94289fd6262
     md5: 3b63dee6974d13cd63617406d19d8946
+work/INPUT/q_ERA5.nc:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/era5/10year/q_ERA5.nc
+  hashes:
+    binhash: dba222afb130cc02e88661a4e23690b2
+    md5: dcbe3e00541dcee1800e3800e0be8956
+work/INPUT/sp_ERA5.nc:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/era5/10year/sp_ERA5.nc
+  hashes:
+    binhash: cd1b85a743220828557383a02969de5c
+    md5: 2e1859f85ec81d72b26b6b1e2f397ce5
 work/INPUT/topog.nc:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/full-80/topog.nc
   hashes:
@@ -211,6 +196,11 @@ work/INPUT/topog_raw.nc:
   hashes:
     binhash: 202ce47f019c49d3d356c2fa9a0b20fd
     md5: a0e6a882ec1c0aaa20f1efff4137e335
+work/INPUT/trr_ERA5.nc:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/era5/10year/trr_ERA5.nc
+  hashes:
+    binhash: 7143b91ed756d71521b94de9e939ceff
+    md5: ce9a1899baaaf43cb260f18ba4505b38
 work/INPUT/vcoord.nc:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/full-80/vcoord.nc
   hashes:

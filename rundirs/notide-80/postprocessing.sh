@@ -1,6 +1,6 @@
 #!/bin/bash
-#PBS -N ttide-pprocess
-#PBS -P v45
+#PBS -N full80-pprocess
+#PBS -P x77
 #PBS -q normalbw
 #PBS -l mem=112gb
 #PBS -l walltime=6:00:00

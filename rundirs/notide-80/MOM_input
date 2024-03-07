@@ -29,7 +29,8 @@ CHECK_BAD_SURFACE_VALS = True   !   [Boolean] default = False
 BAD_VAL_SST_MIN = -3.0          !   [deg C] default = -2.1
                                 ! The value of SST below which a bad value message is triggered, if
                                 ! CHECK_BAD_SURFACE_VALS is true.
-        
+BAD_VAL_SSH_MAX = 4
+BAD_VAL_SSH_MIN = -4        
 ! === module MOM_fixed_initialization ===
 INPUTDIR = "INPUT"              ! default = "."
                                 ! The directory in which input files are found.
@@ -158,7 +159,7 @@ RESTART_CHECKSUMS_REQUIRED = False !   [Boolean] default = True
                                 ! may want to avoid this comparison if for example the restarts are made from a
                                 ! run with a different mask_table than the current run, in which case the
                                 ! checksums will not match and cause crash.
-PARALLEL_RESTARTFILES = True    !   [Boolean] default = False
+PARALLEL_RESTARTFILES = False    !   [Boolean] default = False
                                 ! If true, the IO layout is used to group processors that write to the same
                                 ! restart file or each processor writes its own (numbered) restart file. If
                                 ! false, a single restart file is generated combining output from all PEs.

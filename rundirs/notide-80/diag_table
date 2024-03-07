@@ -1,14 +1,22 @@
 ttide
-2015 1 1 0 0 0
+2014 1 10 0 0 0
 
 ## 2D Diagnostics at 6hrs frequency. Mostly for tracking eddies 
 "surface",            6, "hours",   1, "hours", "time"
 
 "ocean_model",   "zos",          "zos",              "surface",         "all", "mean", "none",2
-#"ocean_model",   "mlotst",       "mlotst",           "surface",         "all", "mean", "none",2
+"ocean_model",   "tos",       "tos",           "surface",         "all", "mean", "none",2
 "ocean_model",   "speed",        "speed",            "surface",         "all", "mean", "none",2
+"ocean_model",	 "sst_global", "sst_global", "surface", "all", "mean", "none",2
+"ocean_model",	 "sss_global", "sss_global", "surface",	"all", "mean", "none",2
+"ocean_model",	 "sss", "sss", "surface",	"all", "mean", "none",2
 "ocean_model","taux",   "taux",   "surface","all","mean","none",2
 "ocean_model","tauy",   "tauy",   "surface","all","mean","none",2
+#"ocean_model","net_heat_surface",   "net_heat_surface",   "surface","all","mean","none",2
+"ocean_model","net_heat_surface_ga",   "net_heat_surface_ga",   "surface","all","mean","none",2
+#"ocean_model","SW",   "SW",   "surface","all","mean","none",2
+#"ocean_model","LW",   "LW",   "surface","all","mean","none",2
+#"ocean_model","net_heat_coupler",   "net_heat_coupler",   "surface","all","mean","none",2
 ## Instead of regional selection, split the variables of interest into separate files and slice afterwards in Python
 
 ## 3D Diagnostifcs on z*

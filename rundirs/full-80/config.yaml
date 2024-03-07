@@ -1,7 +1,7 @@
 project: x77
 queue: normal
-walltime: 6:00:00
-jobname: full-40
+walltime: 5:00:00
+jobname: full-80
 #ncpus: 1435
 ncpus: 5634
 jobfs: 100GB
