@@ -1,5 +1,5 @@
 CGRID_ICE_DYNAMICS = True
-DT_ICE_DYNAMICS = 180.0
+DT_ICE_DYNAMICS = 2000.0
 ! fixed bulk salinity of sea ice
 ICE_BULK_SALINITY = 0.0
 ! salinity of sea ice as fraction of salinity
@@ -59,3 +59,5 @@ FATAL_UNUSED_PARAMS = True
 
 ! from overrides:
 ADD_DIURNAL_SW = False
+
+RESTART_CHECKSUMS_REQUIRED = False
