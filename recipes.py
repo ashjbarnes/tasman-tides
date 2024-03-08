@@ -597,11 +597,11 @@ if __name__ == "__main__":
         
 
     elif args.qsub == 1:
+        if args.recipe == "lagrange_filter":
+            qsub_lagrange_filter(args.experiment,args.zl,args.t0)
 
         qsub(args.recipe, args.experiment, args.outputs,args.recompute)
 
-    elif args.recipe == "lagrange_filter":
-        lagrange_filter(args.experiment,2,0)
 
     elif args.recipe == "surface_speed_movie":
         surface_speed_movie(args.experiment)
