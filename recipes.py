@@ -4,7 +4,6 @@ import ttidelib as tt
 import os
 import subprocess
 import time
-import filtering
 from datetime import timedelta
 from dask.distributed import Client,default_client
 from matplotlib import pyplot as plt
@@ -300,6 +299,8 @@ def spinup_timeseries(experiment):
 #### LAGRANGE FILTERING
     
 def lagrange_filter(expt,zl,t0,time_window = 200,filter_window = 100,filter_cutoff = 2*np.pi/(12.42*3600)):
+    import filtering
+
     """
     Apply the Lagrange filter to the input data. This is a wrapper around the LagrangeFilter class in filtering.py
     Saves the outputs to `postprocessing/expt/lfiltered/t0-<t0>/filtered_<zl>.nc` with a separate file for each z level.
