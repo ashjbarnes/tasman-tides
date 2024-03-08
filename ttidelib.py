@@ -860,3 +860,21 @@ def postprocessing(to_process,expt = "full-20",recompute = False):
             )
 
 
+def cross_scale_transfer(data):
+    """Calcualtes the cross scale transfer term given already filtered data. This will work
+    whether the data is temporally or spatially filtered"""
+
+    tau_uu = data.uu - data.u**2
+    tau_uv = data.uv - data.u*data.v
+    tau_vv = data.vv - data.v**2
+    u = data.u
+    v = data.v
+
+    transfer = (
+        tau_uu * u.differentiate("xb") +
+        tau_uv * u.differentiate("yb") +
+        tau_uv * v.differentiate("xb") +
+        tau_vv * v.differentiate("yb")
+    ).rename("energy_transfer")
+
+    return transfer
