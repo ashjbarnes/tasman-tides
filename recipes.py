@@ -452,7 +452,6 @@ python3 /home/149/ab8992/tasman-tides/recipes.py -r lagrange_filter -e {experime
     with open(f"/home/149/ab8992/tasman-tides/logs/lfilter/lfilter-{experiment}-{zl}.pbs", "w") as f:
         f.write(text)
 
-    
     result = subprocess.run(
         f"qsub /home/149/ab8992/tasman-tides/logs/lfilter/lfilter-{experiment}-{zl}.pbs",
         shell=True,
@@ -635,3 +634,5 @@ if __name__ == "__main__":
     elif args.recipe == "postprocess":
         postprocess(args.experiment,args.outputs,args.recompute)
 
+    elif args.recipe == "lagrange_filter":
+        lagrange_filter(args.experiment,args.zl,args.t0)
