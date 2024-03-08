@@ -586,7 +586,7 @@ if __name__ == "__main__":
     parser.add_argument("-q", "--qsub", default=1,type=int, help="Choose whether to execute directly or as qsub job")
     parser.add_argument("-c", "--recompute", action="store_true", help="Recompute completed calculations or not")
     parser.add_argument("-t", "--t0", type=int, help="For lagrange filter: choose the midpoint of the time slice to filter")
-    parser.add_argument("-z", "--zl", type=int, default = "all",help="For lagrange filter: choose which z levels to include. eg 0-20 or 5")
+    parser.add_argument("-z", "--zl", default = 0,type=int,help="For lagrange filter: choose which z levels to include. eg 0-20 or 5")
     args = parser.parse_args()
 
 
