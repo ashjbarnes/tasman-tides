@@ -4,6 +4,8 @@ import ttidelib as tt
 import os
 import subprocess
 import time
+import filtering
+from datetime import timedelta
 from dask.distributed import Client,default_client
 from matplotlib import pyplot as plt
 from pathlib import Path
@@ -295,10 +297,184 @@ def spinup_timeseries(experiment):
     ke.to_netcdf(f"/g/data/nm03/ab8992/postprocessed/{experiment}/ke_timeseries.nc")
 
 
+#### LAGRANGE FILTERING
+    
+def lagrange_filter(expt,zl,t0,time_window = 200,filter_window = 100,filter_cutoff = 2*np.pi/(12.42*3600)):
+    """
+    Apply the Lagrange filter to the input data. This is a wrapper around the LagrangeFilter class in filtering.py
+    Saves the outputs to `postprocessing/expt/lfiltered/t0-<t0>/filtered_<zl>.nc` with a separate file for each z level.
+    Inputs:
+        expt: str, the experiment to process
+        zl: int, the z level(s) to process
+        t0: int, the middle time of the time slice we care about
+    """
+
+
+
+    tmpstorage = os.getenv('PBS_JOBFS')
+
+    rawdata = tt.collect_data(
+        expt,
+        rawdata = ["u","v"],
+        timerange=(t0 - time_window,t0 + time_window)).isel(zl = [zl])
+
+    # Save attributes to re-add later
+    attrs = {
+        "u": rawdata.u.attrs,
+        "v": rawdata.v.attrs,
+        "time": rawdata.time.attrs,
+        "xb": rawdata.xb.attrs,
+        "yb": rawdata.yb.attrs,
+        "zl": rawdata.zl.attrs,
+        "base" : rawdata.attrs
+    }
+
+    ## Save z level to re-add later
+    zl_value = rawdata.zl.values[0]
+
+    ## Remove zl to make data properly 2D
+    rawdata = rawdata.isel(zl = 0)
+
+    # Strip attrs since lagrange filter complains about them
+    rawdata.u.attrs = {}
+    rawdata.v.attrs = {}
+    rawdata.zl.attrs = {}
+    rawdata.time.attrs = {}
+    rawdata.yb.attrs = {}
+    rawdata.xb.attrs = {}
+    rawdata = rawdata.assign_coords({
+        "time":rawdata.time * 3600,
+        "xb":rawdata.xb * 1000,
+        "yb":rawdata.yb * 1000})
+    # rawdata = rawdata.drop(["bathy","lat","lon"]) ## COMMENTED OUT FOR NOTIDE
+
+    print("Saving data to temporary storage")
+
+    rawdata.u.to_netcdf(tmpstorage + f"/u.nc",mode="w")
+    rawdata.v.to_netcdf(tmpstorage + f"/v.nc",mode="w")
+    (rawdata.v**2).rename("vv").to_netcdf(tmpstorage + f"/vv.nc",mode="w")
+    (rawdata.u**2).rename("uu").to_netcdf(tmpstorage + f"/uu.nc",mode="w")
+    (rawdata.u*rawdata.v).rename("uv").to_netcdf(tmpstorage + f"/uv.nc",mode="w")
+    print("done")
+    client.close()
+
+    f = filtering.LagrangeFilter(
+        tmpstorage + "/filtered", ## Save intermediate output to temporary storage
+        {
+            "U":tmpstorage + "/u.nc",
+            "V":tmpstorage + "/v.nc",
+            "uu":tmpstorage + "/uu.nc",
+            "vv":tmpstorage + "/vv.nc",
+            "uv":tmpstorage + "/uv.nc"
+        }, 
+        {"U":"u","V":"v","uu":"uu","vv":"vv","uv":"uv"}, 
+        {"lon":"xb","lat":"yb","time":"time"},
+        sample_variables=["U","V","vv","uu","uv"], mesh="flat",highpass_frequency = filter_cutoff,
+        advection_dt =timedelta(minutes=30).total_seconds(),
+        window_size = timedelta(hours=24).total_seconds(),
+    )
+    f(times = range(3600 * (time_window - filter_window),3600 * (time_window + filter_window),3600)) ## Ensure we take times either side of the point of interest
+
+    ## Remove stored data to save space on disk
+    for i in ["u","v","uu","vv","uv"]:
+        os.remove(tmpstorage + f"/{i}.nc")
+
+    client = startdask()
+
+    ## Load the filtered data
+    filtered = xr.open_dataset(tmpstorage + "/filtered.nc",chunks = "auto")
+
+    ## Re-add zl as a dimension. Expand dims, then add zl
+    filtered = filtered.expand_dims({"zl":[zl_value]})
+
+    ## Restore scale and attributes of rawdata
+    filtered = filtered.assign_coords({
+        "time":filtered.time / 3600,
+        "xb":filtered.xb / 1000,
+        "yb":filtered.yb / 1000})
+
+    ## Fix up names of filtered variables:
+    for i in filtered.data_vars:
+        filtered = filtered.rename({i:i.split("_")[1].lower()})
+
+    filtered.attrs = attrs["base"]
+    filtered.u.attrs = attrs["u"]
+    filtered.v.attrs = attrs["v"]
+    filtered.zl.attrs = attrs["zl"]
+    filtered.time.attrs = attrs["time"]
+    filtered.yb.attrs = attrs["yb"]
+    filtered.xb.attrs = attrs["xb"]
+
+    filtered.attrs["long_name"] = "Filtered velocity data"
+
+    cst = tt.cross_scale_transfer(filtered)
+
+    filtered["cst"] = cst
+
+    ## Now save to the postprocessing file. 
+
+    outfolder = Path(f"/g/data/nm03/ab8992/postprocessed/{expt}/lfiltered/t0-{t0}")
+
+    if not os.path.exists(outfolder):
+        os.makedirs(outfolder)
+
+
+    filtered[["u","v","cst"]].to_netcdf(outfolder / f"filtered_{zl}.nc",mode="w")
+    
+    return
+
+
+
+
 def postprocess(experiment,outputs,recompute = False):
     print(startdask())
     tt.postprocessing(outputs,experiment,recompute)
     return
+
+def qsub_lagrange_filter(experiment,zl,t0):
+    tt.logmsg(f"Submitting lagrange filter for {experiment}, {zl}, {t0} to qsub")
+    text = f"""
+#!/bin/bash
+#PBS -N lf-{experiment}-{zl}-{t0}
+#PBS -P x77
+#PBS -q normalbw
+#PBS -l mem=112gb
+#PBS -l walltime=12:00:00
+#PBS -l ncpus=28
+#PBS -l jobfs=100gb
+#PBS -l storage=gdata/v45+scratch/v45+scratch/x77+gdata/v45+gdata/nm03+gdata/hh5+scratch/nm03
+PYTHONNOUSERSITE=1
+source /home/149/ab8992/libraries/conda/filtering_env/bin/activate
+python3 /home/149/ab8992/tasman-tides/recipes.py -r lagrange_filter -e {experiment}  -q 0 -t {t0} -z {zl}"""
+    with open(f"/home/149/ab8992/tasman-tides/logs/lfilter/lfilter-{experiment}-{zl}.pbs", "w") as f:
+        f.write(text)
+
+    
+    result = subprocess.run(
+        f"qsub /home/149/ab8992/tasman-tides/logs/lfilter/lfilter-{experiment}-{zl}.pbs",
+        shell=True,
+        capture_output=True,
+        text=True,
+        cwd = f"/home/149/ab8992/tasman-tides/logs/lfilter",
+    )
+    pbs_error = f"lfilter-{experiment}-{zl}.e{result.stdout.split('.')[0]}"
+    pbs_log = f"lfilter-{experiment}-{zl}.o{result.stdout.split('.')[0]}"
+
+
+    # Wait until the PBS logfile appears in the log folder
+    while not os.path.exists(f"/home/149/ab8992/tasman-tides/logs/lfilter/{pbs_error}"):
+        time.sleep(10)
+
+    ## Rename the logfile to be recipe--experiment--current_date
+    current_date = time.strftime("%b_%d_%H-%M-%S").lower()
+    os.rename(
+        f"/home/149/ab8992/tasman-tides/logs/lfilter/{pbs_error}",
+        f"/home/149/ab8992/tasman-tides/logs/lfilter/{experiment}-{zl}_{current_date}.err",
+    )
+    os.rename(
+        f"/home/149/ab8992/tasman-tides/logs/lfilter/{pbs_log}",
+        f"/home/149/ab8992/tasman-tides/logs/lfilter/{experiment}-{zl}_{current_date}.out",
+    )
 
 def qsub(recipe, experiment, outputs,recompute):
     tt.logmsg(f"Submitting {recipe} for {experiment}, {outputs} to qsub")
@@ -406,6 +582,8 @@ if __name__ == "__main__":
     parser.add_argument("-o", "--outputs", help="Specify the outputs to use",default = "output*")
     parser.add_argument("-q", "--qsub", default=1,type=int, help="Choose whether to execute directly or as qsub job")
     parser.add_argument("-c", "--recompute", action="store_true", help="Recompute completed calculations or not")
+    parser.add_argument("-t", "--t0",  help="For lagrange filter: choose the midpoint of the time slice to filter")
+    parser.add_argument("-z", "--zl",  default = "all",help="For lagrange filter: choose which z levels to include. eg 0-20 or 5")
     args = parser.parse_args()
 
 
@@ -419,10 +597,26 @@ if __name__ == "__main__":
         
 
     elif args.qsub == 1:
-        if  "+" in args.experiment:
-            [qsub(args.recipe,i,args.outputs,args.recompute) for i in args.experiment.split("+")]
+        ## Special case for lagrange filter
+        if args.recipe == "lagrange_filter":
+            if args.zl == "all":
+                zl = [i for i in range(0,100)]
+            if "-" in args.zl:
+                zl = [i for i in range(
+                    int(args.zl.split("-")[0]),
+                    int(args.zl.split("-")[1])
+                    )
+                    ]
+            else:
+                zl = int(args.zl)
+            for i in zl:
+                lagrange_filter(args.experiment,i,args.t0)
+        # All other recipes
         else:
             qsub(args.recipe, args.experiment, args.outputs,args.recompute)
+
+    elif args.recipe == "lagrange_filter":
+        lagrange_filter(args.experiment,2,0)
 
     elif args.recipe == "surface_speed_movie":
         surface_speed_movie(args.experiment)
