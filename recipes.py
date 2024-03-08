@@ -312,7 +312,7 @@ def lagrange_filter(expt,zl,t0,time_window = 200,filter_window = 100,filter_cuto
         t0: int, the middle time of the time slice we care about
     """
 
-
+    client = startdask()
 
     tmpstorage = os.getenv('PBS_JOBFS')
 
@@ -359,7 +359,7 @@ def lagrange_filter(expt,zl,t0,time_window = 200,filter_window = 100,filter_cuto
     (rawdata.u**2).rename("uu").to_netcdf(tmpstorage + f"/uu.nc",mode="w")
     (rawdata.u*rawdata.v).rename("uv").to_netcdf(tmpstorage + f"/uv.nc",mode="w")
     print("done")
-    client.close()
+    client.close() ## Have to close dask client or it messes up the filtering package
 
     f = filtering.LagrangeFilter(
         tmpstorage + "/filtered", ## Save intermediate output to temporary storage
