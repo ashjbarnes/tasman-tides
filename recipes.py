@@ -26,6 +26,8 @@ def startdask():
         client = Client()
         print(client)
 
+    return client
+
 def surface_speed_movie(experiment):
     """
     Make a movie of the surface speed
