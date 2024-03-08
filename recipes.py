@@ -582,8 +582,8 @@ if __name__ == "__main__":
     parser.add_argument("-o", "--outputs", help="Specify the outputs to use",default = "output*")
     parser.add_argument("-q", "--qsub", default=1,type=int, help="Choose whether to execute directly or as qsub job")
     parser.add_argument("-c", "--recompute", action="store_true", help="Recompute completed calculations or not")
-    parser.add_argument("-t", "--t0",  help="For lagrange filter: choose the midpoint of the time slice to filter")
-    parser.add_argument("-z", "--zl",  default = "all",help="For lagrange filter: choose which z levels to include. eg 0-20 or 5")
+    parser.add_argument("-t", "--t0", type=int, help="For lagrange filter: choose the midpoint of the time slice to filter")
+    parser.add_argument("-z", "--zl", type=int, default = "all",help="For lagrange filter: choose which z levels to include. eg 0-20 or 5")
     args = parser.parse_args()
 
 
@@ -597,23 +597,8 @@ if __name__ == "__main__":
         
 
     elif args.qsub == 1:
-        ## Special case for lagrange filter
-        if args.recipe == "lagrange_filter":
-            if args.zl == "all":
-                zl = [i for i in range(0,100)]
-            if "-" in args.zl:
-                zl = [i for i in range(
-                    int(args.zl.split("-")[0]),
-                    int(args.zl.split("-")[1])
-                    )
-                    ]
-            else:
-                zl = int(args.zl)
-            for i in zl:
-                lagrange_filter(args.experiment,i,args.t0)
-        # All other recipes
-        else:
-            qsub(args.recipe, args.experiment, args.outputs,args.recompute)
+
+        qsub(args.recipe, args.experiment, args.outputs,args.recompute)
 
     elif args.recipe == "lagrange_filter":
         lagrange_filter(args.experiment,2,0)
