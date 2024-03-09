@@ -351,9 +351,10 @@ def lagrange_filter(expt,zl,t0,time_window = 200,filter_window = 100,filter_cuto
         "time":rawdata.time * 3600,
         "xb":rawdata.xb * 1000,
         "yb":rawdata.yb * 1000})
-    # rawdata = rawdata.drop(["bathy","lat","lon"]) ## COMMENTED OUT FOR NOTIDE
+    rawdata = rawdata.drop(["bathy","lat","lon"]) 
 
     print("Saving data to temporary storage")
+    print(rawdata)
 
     rawdata.u.to_netcdf(tmpstorage + f"/u.nc",mode="w")
     rawdata.v.to_netcdf(tmpstorage + f"/v.nc",mode="w")
