@@ -300,7 +300,7 @@ def spinup_timeseries(experiment):
 
 #### LAGRANGE FILTERING
     
-def lagrange_filter(expt,zl,t0,time_window = 200,filter_window = 100,filter_cutoff = 2*np.pi/(16*3600)):
+def lagrange_filter(expt,zl,t0,time_window = 100,filter_window = 50,filter_cutoff = 2*np.pi/(16*3600)):
     print("START LAGRANGE FILTERING")
     print("import filtering package:")
     import filtering
@@ -376,8 +376,8 @@ def lagrange_filter(expt,zl,t0,time_window = 200,filter_window = 100,filter_cuto
         {"U":"u","V":"v","uu":"uu","vv":"vv","uv":"uv"}, 
         {"lon":"xb","lat":"yb","time":"time"},
         sample_variables=["U","V","vv","uu","uv"], mesh="flat",highpass_frequency = filter_cutoff,
-        advection_dt =timedelta(minutes=30).total_seconds(),
-        window_size = timedelta(hours=24).total_seconds(),
+        advection_dt =timedelta(minutes=5).total_seconds(),
+        window_size = timedelta(hours=48).total_seconds(),
     )
     f(times = range(3600 * (time_window - filter_window),3600 * (time_window + filter_window),3600)) ## Ensure we take times either side of the point of interest
 
