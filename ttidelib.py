@@ -375,20 +375,20 @@ def plot_dissipation(data,vmax_topdown = 5e5,anomaly = False):
         vmax_transect = 200
         vmin_transect = -200
         cmap = "Rdbu"
-        data["vorticity_topdown"] -= data["vorticity_topdown_mean"]
-        data["vorticity_transect"] -= data["vorticity_transect_mean"]
+        data["dissipation_topdown"] -= data["dissipation_topdown_mean"]
+        data["dissipation_transect"] -= data["dissipation_transect_mean"]
 
         ## Replace all negative values with -log10 of the absolute value
-        data["vorticity_topdown"].loc[data["vorticity_topdown"] > 0] =  np.log10(np.abs(data["vorticity_topdown"].loc[data["vorticity_topdown"] > 0]))
-        data["vorticity_transect"].loc[data["vorticity_transect"] > 0] =  np.log10(np.abs(data["vorticity_transect"].loc[data["vorticity_transect"] > 0]))
+        data["dissipation_topdown"].loc[data["dissipation_topdown"] > 0] =  np.log10(np.abs(data["dissipation_topdown"].loc[data["dissipation_topdown"] > 0]))
+        data["dissipation_transect"].loc[data["dissipation_transect"] > 0] =  np.log10(np.abs(data["dissipation_transect"].loc[data["dissipation_transect"] > 0]))
 
         ## Replace all negative values with -log10 of the absolute value
-        data["vorticity_topdown"].loc[data["vorticity_topdown"] < 0] = -1 * np.log10(np.abs(data["vorticity_topdown"].loc[data["vorticity_topdown"] < 0]))
-        data["vorticity_transect"].loc[data["vorticity_transect"] < 0] = -1 * np.log10(np.abs(data["vorticity_transect"].loc[data["vorticity_transect"] < 0]))
+        data["dissipation_topdown"].loc[data["dissipation_topdown"] < 0] = -1 * np.log10(np.abs(data["dissipation_topdown"].loc[data["dissipation_topdown"] < 0]))
+        data["dissipation_transect"].loc[data["dissipation_transect"] < 0] = -1 * np.log10(np.abs(data["dissipation_transect"].loc[data["dissipation_transect"] < 0]))
 
     else:
-        data["vorticity_topdown"] = np.log10(data["vorticity_topdown"])
-        data["vorticity_transect"] = np.log10(data["vorticity_transect"])
+        data["dissipation_topdown"] = np.log10(data["dissipation_topdown"])
+        data["dissipation_transect"] = np.log10(data["dissipation_transect"])
 
         # Replace po
 
