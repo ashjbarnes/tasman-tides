@@ -300,7 +300,7 @@ def spinup_timeseries(experiment):
 
 #### LAGRANGE FILTERING
     
-def lagrange_filter(expt,zl,t0,time_window = 200,filter_window = 100,filter_cutoff = 2*np.pi/(12.42*3600)):
+def lagrange_filter(expt,zl,t0,time_window = 200,filter_window = 100,filter_cutoff = 2*np.pi/(16*3600)):
     print("START LAGRANGE FILTERING")
     print("import filtering package:")
     import filtering
