@@ -367,13 +367,15 @@ def plot_dissipation(data,vmax_topdown = 5e5,anomaly = False):
     vmin_topdown = 0
     vmax_transect = 500
     vmin_transect = 0
-    cmap = matplotlib.cm.get_cmap('plasma')
-
+    vmin = 0
+    cmap1 = matplotlib.cm.get_cmap('plasma')
+    cmap2 = cmap = cmocean.cm.dense_r
     if anomaly == True:
         vmax_topdown = 400000
         vmin_topdown = -400000
         vmax_transect = 200
         vmin_transect = -200
+        vmin = -5
         cmap = "Rdbu"
         data["dissipation_topdown"] -= data["dissipation_topdown_mean"]
         data["dissipation_transect"] -= data["dissipation_transect_mean"]
@@ -399,16 +401,16 @@ def plot_dissipation(data,vmax_topdown = 5e5,anomaly = False):
 
     ## HORIZONTAL PLOTS FIRST
 
-    data["vorticity_topdown"].plot.contour(ax = ax[0],levels = [-0.075,-0.025,0.025,0.075],cmap = cmap,linestyle = "solid")
-    data["dissipation_topdown"].plot(ax = ax[0],cmap = cmap,cbar_kwargs={'label': "Dissipation"})
+    data["vorticity_topdown"].plot.contour(ax = ax[0],levels = [-0.075,-0.025,0.025,0.075],cmap = cmap2,linestyle = "solid")
+    data["dissipation_topdown"].plot(ax = ax[0],cmap = cmap2,cbar_kwargs={'label': "Dissipation"},vmax = 5,vmin = vmin)
 
     ## Add bathymetry plot
     plot_topo(ax[0],data["bathy"])
 
 
     ## Second axis: vertical transect
-    data["vorticity_transect"].plot.contour(ax = ax[1],levels = [-0.075,-0.025,0.025,0.075],cmap = cmap,linestyle = "solid")
-    data["dissipation_transect"].plot(ax = ax[1],cmap = cmap,cbar_kwargs={'label': "Dissipation"})
+    data["vorticity_transect"].plot.contour(ax = ax[1],levels = [-0.075,-0.025,0.025,0.075],cmap = cmap1,linestyle = "solid")
+    data["dissipation_transect"].plot(ax = ax[1],cmap = cmap1,cbar_kwargs={'label': "Dissipation"})
     plot_topo(ax[1],data["bathy"],transect=0)
 
     # fig.suptitle(exptname)

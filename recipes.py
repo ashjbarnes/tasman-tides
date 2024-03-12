@@ -176,7 +176,7 @@ def dissipation_anomaly_movie(experiment, outputs):
     print("Make dissipation anomaly movie")
 
     data["dissipation_topdown_mean"] = data["dissipation_topdown"].mean("time").compute()
-    data["dissipation_trannsect_mean"] = data["dissipation_transect"].mean("time").compute()
+    data["dissipation_transect_mean"] = data["dissipation_transect"].mean("time").compute()
 
     fig = plt.figure(figsize=(20, 12))
 
