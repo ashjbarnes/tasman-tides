@@ -377,6 +377,22 @@ def plot_dissipation(data,vmax_topdown = 5e5,anomaly = False):
         cmap = "Rdbu"
         data["vorticity_topdown"] -= data["vorticity_topdown_mean"]
         data["vorticity_transect"] -= data["vorticity_transect_mean"]
+
+        ## Replace all negative values with -log10 of the absolute value
+        data["vorticity_topdown"].loc[data["vorticity_topdown"] > 0] =  np.log10(np.abs(data["vorticity_topdown"].loc[data["vorticity_topdown"] > 0]))
+        data["vorticity_transect"].loc[data["vorticity_transect"] > 0] =  np.log10(np.abs(data["vorticity_transect"].loc[data["vorticity_transect"] > 0]))
+
+        ## Replace all negative values with -log10 of the absolute value
+        data["vorticity_topdown"].loc[data["vorticity_topdown"] < 0] = -1 * np.log10(np.abs(data["vorticity_topdown"].loc[data["vorticity_topdown"] < 0]))
+        data["vorticity_transect"].loc[data["vorticity_transect"] < 0] = -1 * np.log10(np.abs(data["vorticity_transect"].loc[data["vorticity_transect"] < 0]))
+
+    else:
+        data["vorticity_topdown"] = np.log10(data["vorticity_topdown"])
+        data["vorticity_transect"] = np.log10(data["vorticity_transect"])
+
+        # Replace po
+
+
     fig = plt.figure(figsize=(20, 12))
     ax = fig.subplots(2,1)
 
@@ -384,7 +400,7 @@ def plot_dissipation(data,vmax_topdown = 5e5,anomaly = False):
     ## HORIZONTAL PLOTS FIRST
 
     data["vorticity_topdown"].plot.contour(ax = ax[0],levels = [-0.075,-0.025,0.025,0.075],cmap = cmap,linestyle = "solid")
-    data["dissipation_topdown"].plot(ax = ax[0],cmap = cmap,cbar_kwargs={'label': "Dissipation"},vmax = vmax_topdown)
+    data["dissipation_topdown"].plot(ax = ax[0],cmap = cmap,cbar_kwargs={'label': "Dissipation"})
 
     ## Add bathymetry plot
     plot_topo(ax[0],data["bathy"])
@@ -392,7 +408,7 @@ def plot_dissipation(data,vmax_topdown = 5e5,anomaly = False):
 
     ## Second axis: vertical transect
     data["vorticity_transect"].plot.contour(ax = ax[1],levels = [-0.075,-0.025,0.025,0.075],cmap = cmap,linestyle = "solid")
-    data["dissipation_transect"].plot(ax = ax[1],cmap = cmap,cbar_kwargs={'label': "Dissipation"},vmax = vmax_transect)
+    data["dissipation_transect"].plot(ax = ax[1],cmap = cmap,cbar_kwargs={'label': "Dissipation"})
     plot_topo(ax[1],data["bathy"],transect=0)
 
     # fig.suptitle(exptname)
