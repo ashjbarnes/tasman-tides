@@ -402,7 +402,7 @@ def plot_dissipation(data,vmax_topdown = 5e5,anomaly = False):
     ## HORIZONTAL PLOTS FIRST
 
     data["vorticity_topdown"].plot.contour(ax = ax[0],levels = [-0.075,-0.025,0.025,0.075],cmap = cmap1,linestyle = "solid")
-    data["dissipation_topdown"].plot(ax = ax[0],cmap = cmap2,cbar_kwargs={'label': "Dissipation"},vmax = 5,vmin = vmin,cmap = cmap2)
+    data["dissipation_topdown"].plot(ax = ax[0],cmap = cmap2,cbar_kwargs={'label': "Dissipation"},vmax = 5,vmin = vmin)
 
     ## Add bathymetry plot
     plot_topo(ax[0],data["bathy"])
