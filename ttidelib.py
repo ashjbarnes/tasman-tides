@@ -401,8 +401,8 @@ def plot_dissipation(data,vmax_topdown = 5e5,anomaly = False):
 
     ## HORIZONTAL PLOTS FIRST
 
-    data["vorticity_topdown"].plot.contour(ax = ax[0],levels = [-0.075,-0.025,0.025,0.075],cmap = cmap2,linestyle = "solid")
-    data["dissipation_topdown"].plot(ax = ax[0],cmap = cmap2,cbar_kwargs={'label': "Dissipation"},vmax = 5,vmin = vmin)
+    data["vorticity_topdown"].plot.contour(ax = ax[0],levels = [-0.075,-0.025,0.025,0.075],cmap = cmap1,linestyle = "solid")
+    data["dissipation_topdown"].plot(ax = ax[0],cmap = cmap2,cbar_kwargs={'label': "Dissipation"},vmax = 5,vmin = vmin,cmap = cmap2)
 
     ## Add bathymetry plot
     plot_topo(ax[0],data["bathy"])
@@ -410,7 +410,7 @@ def plot_dissipation(data,vmax_topdown = 5e5,anomaly = False):
 
     ## Second axis: vertical transect
     data["vorticity_transect"].plot.contour(ax = ax[1],levels = [-0.075,-0.025,0.025,0.075],cmap = cmap1,linestyle = "solid")
-    data["dissipation_transect"].plot(ax = ax[1],cmap = cmap1,cbar_kwargs={'label': "Dissipation"})
+    data["dissipation_transect"].plot(ax = ax[1],cmap = cmap2,cbar_kwargs={'label': "Dissipation"})
     plot_topo(ax[1],data["bathy"],transect=0)
 
     # fig.suptitle(exptname)
