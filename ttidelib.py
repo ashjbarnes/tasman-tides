@@ -105,7 +105,7 @@ def beamgrid(data,lat0 = -42.1,lon0 = 147.2,beamwidth = 400,beamlength = 1500,pl
     Xrot , Yrot = X_ * np.cos(theta_) - Y_ * np.sin(theta_) , X_ * np.sin(theta_) + Y_ * np.cos(theta_)
     ## Calculate X,Y (the rotated grid points) as lat/lon
     x0,y0 = 6371 * np.cos(lat0 * np.pi/180) * np.sin(lon0 * np.pi/180) , 6371 * np.sin(lat0 * np.pi/180)
-    LONrot,LATrot = xy_to_lonlat(Xrot,Yrot,x0,y0)
+    LONrot,LATrot = xy_to_lonlat(Xrot,Yrot,x0,y0) 
 
     ## Create target grid to interpolate onto
     newgrid = xr.DataArray(
