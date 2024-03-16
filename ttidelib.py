@@ -222,7 +222,10 @@ def collect_data(exptname,rawdata = None,ppdata = None,surface_data = None,outpu
         #! I messed up the rotation! This fixes the velocity rotation on data load.
         if "u" in rawdata and "v" in rawdata:
             u_rotated_once,v_rotated_once = anticlockwise_rotation(data["u"],data["v"])
-            data["u"], data["v"] = anticlockwise_rotation(u_rotated_once,v_rotated_once)
+            u_rotated_once, v_rotated_once = anticlockwise_rotation(u_rotated_once,v_rotated_once)
+
+            data["u"] = u_rotated_once.rename("u")
+            data["v"] = v_rotated_once.rename("v")
 
     if type(ppdata) != type(None):
         for var in ppdata:
