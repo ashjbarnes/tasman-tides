@@ -182,7 +182,12 @@ def beamgrid(data,lat0 = -42.1,lon0 = 147.2,beamwidth = 400,beamlength = 1500,pl
         ax[1].set_title("Subgrid in latlon")
 
         return out
-    
+
+def anticlockwise_rotation(x,y):
+    theta = np.abs(np.arctan((-43.3 + 49.8) / -17))
+    x_rotated = x * np.cos(theta) - y * np.sin(theta)
+    y_rotated = x * np.sin(theta) + y * np.cos(theta)
+    return x_rotated,y_rotated
 
 def collect_data(exptname,rawdata = None,ppdata = None,surface_data = None,outputs = "output*",chunks = None,timerange = (None,None)):
     """
@@ -214,6 +219,11 @@ def collect_data(exptname,rawdata = None,ppdata = None,surface_data = None,outpu
             )[var]
             print("done.")
 
+        #! I messed up the rotation! This fixes the velocity rotation on data load.
+        if "u" in rawdata and "v" in rawdata:
+            u_rotated_once,v_rotated_once = anticlockwise_rotation(data["u"],data["v"])
+            data["u"], data["v"] = anticlockwise_rotation(u_rotated_once,v_rotated_once)
+
     if type(ppdata) != type(None):
         for var in ppdata:
             print(f"loading {var} topdown...",end = "\t" )
@@ -227,12 +237,22 @@ def collect_data(exptname,rawdata = None,ppdata = None,surface_data = None,outpu
             print("done.")
 
 
+
     data["bathy"] = xr.open_mfdataset(str(rawdata_path.parent / "bathy_transect.nc")).rename({"elevation":"bathy"})
 
 
     data = xr.merge([data[i] for i in data])
 
     return data
+
+def anticlockwise_rotation(x,y):
+    theta = np.abs(theta = np.arctan((-43.3 + 49.8) / -17))
+    x_rotated = x * np.cos(theta) - y * np.sin(theta)
+    y_rotated = x * np.sin(theta) + y * np.cos(theta)
+    return x_rotated,y_rotated
+
+
+
 
 def save_ppdata(transect_data,topdown_data,basepath,recompute = False):
     """
