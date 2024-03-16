@@ -245,11 +245,7 @@ def collect_data(exptname,rawdata = None,ppdata = None,surface_data = None,outpu
 
     return data
 
-def anticlockwise_rotation(x,y):
-    theta = np.abs(theta = np.arctan((-43.3 + 49.8) / -17))
-    x_rotated = x * np.cos(theta) - y * np.sin(theta)
-    y_rotated = x * np.sin(theta) + y * np.cos(theta)
-    return x_rotated,y_rotated
+
 
 
 
