@@ -5,6 +5,7 @@ import os
 import subprocess
 import time
 from datetime import timedelta
+import dask
 from dask.distributed import Client,default_client
 from matplotlib import pyplot as plt
 from pathlib import Path
@@ -315,7 +316,7 @@ def lagrange_filter(expt,zl,t0,time_window = 100,filter_window = 50,filter_cutof
     """
 
     client = startdask()
-
+    dask.config.set(scheduler="single-threaded")
     tmpstorage = os.getenv('PBS_JOBFS')
 
     rawdata = tt.collect_data(
