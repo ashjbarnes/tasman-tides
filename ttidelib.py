@@ -209,7 +209,7 @@ def collect_data(exptname,rawdata = None,ppdata = None,surface_data = None,chunk
 
     if res == "20" and exptname != "blank-20":
         time_per_output = 15 * 24
-    elif res == "40" or exptname == "blank-40":
+    elif res == "40" or exptname == "blank-20":
         time_per_output = 5 * 24
 
     outputs = np.arange(
