@@ -189,7 +189,7 @@ def anticlockwise_rotation(x,y):
     y_rotated = x * np.sin(theta) + y * np.cos(theta)
     return x_rotated,y_rotated
 
-def collect_data(exptname,rawdata = None,ppdata = None,surface_data = None,outputs = "output*",chunks = None,timerange = (None,None)):
+def collect_data(exptname,rawdata = None,ppdata = None,surface_data = None,chunks = None,timerange = (None,None)):
     """
     Collect all data required for analysis into a single xarray.Dataset
     expname : str
@@ -205,7 +205,20 @@ def collect_data(exptname,rawdata = None,ppdata = None,surface_data = None,outpu
     timerange : Can choose the times instead of output. If None, use all times
     """
 
-    rawdata_path = Path("/g/data/nm03/ab8992/outputs/") / exptname / outputs
+    res = exptname.split("-")[-1]
+
+    if res == "20":
+        time_per_output = 15 * 24
+    elif res == "40":
+        time_per_output = 5 * 24
+
+    outputs = np.arange(
+        np.floor(timerange[0] /time_per_output),
+        np.ceil(timerange[1] / time_per_output)
+    ).astype(int)
+    # change these outputs to strings with 3 digits
+    rawdata_paths = [f"/g/data/nm03/ab8992/outputs/{exptname}/output{i:03d}" for i in outputs]
+
     ppdata_path = Path("/g/data/nm03/ab8992/postprocessed/") / exptname
 
 
@@ -215,17 +228,29 @@ def collect_data(exptname,rawdata = None,ppdata = None,surface_data = None,outpu
         for var in rawdata:
             print(f"loading {var}...",end = "\t" )
 
-            data[var] = xr.open_mfdataset(str(rawdata_path / var / "*.nc"),chunks = chunks,decode_times = False,parallel = True,decode_cf = False).sel(time = slice(timerange[0],timerange[1])
-            )[var]
+            # Collect list of files to load
+            all_files = []
+            # Loop over each path in the paths list
+            for path in rawdata_paths:
+                # Convert the path to a Path object
+                path = Path(path) / var
+                # Use glob to find all files that match the pattern
+                files = list(path.glob('*.nc'))
+                # Add the files to the all_files list
+                all_files.extend(files)
+
+            # Now pass all the files instead of a wildcard string
+            data[var] = xr.open_mfdataset(all_files, decode_times=False, parallel=True, decode_cf=False).sel(time = slice(timerange[0],timerange[1]))[var]
+            
             print("done.")
 
-        #! I messed up the rotation! This fixes the velocity rotation on data load.
-        if "u" in rawdata and "v" in rawdata:
-            u_rotated_once,v_rotated_once = anticlockwise_rotation(data["u"],data["v"])
-            u_rotated_once, v_rotated_once = anticlockwise_rotation(u_rotated_once,v_rotated_once)
+        # #! I messed up the rotation! This fixes the velocity rotation on data load.
+        # if "u" in rawdata and "v" in rawdata:
+        #     u_rotated_once,v_rotated_once = anticlockwise_rotation(data["u"],data["v"])
+        #     u_rotated_once, v_rotated_once = anticlockwise_rotation(u_rotated_once,v_rotated_once)
 
-            data["u"] = u_rotated_once.rename("u")
-            data["v"] = v_rotated_once.rename("v")
+        #     data["u"] = u_rotated_once.rename("u")
+        #     data["v"] = v_rotated_once.rename("v")
 
     if type(ppdata) != type(None):
         for var in ppdata:
@@ -241,7 +266,7 @@ def collect_data(exptname,rawdata = None,ppdata = None,surface_data = None,outpu
 
 
 
-    data["bathy"] = xr.open_mfdataset(str(rawdata_path.parent / "bathy_transect.nc")).rename({"elevation":"bathy"})
+    data["bathy"] = xr.open_mfdataset(str(Path("/g/data/nm03/ab8992/outputs/") / exptname / "bathy_transect.nc")).rename({"elevation":"bathy"})
 
 
     data = xr.merge([data[i] for i in data])
