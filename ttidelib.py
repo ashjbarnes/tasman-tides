@@ -214,7 +214,7 @@ def collect_data(exptname,rawdata = None,ppdata = None,surface_data = None,chunk
 
     if None in timerange:
         rawdata_paths = list(
-            Path(f"/g/data/nm03/ab8992/outputs/{exptname}/output").glob('output*')
+            Path(f"/g/data/nm03/ab8992/outputs/{exptname}/").glob('output*')
             )
     else:
         outputs = np.arange(
