@@ -438,8 +438,8 @@ def postprocess(experiment,outputs,recompute = False):
     tt.postprocessing(outputs,experiment,recompute)
     return
 
-def qsub_lagrange_filter(experiment,zl,t0):
-    tt.logmsg(f"Submitting lagrange filter for {experiment}, {zl}, {t0} to qsub")
+def qsub_lagrange_filter(experiment,zl,t0,windowsize):
+    tt.logmsg(f"Submitting lagrange filter for {experiment}, {zl}, {t0}, {windowsize} to qsub")
     text = f"""
 #!/bin/bash
 #PBS -N lf-{experiment}-{zl}-{t0}
@@ -452,7 +452,7 @@ def qsub_lagrange_filter(experiment,zl,t0):
 #PBS -l storage=gdata/v45+scratch/v45+scratch/x77+gdata/v45+gdata/nm03+gdata/hh5+scratch/nm03
 PYTHONNOUSERSITE=1
 source /home/149/ab8992/libraries/conda/filtering_env/bin/activate
-python3 /home/149/ab8992/tasman-tides/recipes.py -r lagrange_filter -e {experiment}  -q 0 -t {t0} -z {zl}"""
+python3 /home/149/ab8992/tasman-tides/recipes.py -r lagrange_filter -e {experiment}  -q 0 -t {t0} -z {zl} -w {windowsize}"""
     with open(f"/home/149/ab8992/tasman-tides/logs/lfilter/lfilter-{experiment}-{zl}.pbs", "w") as f:
         f.write(text)
 
@@ -504,7 +504,7 @@ PYTHONNOUSERSITE=1
 module use /g/data/hh5/public/modules
 module load conda/analysis3-unstable
 module list
-python3 /home/149/ab8992/tasman-tides/recipes.py -r {recipe} -e {experiment} -o {outputs} -q 0 {recompute}"""
+python3 /home/149/ab8992/tasman-tides/recipes.py -r {recipe} -e {experiment} -o {outputs} -q 0 {recompute} """
 
     with open(f"/home/149/ab8992/tasman-tides/logs/{recipe}/{recipe}-{experiment}.pbs", "w") as f:
         f.write(text)
@@ -590,21 +590,20 @@ if __name__ == "__main__":
     parser.add_argument("-c", "--recompute", action="store_true", help="Recompute completed calculations or not")
     parser.add_argument("-t", "--t0", type=int, help="For lagrange filter: choose the midpoint of the time slice to filter")
     parser.add_argument("-z", "--zl", default = 0,type=int,help="For lagrange filter: choose which z levels to include. eg 0-20 or 5")
+    parser.add_argument("-w", "--windowsize", default = 200,type=int,help="For lagrange filter: choose hours either side of t0 to include")
     args = parser.parse_args()
 
 
     if args.recipe == None:
         print("Available recipes:\nsurface_speed_movie\nsave_vorticity\nsave_filtered_vels\nspinup_timeseries\nke_movie\ndissipation_movie\nvorticity_movie")
-        
-
-	
+        	
     elif args.recipe == "stocktake":
         stocktake()
         
 
     elif args.qsub == 1:
         if args.recipe == "lagrange_filter":
-            qsub_lagrange_filter(args.experiment,args.zl,args.t0)
+            qsub_lagrange_filter(args.experiment,args.zl,args.t0,args.windowsize)
 
         qsub(args.recipe, args.experiment, args.outputs,args.recompute)
 
@@ -639,4 +638,4 @@ if __name__ == "__main__":
         postprocess(args.experiment,args.outputs,args.recompute)
 
     elif args.recipe == "lagrange_filter":
-        lagrange_filter(args.experiment,args.zl,args.t0)
+        lagrange_filter(args.experiment,args.zl,args.t0,args.windowsize)

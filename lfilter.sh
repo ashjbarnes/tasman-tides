@@ -7,8 +7,11 @@ do
         t) tvalue=${OPTARG};;
         e) evalue=${OPTARG};;
         z) zvalue=${OPTARG};;
+        w) wvalue=${OPTARG};;
     esac
 done
+
+wvalue=${wvalue:-200}
 
 # Check if the zvalue contains a dash, indicating a range
 if [[ $zvalue == *-* ]]
@@ -25,10 +28,10 @@ then
             echo "File $filepath exists."
         else
             echo "File $filepath does not exist."
-            python3 recipes.py -r lagrange_filter -e $evalue -t $tvalue -z $i &
+            python3 recipes.py -r lagrange_filter -e $evalue -t $tvalue -z $i -w $wvalue&
         fi
     done
 else
     # If the zvalue is not a range, just run the command once
-    python3 recipes.py -r lagrange_filter -e $evalue -t $tvalue -z $zvalue *
+    python3 recipes.py -r lagrange_filter -e $evalue -t $tvalue -z $zvalue -w $wvalue*
 fi
