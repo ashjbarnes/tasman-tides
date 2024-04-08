@@ -449,6 +449,7 @@ def qsub_lagrange_filter(experiment,zl,t0,windowsize):
 #PBS -l jobfs=100gb
 #PBS -l storage=gdata/v45+scratch/v45+scratch/x77+gdata/v45+gdata/nm03+gdata/hh5+scratch/nm03
 PYTHONNOUSERSITE=1
+cd /scratch/v45/ab8992/tmp
 source /home/149/ab8992/libraries/conda/filtering_env/bin/activate
 python3 /home/149/ab8992/tasman-tides/recipes.py -r lagrange_filter -e {experiment}  -q 0 -t {t0} -z {zl} -w {windowsize}"""
     with open(f"/home/149/ab8992/tasman-tides/logs/lfilter/lfilter-{experiment}-{zl}.pbs", "w") as f:
