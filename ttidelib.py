@@ -212,12 +212,17 @@ def collect_data(exptname,rawdata = None,ppdata = None,surface_data = None,chunk
     elif res == "40" or exptname == "blank-20":
         time_per_output = 5 * 24
 
-    outputs = np.arange(
-        np.floor(timerange[0] /time_per_output),
-        np.ceil(timerange[1] / time_per_output)
-    ).astype(int)
-    # change these outputs to strings with 3 digits
-    rawdata_paths = [f"/g/data/nm03/ab8992/outputs/{exptname}/output{i:03d}" for i in outputs]
+    if None in timerange:
+        rawdata_paths = list(
+            Path(f"/g/data/nm03/ab8992/outputs/{exptname}/output").glob('output*')
+            )
+    else:
+        outputs = np.arange(
+            np.floor(timerange[0] /time_per_output),
+            np.ceil(timerange[1] / time_per_output)
+        ).astype(int)
+        # change these outputs to strings with 3 digits
+        rawdata_paths = [f"/g/data/nm03/ab8992/outputs/{exptname}/output{i:03d}" for i in outputs]
 
     ppdata_path = Path("/g/data/nm03/ab8992/postprocessed/") / exptname
 
