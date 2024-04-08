@@ -71,7 +71,7 @@ def vorticity_movie(experiment, outputs):
     """
     startdask()
 
-    data = tt.collect_data(experiment,ppdata=["vorticity"],chunks = {"time":1},outputs=outputs)
+    data = tt.collect_data(experiment,ppdata=["vorticity"],chunks = {"time":1})
     print("loaded data")
     print(data)
     fig = plt.figure(figsize=(20, 12))
@@ -126,7 +126,7 @@ def ke_movie(experiment, outputs):
     """
     startdask()
 
-    data = tt.collect_data("full-20",ppdata = ["vorticity","UU","VV"],outputs = outputs,)
+    data = tt.collect_data("full-20",ppdata = ["vorticity","UU","VV"])
 
     print("loaded data")
     print(data)
@@ -148,7 +148,7 @@ def dissipation_movie(experiment, outputs):
     """
     startdask()
 
-    data = tt.collect_data(experiment,ppdata = ["vorticity","dissipation"],outputs = outputs,chunks = {"time":1})
+    data = tt.collect_data(experiment,ppdata = ["vorticity","dissipation"],chunks = {"time":1})
 
     print("loaded data")
     fig = plt.figure(figsize=(20, 12))
@@ -171,7 +171,7 @@ def dissipation_anomaly_movie(experiment, outputs):
     """
     startdask()
 
-    data = tt.collect_data(experiment,ppdata = ["vorticity","dissipation"],outputs = outputs,chunks = {"time":1})
+    data = tt.collect_data(experiment,ppdata = ["vorticity","dissipation"],chunks = {"time":1})
 
     print("loaded data")
     print("Make dissipation anomaly movie")
@@ -205,7 +205,6 @@ def save_vorticity(experiment,outputs,recompute = False):
 
     rawdata = tt.collect_data(
         experiment,
-        outputs=outputs,
         rawdata = ["u","v"],
         chunks = {"time": -1,"xb":-1,"zl":10}
         )
@@ -230,7 +229,6 @@ def save_filtered_vels(experiment,outputs,recompute = False):
 
     data = tt.collect_data(
         experiment,
-        outputs=outputs,
         rawdata = ["u","v","ahh"],
         chunks = {"zl":10}
         )
