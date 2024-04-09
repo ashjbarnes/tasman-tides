@@ -249,13 +249,13 @@ def collect_data(exptname,rawdata = None,ppdata = None,surface_data = None,chunk
             
             print("done.")
 
-        # #! I messed up the rotation! This fixes the velocity rotation on data load.
-        # if "u" in rawdata and "v" in rawdata:
-        #     u_rotated_once,v_rotated_once = anticlockwise_rotation(data["u"],data["v"])
-        #     u_rotated_once, v_rotated_once = anticlockwise_rotation(u_rotated_once,v_rotated_once)
+        #! I messed up the rotation! This fixes the velocity rotation on data load.
+        if "u" in rawdata and "v" in rawdata:
+            u_rotated_once,v_rotated_once = anticlockwise_rotation(data["u"],data["v"])
+            u_rotated_once, v_rotated_once = anticlockwise_rotation(u_rotated_once,v_rotated_once)
 
-        #     data["u"] = u_rotated_once.rename("u")
-        #     data["v"] = v_rotated_once.rename("v")
+            data["u"] = u_rotated_once.rename("u")
+            data["v"] = v_rotated_once.rename("v")
 
     if type(ppdata) != type(None):
         for var in ppdata:
@@ -268,7 +268,6 @@ def collect_data(exptname,rawdata = None,ppdata = None,surface_data = None,chunk
                 str(ppdata_path / var / "transect" / "*.nc"),chunks = chunks,decode_times = False,parallel = True,decode_cf = False).sel(time = slice(timerange[0],timerange[1])
             )[var].rename(f"{var}_transect")
             print("done.")
-
 
 
     data["bathy"] = xr.open_mfdataset(str(Path("/g/data/nm03/ab8992/outputs/") / exptname / "bathy_transect.nc")).rename({"elevation":"bathy"})
