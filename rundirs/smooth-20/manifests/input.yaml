@@ -96,6 +96,16 @@ work/INPUT/forcing/init_tracers.nc:
   hashes:
     binhash: 8a3bd299fecf4c30c0f7400bb10416c5
     md5: 357baa15194fa5e01e5251ccf0997de0
+work/INPUT/forcing/init_tracers_old.nc:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/full-20/forcing/init_tracers_old.nc
+  hashes:
+    binhash: 7a4161ec84acc938cd12473625f8c09b
+    md5: 6b44ae7f67a17e1c4075683a8273c1c7
+work/INPUT/forcing/init_tracers_zinterp.nc:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/full-20/forcing/init_tracers_zinterp.nc
+  hashes:
+    binhash: fc72dbb1e877ab3ba4521754150ad9f7
+    md5: c3c8da737cb6079594dc97ce461d8c5f
 work/INPUT/forcing/init_vel.nc:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/full-20/forcing/init_vel.nc
   hashes:

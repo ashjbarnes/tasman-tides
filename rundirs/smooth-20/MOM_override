@@ -2,3 +2,6 @@
 #override DT=250
 #override DT_THERM=1000
 #override DTBT = -0.1
+
+
+#override TEMP_SALT_Z_INIT_FILE = "forcing/init_tracers_zinterp.nc" 
