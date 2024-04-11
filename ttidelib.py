@@ -14,6 +14,7 @@ import shutil
 import dask
 import cmocean
 from pathlib import Path
+from dask.distributed import Client,default_client
 
 home = Path("/home/149/ab8992/tasman-tides")
 gdata = Path("/g/data/nm03/ab8992")
