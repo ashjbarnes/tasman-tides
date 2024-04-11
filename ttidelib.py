@@ -975,7 +975,7 @@ def PlotKEPS(data,ax,color,label = None,linestyle = "solid",dim = "time"):
     color : color of line
     label : label for line. Kind of deprecated if you're adding manually anyway
     """
-
+    import xrft
     u = xrft.power_spectrum(data.u, dim=[dim], window='hann',true_phase = True,detrend = "linear")
     v = xrft.power_spectrum(data.v, dim=[dim], window='hann',true_phase = True,detrend = "linear")
     ps = 0.5*(u + v)
