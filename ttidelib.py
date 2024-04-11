@@ -18,6 +18,8 @@ from pathlib import Path
 home = Path("/home/149/ab8992/tasman-tides")
 gdata = Path("/g/data/nm03/ab8992")
 
+########################################### Small Utility Functions ###############################################
+
 
 def logmsg(message,logfile = home / "logs" /"mainlog"):
     """
@@ -28,6 +30,17 @@ def logmsg(message,logfile = home / "logs" /"mainlog"):
     with open(logfile,"a") as f:
         f.write(current_time + ":\t" + message + "\n")
     return 
+
+def startdask():
+    try:
+    # Try to get the existing Dask client
+        client = default_client()
+        print(client)
+    except ValueError:
+        # If there's no existing client, create a new one
+        client = Client()
+        print(client)
+    return client
 
 def xy_to_lonlat(x,y,x0,y0):
     """
@@ -53,9 +66,35 @@ def lonlat_to_xy(lon,lat,lon0,lat0):
 
     return x,y
 
-def beamgrid(data,lat0 = -42.1,lon0 = 147.2,beamwidth = 400,beamlength = 1500,plot = False,xname = "xh",yname = "yh",vmin = None,vmax = None,chunks = 12):
-    # make a docstring describing these variables
+def anticlockwise_rotation(x,y):
+    theta = np.abs(np.arctan((-43.3 + 49.8) / -17))
+    x_rotated = x * np.cos(theta) - y * np.sin(theta)
+    y_rotated = x * np.sin(theta) + y * np.cos(theta)
+    return x_rotated,y_rotated
+
+def m2filter(field,freq = m2f,tol = 0.015):
     """
+    Filter about the m2 frequency. Just pass a field and it will return the real part of the filtered field
+    """
+    import xrft
+    FIELD = xrft.fft(field,dim = "time")
+    FIELD_filtered = FIELD.where(np.abs(np.abs(FIELD.freq_time) - freq) < tol,0)
+    return np.real(xrft.ifft(FIELD_filtered,dim = "freq_time"))
+
+def filter_velocities(data):
+    """
+    Given a velocity field
+    """
+    duy = data.u.differentiate("yb")
+    dvx = data.v.differentiate("xb")
+    return (dvx - duy)
+
+########################################### More involved postprocessing functions ###############################################
+
+def beamgrid(data,lat0 = -42.1,lon0 = 147.2,beamwidth = 400,beamlength = 1500,plot = False,xname = "xh",yname = "yh",vmin = None,vmax = None,chunks = 12):
+    
+    """
+    Takes data output from MOM6, interpolates onto our small and rotated grid and saves for long term storage
     data : xarray.DataArray
         The data to be gridded
     lat0 : float
@@ -183,548 +222,10 @@ def beamgrid(data,lat0 = -42.1,lon0 = 147.2,beamwidth = 400,beamlength = 1500,pl
 
         return out
 
-def anticlockwise_rotation(x,y):
-    theta = np.abs(np.arctan((-43.3 + 49.8) / -17))
-    x_rotated = x * np.cos(theta) - y * np.sin(theta)
-    y_rotated = x * np.sin(theta) + y * np.cos(theta)
-    return x_rotated,y_rotated
-
-def collect_data(exptname,rawdata = None,ppdata = None,surface_data = None,chunks = None,timerange = (None,None)):
-    """
-    Collect all data required for analysis into a single xarray.Dataset
-    expname : str
-        Name of the experiment
-    rawdata : list of str
-        List of raw data variables to include
-    ppdata : list of str
-        List of postprocessed data variables to include. Note that thse aren't organised in to "outputs" given that they are often filtered temporally and so don't fit within the same output bins as model runs
-    outputs : str
-        Glob string to match the output directories
-    chunks : dict
-        Chunks to use for dask. If "auto", use the default chunking for each variable. Surface variables are only given a time chunk
-    timerange : Can choose the times instead of output. If None, use all times
-    """
-
-    res = exptname.split("-")[-1]
-
-    if res == "20" and exptname != "blank-20":
-        time_per_output = 15 * 24
-    elif res == "40" or exptname == "blank-20":
-        time_per_output = 5 * 24
-
-    if None in timerange:
-        rawdata_paths = list(
-            Path(f"/g/data/nm03/ab8992/outputs/{exptname}/").glob('output*')
-            )
-    else:
-        outputs = np.arange(
-            np.floor(timerange[0] /time_per_output),
-            np.ceil(timerange[1] / time_per_output)
-        ).astype(int)
-        # change these outputs to strings with 3 digits
-        rawdata_paths = [f"/g/data/nm03/ab8992/outputs/{exptname}/output{i:03d}" for i in outputs]
-
-    ppdata_path = Path("/g/data/nm03/ab8992/postprocessed/") / exptname
-
-
-    data = {}
-    if type(rawdata) != type(None):
-        
-        for var in rawdata:
-            print(f"loading {var}...",end = "\t" )
-
-            # Collect list of files to load
-            all_files = []
-            # Loop over each path in the paths list
-            for path in rawdata_paths:
-                # Convert the path to a Path object
-                path = Path(path) / var
-                # Use glob to find all files that match the pattern
-                files = list(path.glob('*.nc'))
-                # Add the files to the all_files list
-                all_files.extend(files)
-
-            # Now pass all the files instead of a wildcard string
-            data[var] = xr.open_mfdataset(all_files, decode_times=False, parallel=True, decode_cf=False).sel(time = slice(timerange[0],timerange[1]))[var]
-            
-            print("done.")
-
-        #! I messed up the rotation! This fixes the velocity rotation on data load.
-        if "u" in rawdata and "v" in rawdata:
-            u_rotated_once,v_rotated_once = anticlockwise_rotation(data["u"],data["v"])
-            u_rotated_once, v_rotated_once = anticlockwise_rotation(u_rotated_once,v_rotated_once)
-
-            data["u"] = u_rotated_once.rename("u")
-            data["v"] = v_rotated_once.rename("v")
-
-    if type(ppdata) != type(None):
-        for var in ppdata:
-            print(f"loading {var} topdown...",end = "\t" )
-            data[var + "_topdown"] = xr.open_mfdataset(
-                str(ppdata_path / var / "topdown" / "*.nc"),chunks = chunks,decode_times = False,parallel = True,decode_cf = False).sel(time = slice(timerange[0],timerange[1])
-            )[var].rename(f"{var}_topdown")
-            print("done. loading transect...",end = "\t")
-            data[var + "_transect"] = xr.open_mfdataset(
-                str(ppdata_path / var / "transect" / "*.nc"),chunks = chunks,decode_times = False,parallel = True,decode_cf = False).sel(time = slice(timerange[0],timerange[1])
-            )[var].rename(f"{var}_transect")
-            print("done.")
-
-
-    data["bathy"] = xr.open_mfdataset(str(Path("/g/data/nm03/ab8992/outputs/") / exptname / "bathy_transect.nc")).rename({"elevation":"bathy"})
-
-
-    data = xr.merge([data[i] for i in data])
-
-    return data
-
-
-
-
-
-
-def save_ppdata(transect_data,topdown_data,basepath,recompute = False):
-    """
-    Save the postprocessed data to gdata. Takes computed topdown and transect data and saves each time slice to postprocessed folders
-    Time index override is used when processing one time slice at a time. That way the index can be used to name the file correctly
-    """
-    print(basepath)
-    print(basepath.name)
-    print(str(type(basepath.name)))
-    for i in ["topdown","transect"]:
-        if not os.path.exists(basepath / i):
-            os.makedirs(basepath / i)
-
-    for i in range(len(topdown_data.time.values)):
-        time = topdown_data.time.values[i]
-        if not os.path.exists(basepath / "topdown" / f"vorticity_time-{str(i).zfill(3)}.nc") or recompute:
-            topdown_data.isel(time = i).expand_dims("time").assign_coords(time = [time]).to_netcdf(basepath / "topdown" / str(basepath.name + f"_time-{str(round(time))}.nc"))
-
-        if not os.path.exists(basepath / "transect" / f"vorticity_time-{str(i).zfill(3)}.nc") or recompute:
-            transect_data.isel(time = i).expand_dims("time").assign_coords(time = [time]).to_netcdf(basepath / "transect" / str(basepath.name + f"_time-{str(round(time))}.nc"))
-
-
-    return
-
-##### FILTERING AND DIAGNOSTICS #####
-
-m2 = 360 / 28.984104 ## Period of m2 in hours
-averaging_window = int(12 * m2) ## this comes out to be 149.0472 hours, so close enough to a multiple of tidal periods
-m2f = 1/ m2    ## Frequency of m2 in radians per hour
-
-
-def m2filter(field,freq = m2f,tol = 0.015):
-    """
-    Filter about the m2 frequency. Just pass a field and it will return the real part of the filtered field
-    """
-    import xrft
-    FIELD = xrft.fft(field,dim = "time")
-    FIELD_filtered = FIELD.where(np.abs(np.abs(FIELD.freq_time) - freq) < tol,0)
-    return np.real(xrft.ifft(FIELD_filtered,dim = "freq_time"))
-
-def filter_velocities(data):
-    """
-    Given a velocity field
-    """
-    duy = data.u.differentiate("yb")
-    dvx = data.v.differentiate("xb")
-    return (dvx - duy)
-
-def plot_vorticity(data):
-    """
-    Plot the vorticity at both surface and a transect. Requires ppdata: vorticity_topdown, vorticity_transect, bathy.
-    """
-    fig,ax = plt.subplots(2,1,figsize = (20,12))
-
-
-    data["vorticity_topdown"].plot(vmin = - 0.075,vmax = 0.075,cmap = "RdBu",ax = ax[0])
-    data["vorticity_transect"].plot(vmin = - 0.05,vmax = 0.05,cmap = "RdBu",ax = ax[1])
-
-    ax[0].set_title("")
-    ax[1].set_title("")
-    ax[1].invert_yaxis()
-    plot_topo(ax[0],bathy = data["bathy"])
-    plot_topo(ax[1],bathy = data["bathy"],transect = 0)
-    ax[1].set_xlabel('km from Tas')
-    ax[0].set_ylabel('km S to N')
-    ax[0].set_xlabel('')
-    ax[1].set_ylabel('km S to N')
-    ax[1].set_title('Transect along middle of beam')
-    ax[0].set_title('Relative Vorticity')
-    ax[0].hlines(y = 0,xmin = 100,xmax = 1450,linestyles = "dashed",color = "black")
-
-    # Add text to the top right corner of the figure
-    ax[0].text(0.95, 0.95, data.time.values, transform=ax[0].transAxes, fontsize=10, va="top", ha="right")
-
-    return fig
-
-
-## PLOTTING
-
-def plot_ekman_pumping(data):
-    """
-    Plot the ekman pumping for the given data
-    """
-    cmap = cmocean.cm.curl
-    earth_cmap = matplotlib.cm.get_cmap("gist_earth")
-    fig,ax = plt.subplots(1,figsize = (15,12))
-    
-    data["curl"].plot(vmax = 0.5,vmin = - 0.5,ax = ax,cmap = cmap,add_colorbar = False)
-    data["bathy"].plot(cmap = earth_cmap,vmin = -1000,vmax = 1500,ax = ax,add_colorbar = False)
-    ax.set_title("Curl of Wind Stress")
-    ax.set_xlabel("Longitude")
-    ax.set_ylabel("Latitude")
-    return fig
-
-def plot_ke(data):
-    fig = plt.figure(figsize=(20, 12))
-    ax = fig.subplots(2,1)
-
-    cmap = matplotlib.cm.get_cmap('plasma')
-
-    ## HORIZONTAL PLOTS FIRST
-
-    data["vorticity_topdown"].plot.contour(ax = ax[0],levels = [-0.075,-0.025,0.025,0.075],cmap = "binary",linestyle = "solid")
-    (1032*(data["UU_topdown"] + data["VV_topdown"])).plot(ax = ax[0],cmap = cmap,cbar_kwargs={'label': "Kinetic Energy"},vmax = 40)
-
-    ## Add bathymetry plot
-    plot_topo(ax[0],data["bathy"])
-
-
-    ## Second axis: vertical transect
-    data["vorticity_transect"].plot.contour(ax = ax[1],levels = [-0.075,-0.025,0.025,0.075],cmap = "binary",linestyle = "solid")
-    (data["UU_transect"] + data["VV_transect"]).plot(ax = ax[1],cmap = cmap,cbar_kwargs={'label': "Kinetic Energy"},vmax = 0.02)
-    plot_topo(ax[1],data["bathy"],transect=0)
-
-    # fig.suptitle(exptname)
-    ax[1].invert_yaxis()
-    ax[0].set_xlabel('km from Tas')
-    ax[0].set_ylabel('km S to N')
-    ax[0].set_title('Kinetic Energy with Surface Speed contours')
-    ## put gridlines on plot
-    # ax[0].grid(True, which='both')
-    ax[0].hlines(y = 0,xmin = 100,xmax = 1450,linestyles = "dashed")
-    ax[1].set_xlabel('')
-    ax[1].set_ylabel('km S to N')
-    ax[1].set_title('Transect along middle of beam')
-    ax[0].text(0.95, 0.95, data["UU_transect"].time.values, transform=ax[0].transAxes, fontsize=10, va="top", ha="right")
-
-    return fig
-
-def plot_dissipation(data,vmax_topdown = 5e5,anomaly = False):
-    vmax_topdown = 5e5
-    vmin_topdown = 0
-    vmax_transect = 500
-    vmin_transect = 0
-    vmin = 0
-    cmap1 = matplotlib.cm.get_cmap('plasma')
-    cmap2 = cmap = cmocean.cm.dense_r
-    if anomaly == True:
-        vmax_topdown = 400000
-        vmin_topdown = -400000
-        vmax_transect = 200
-        vmin_transect = -200
-        vmin = -5
-        cmap = "Rdbu"
-        data["dissipation_topdown"] -= data["dissipation_topdown_mean"]
-        data["dissipation_transect"] -= data["dissipation_transect_mean"]
-
-        ## Replace all negative values with -log10 of the absolute value
-        data["dissipation_topdown"].loc[data["dissipation_topdown"] > 0] =  np.log10(np.abs(data["dissipation_topdown"].loc[data["dissipation_topdown"] > 0]))
-        data["dissipation_transect"].loc[data["dissipation_transect"] > 0] =  np.log10(np.abs(data["dissipation_transect"].loc[data["dissipation_transect"] > 0]))
-
-        ## Replace all negative values with -log10 of the absolute value
-        data["dissipation_topdown"].loc[data["dissipation_topdown"] < 0] = -1 * np.log10(np.abs(data["dissipation_topdown"].loc[data["dissipation_topdown"] < 0]))
-        data["dissipation_transect"].loc[data["dissipation_transect"] < 0] = -1 * np.log10(np.abs(data["dissipation_transect"].loc[data["dissipation_transect"] < 0]))
-
-    else:
-        data["dissipation_topdown"] = np.log10(data["dissipation_topdown"])
-        data["dissipation_transect"] = np.log10(data["dissipation_transect"])
-
-        # Replace po
-
-
-    fig = plt.figure(figsize=(20, 12))
-    ax = fig.subplots(2,1)
-
-
-    ## HORIZONTAL PLOTS FIRST
-
-    data["vorticity_topdown"].plot.contour(ax = ax[0],levels = [-0.075,-0.025,0.025,0.075],cmap = cmap1,linestyle = "solid")
-    data["dissipation_topdown"].plot(ax = ax[0],cmap = cmap2,cbar_kwargs={'label': "Dissipation"},vmax = 5,vmin = vmin)
-
-    ## Add bathymetry plot
-    plot_topo(ax[0],data["bathy"])
-
-
-    ## Second axis: vertical transect
-    data["vorticity_transect"].plot.contour(ax = ax[1],levels = [-0.075,-0.025,0.025,0.075],cmap = cmap1,linestyle = "solid")
-    data["dissipation_transect"].plot(ax = ax[1],cmap = cmap2,cbar_kwargs={'label': "Dissipation"})
-    plot_topo(ax[1],data["bathy"],transect=0)
-
-    # fig.suptitle(exptname)
-    ax[1].invert_yaxis()
-    ax[0].set_xlabel('km from Tas')
-    ax[0].set_ylabel('km S to N')
-    ax[0].set_title('Dissipation of M2 energy with vorticity contours')
-    ## put gridlines on plot
-    # ax[0].grid(True, which='both')
-    ax[0].hlines(y = 0,xmin = 100,xmax = 1450,linestyles = "dashed")
-    ax[1].set_xlabel('')
-    ax[1].set_ylabel('km S to N')
-    ax[1].set_title('Transect along middle of beam')
-    ax[0].text(0.95, 0.95, data["vorticity_transect"].time.values, transform=ax[0].transAxes, fontsize=10, va="top", ha="right")
-
-    return fig
-
-def calculate_vorticity(rawdata):
-    """
-    Calculate the relative vorticity from the raw data
-    """
-    u = rawdata["u"]
-    v = rawdata["v"]
-    u = u.fillna(0)
-    v = v.fillna(0)
-
-    dvx = v.differentiate("xb")
-    duy = u.differentiate("yb")
-
-
-    return (dvx - duy)
-
-def calculate_hef(u,v,time,total_only = True):
-    """
-    Calculate the horizontal energy fluxes from the u and v velocities and ith time index. Time window is 12 m2 periods
-    Inputs:
-    u,v : xarray.DataArray
-        u and v velocities
-    i : int
-        index of the time window to calculate over
-    total_only : bool
-        If true, only return the total energy flux. If false, return all components
-    """
-
-    u = u.fillna(0)
-    v = v.fillna(0)
-
-
-    ## Actually set it to a midpoint of the time window
-    u_ = u.sel(
-            time = slice(time -  0.5 * averaging_window, time + 0.5 *  averaging_window)
-            ).chunk({"time":-1}).drop(["lat","lon"])
-    v_ = v.sel(
-            time = slice(time -  0.5 * averaging_window, time + 0.5 *  averaging_window)
-            ).chunk({"time":-1}).drop(["lat","lon"])
-
-    uf = m2filter(
-        u_,
-        m2f)
-    vf = m2filter(
-        v_,
-        m2f)
-
-    dux = u_.mean("time").differentiate("xb")
-    dvy = v_.mean("time").differentiate("yb")
-    duy = u_.mean("time").differentiate("yb")
-    dvx = v_.mean("time").differentiate("xb")
-
-    nstress_u = -1 * (uf * uf).mean("time")
-    nstress_v = -1 * (vf * vf).mean("time")
-    n_strain = -1 * (dux - dvy)
-    shear = -1 * (uf * vf).mean("time")
-    shear_strain = -1 * (duy + dvx)
-
-    out = xr.Dataset(
-        {
-            "nstress_u":nstress_u,
-            "nstress_v":nstress_v,
-            "n_strain":n_strain,
-            "shear":shear,
-            "shear_strain":shear_strain,
-            "total":0.5 * ((nstress_u - nstress_v) * n_strain - shear * shear_strain)
-        }
-    )
-    # out.expand_dims("TIME").assign_coords(time=('TIME', [t_middle]))
-    # out.time.attrs = u.time.attrs
-
-    if total_only == True:
-        return out.total ## Do this to reintroduce nans for easy plotting
-
-
-    return out
-
-def plot_topo(ax,bathy = None,transect = None):
-    """
-    Plot the topography. If transect is not None, plot a transect at the specified yb value
-    """
-
-    earth_cmap = matplotlib.cm.get_cmap("gist_earth")
-    earth_cmap.set_bad(color = "white",alpha = 0)
-    if type(bathy) == type(None):
-        bathy = beamgrid(xr.open_mfdataset(f"/g/data/nm03/ab8992/ttide-inputs/full-20/topog_raw.nc",decode_times = False).elevation,xname = "lon",yname = "lat")
-
-
-
-    if type(transect) == type(None):
-        bathy.where(bathy > 0).plot(cmap = earth_cmap,vmin = -1000,vmax = 1500,ax = ax,add_colorbar = False)
-        return ax
-    
-    else:
-        transect = bathy.sel(yb = transect,method = "nearest")
-        ax.fill_between(transect.xb,transect * 0 + 6000,-1 * transect,color = "dimgrey")
-        return ax
-
-
-
-def make_movie(data,plot_function,runname,plotname,framerate = 5,parallel = False,plot_kwargs = {}):
-    """
-    Custom function to make a movie of a plot function. Saves to a folder in dropbox. Intermediate frames are saved to /tmp
-    data_list : dictionary of dataarrays required by plot function
-    plot_function : function to plot data
-    runname : name of the run eg full-20
-    plotname : name of the plot eg "h_energy_transfer"
-    plot_kwargs : kwargs to pass to plot function
-    """
-
-    print(f"Making movie {plotname} for {runname}")
-    tmppath = Path(f"/g/data/v45/ab8992/movies_tmp/tasman-tides/{runname}/movies/{plotname}/")
-    outpath = Path(f"/g/data/v45/ab8992/dropbox/tasman-tides/{runname}/movies/")
-    print(tmppath)
-    ## Log the start of movie making
-
-    if os.path.exists(tmppath):
-        shutil.rmtree(tmppath)
-    os.makedirs(tmppath)
-    if not os.path.exists(outpath):
-        os.makedirs(outpath)
-    
-    logmsg(f"Making movie {plotname} for {runname}")  
-
-
-    ## Make each frame of the movie and save to tmpdir
-    if parallel == True:
-        @dask.delayed
-        def process_chunk(_data,i):
-            fig = plot_function(_data,**plot_kwargs)
-            fig.savefig(tmppath / f"frame_{str(i).zfill(5)}.png")
-            plt.close()
-            return None
-        
-        frames = [process_chunk(data.isel(time = i),i) for i in range(len(data.time))]
-        dask.compute(*frames)
-
-    ## Do the same thing but in serial
-    else:
-        for i in range(len(data.time)):
-            fig = plot_function(data.isel(time = i))
-            fig.savefig(tmppath / f"frame_{str(i).zfill(5)}.png")
-            plt.close()
-
-
-    logmsg(f"Finished making frames")
-    print(f"ffmpeg -r {framerate}  -i {tmppath}/frame_%05d.png -s 1920x1080 -c:v libx264 -pix_fmt yuv420p {str(outpath) + plotname}.mp4")
-    result = subprocess.run(
-            f"ffmpeg -y -r {framerate} -i {tmppath}/frame_%05d.png -s 1920x1080 -c:v libx264 -pix_fmt yuv420p {str(outpath / plotname)}.mp4",
-            shell = True,
-            capture_output=True,
-            text=True,
-        )
-    print(f"ffmpeg finished with returncode {result.returncode} \n\n and output \n\n{result.stdout}")
-    logmsg(
-        f"ffmpeg finished with returncode {result.returncode}",
-    )
-    print(result.stderr)
-    print(result.stdout)
-    if str(result.returncode) == "1":
-        logmsg(f"ffmpeg output: {result.stdout}")
-    return
-
-def plot_hef(data,fig,i,framedim = "TIME",**kwargs):
-
-    ax = fig.subplots(2,1)
-
-    time = data["speed"].TIME.values[i]
-    hef = calculate_hef(data["u"],data["v"],time = time)
-    # exptname = "full-20" #TODO make this a kwarg
-
-    cmap = matplotlib.cm.get_cmap('RdBu')
-    data["speed"].isel(TIME = i).plot.contour(ax = ax[0],levels = [0.5,0.75,1,1.25],cmap = "copper",lineweight = 0.5,vmin = 0.25,vmax = 1.25,linewidths = 0.75)
-    hef.integrate("zl").plot(ax = ax[0],cmap = cmap,vmin = -0.05,vmax = 0.05,cbar_kwargs={'label': "Energy flux (tide to eddy)"})
-
-    ## Add bathymetry plot
-    plot_topo(ax[0],data["bathy"])
-    ## Second axis: vertical transect
-    hef.sel(yb = 0,method = "nearest").plot(ax = ax[1],cmap = cmap,vmin = -0.00001,vmax = 0.00001,cbar_kwargs={'label': "Energy flux (tide to eddy)"})
-    plot_topo(ax[1],data["bathy"],transect = 0)
-    # fig.suptitle(exptname)
-    ax[1].invert_yaxis()
-    ax[0].set_xlabel('km from Tas')
-    ax[0].set_ylabel('km S to N')
-    ax[0].set_title('M2 Horizontal Energy Transfer with Surface Speed contours')
-    ## put gridlines on plot
-    # ax[0].grid(True, which='both')
-    ax[0].hlines(y = 0,xmin = 100,xmax = 1450,linestyles = "dashed")
-    ax[1].set_xlabel('')
-    ax[1].set_ylabel('km S to N')
-    ax[1].set_title('Transect along middle of beam')
-    return
-
-
-
-
-def plot_ke(data,framedim = "TIME",**kwargs):
-
-    ax = fig.subplots(2,1)
-
-    time = data["speed"].TIME.values[i]
-    ke = calculate_ke(data["u"],data["v"],time = time)
-    exptname = "full-20" #TODO make this a kwarg
-
-    cmap = matplotlib.cm.get_cmap('plasma')
-    data["speed"].isel(TIME = i).plot.contour(ax = ax[0],levels = [0.5,0.75,1,1.25],cmap = "copper",lineweight = 0.5,vmin = 0.25,vmax = 1.25,linewidths = 0.75)
-    ke.mean("zl").plot(ax = ax[0],cmap = cmap,vmax = 12,cbar_kwargs={'label': "Energy flux (tide to eddy)"})
-
-    ## Add bathymetry plot
-    plot_topo(ax[0],data["bathy"])
-
-
-    ## Second axis: vertical transect
-    ke.sel(yb = 0,method = "nearest").plot(ax = ax[1],cmap = cmap,vmax = 12,cbar_kwargs={'label': "Kinetic Energy about M2"})
-    plot_topo(ax[1],data["bathy"],transect = 0)
-    fig.suptitle(exptname)
-    ax[1].invert_yaxis()
-    ax[0].set_xlabel('km from Tas')
-    ax[0].set_ylabel('km S to N')
-    ax[0].set_title('Kinetic Energy with Surface Speed contours')
-    ## put gridlines on plot
-    # ax[0].grid(True, which='both')
-    ax[0].hlines(y = 0,xmin = 100,xmax = 1450,linestyles = "dashed")
-    ax[1].set_xlabel('')
-    ax[1].set_ylabel('km S to N')
-    ax[1].set_title('Transect along middle of beam')
-    return
-
-def plot_surfacespeed(data,**kwargs):
-
-    cmap = cmocean.cm.dense_r
-    earth_cmap = matplotlib.cm.get_cmap("gist_earth")
-    fig,ax = plt.subplots(1,figsize = (15,12))
-    # Set the background colour to the plot to the lowest value in the cmap
-    ax.set_facecolor(cmap(0))
-    
-    data["speed"].plot(vmax = 4,vmin = 0,ax = ax,cmap = cmap,add_colorbar = False)
-    data["bathy"].plot(cmap = earth_cmap,vmin = -1000,vmax = 1500,ax = ax,add_colorbar = False)
-    ax.set_title("Surface Speed")
-    ax.set_xlabel("Longitude")
-    ax.set_ylabel("Latitude")
-
-    ax.text(0.95, 0.95, f"Day {int(data.time.values//24)}", transform=ax.transAxes, fontsize=15, va="top", ha="right",color = "linen")
-    return fig
-
-
-
-## Stuff that used to be in postprocessing script
-
 def save_chunked(data,name,chunks,gdataout):
+    """
+    Saves data with chunks in cross beam direction
+    """
     if not (gdataout / f"{name}").exists():
         (gdataout / f"{name}").mkdir(parents=True)
     i = 0
@@ -737,6 +238,9 @@ def save_chunked(data,name,chunks,gdataout):
         i += 1
 
 def postprocessing(to_process,expt = "full-20",recompute = False):
+    """
+    This is called after each run. Calls beamgrid to interpolate everything and save to gdata
+    """
     hourly_diags = {
     "rho":
     {"x":"xh","y":"yh","z":"z_l"},
@@ -925,6 +429,118 @@ def postprocessing(to_process,expt = "full-20",recompute = False):
             shell=True
             )
 
+def collect_data(exptname,rawdata = None,ppdata = None,surface_data = None,chunks = None,timerange = (None,None)):
+    """
+    Collect all data required for analysis into a single xarray.Dataset
+    expname : str
+        Name of the experiment
+    rawdata : list of str
+        List of raw data variables to include
+    ppdata : list of str
+        List of postprocessed data variables to include. Note that thse aren't organised in to "outputs" given that they are often filtered temporally and so don't fit within the same output bins as model runs
+    outputs : str
+        Glob string to match the output directories
+    chunks : dict
+        Chunks to use for dask. If "auto", use the default chunking for each variable. Surface variables are only given a time chunk
+    timerange : Can choose the times instead of output. If None, use all times
+    """
+
+    res = exptname.split("-")[-1]
+
+    if res == "20" and exptname != "blank-20":
+        time_per_output = 15 * 24
+    elif res == "40" or exptname == "blank-20":
+        time_per_output = 5 * 24
+
+    if None in timerange:
+        rawdata_paths = list(
+            Path(f"/g/data/nm03/ab8992/outputs/{exptname}/").glob('output*')
+            )
+    else:
+        outputs = np.arange(
+            np.floor(timerange[0] /time_per_output),
+            np.ceil(timerange[1] / time_per_output)
+        ).astype(int)
+        # change these outputs to strings with 3 digits
+        rawdata_paths = [f"/g/data/nm03/ab8992/outputs/{exptname}/output{i:03d}" for i in outputs]
+
+    ppdata_path = Path("/g/data/nm03/ab8992/postprocessed/") / exptname
+
+
+    data = {}
+    if type(rawdata) != type(None):
+        
+        for var in rawdata:
+            print(f"loading {var}...",end = "\t" )
+
+            # Collect list of files to load
+            all_files = []
+            # Loop over each path in the paths list
+            for path in rawdata_paths:
+                # Convert the path to a Path object
+                path = Path(path) / var
+                # Use glob to find all files that match the pattern
+                files = list(path.glob('*.nc'))
+                # Add the files to the all_files list
+                all_files.extend(files)
+
+            # Now pass all the files instead of a wildcard string
+            data[var] = xr.open_mfdataset(all_files, decode_times=False, parallel=True, decode_cf=False).sel(time = slice(timerange[0],timerange[1]))[var]
+            
+            print("done.")
+
+        #! I messed up the rotation! This fixes the velocity rotation on data load.
+        if "u" in rawdata and "v" in rawdata:
+            u_rotated_once,v_rotated_once = anticlockwise_rotation(data["u"],data["v"])
+            u_rotated_once, v_rotated_once = anticlockwise_rotation(u_rotated_once,v_rotated_once)
+
+            data["u"] = u_rotated_once.rename("u")
+            data["v"] = v_rotated_once.rename("v")
+
+    if type(ppdata) != type(None):
+        for var in ppdata:
+            print(f"loading {var} topdown...",end = "\t" )
+            data[var + "_topdown"] = xr.open_mfdataset(
+                str(ppdata_path / var / "topdown" / "*.nc"),chunks = chunks,decode_times = False,parallel = True,decode_cf = False).sel(time = slice(timerange[0],timerange[1])
+            )[var].rename(f"{var}_topdown")
+            print("done. loading transect...",end = "\t")
+            data[var + "_transect"] = xr.open_mfdataset(
+                str(ppdata_path / var / "transect" / "*.nc"),chunks = chunks,decode_times = False,parallel = True,decode_cf = False).sel(time = slice(timerange[0],timerange[1])
+            )[var].rename(f"{var}_transect")
+            print("done.")
+
+
+    data["bathy"] = xr.open_mfdataset(str(Path("/g/data/nm03/ab8992/outputs/") / exptname / "bathy_transect.nc")).rename({"elevation":"bathy"})
+
+
+    data = xr.merge([data[i] for i in data])
+
+    return data
+
+def save_ppdata(transect_data,topdown_data,basepath,recompute = False):
+    """
+    Save the postprocessed data to gdata. Takes computed topdown and transect data and saves each time slice to postprocessed folders
+    Time index override is used when processing one time slice at a time. That way the index can be used to name the file correctly
+    """
+    print(basepath)
+    print(basepath.name)
+    print(str(type(basepath.name)))
+    for i in ["topdown","transect"]:
+        if not os.path.exists(basepath / i):
+            os.makedirs(basepath / i)
+
+    for i in range(len(topdown_data.time.values)):
+        time = topdown_data.time.values[i]
+        if not os.path.exists(basepath / "topdown" / f"vorticity_time-{str(i).zfill(3)}.nc") or recompute:
+            topdown_data.isel(time = i).expand_dims("time").assign_coords(time = [time]).to_netcdf(basepath / "topdown" / str(basepath.name + f"_time-{str(round(time))}.nc"))
+
+        if not os.path.exists(basepath / "transect" / f"vorticity_time-{str(i).zfill(3)}.nc") or recompute:
+            transect_data.isel(time = i).expand_dims("time").assign_coords(time = [time]).to_netcdf(basepath / "transect" / str(basepath.name + f"_time-{str(round(time))}.nc"))
+
+
+    return
+
+########################### ANALYSIS #############################################
 
 def cross_scale_transfer(data):
     """Calcualtes the cross scale transfer term given already filtered data. This will work
@@ -944,3 +560,502 @@ def cross_scale_transfer(data):
     ).rename("energy_transfer")
 
     return transfer
+
+
+m2 = 360 / 28.984104 ## Period of m2 in hours
+averaging_window = int(12 * m2) ## this comes out to be 149.0472 hours, so close enough to a multiple of tidal periods
+m2f = 1/ m2    ## Frequency of m2 in radians per hour
+
+def calculate_vorticity(rawdata):
+    """
+    Calculate the relative vorticity from the raw data
+    """
+    u = rawdata["u"]
+    v = rawdata["v"]
+    u = u.fillna(0)
+    v = v.fillna(0)
+
+    dvx = v.differentiate("xb")
+    duy = u.differentiate("yb")
+
+
+    return (dvx - duy)
+
+def calculate_hef(u,v,time,total_only = True):
+    """
+    Calculate the horizontal energy fluxes from the u and v velocities and ith time index. Time window is 12 m2 periods
+    Inputs:
+    u,v : xarray.DataArray
+        u and v velocities
+    i : int
+        index of the time window to calculate over
+    total_only : bool
+        If true, only return the total energy flux. If false, return all components
+    """
+
+    u = u.fillna(0)
+    v = v.fillna(0)
+
+
+    ## Actually set it to a midpoint of the time window
+    u_ = u.sel(
+            time = slice(time -  0.5 * averaging_window, time + 0.5 *  averaging_window)
+            ).chunk({"time":-1}).drop(["lat","lon"])
+    v_ = v.sel(
+            time = slice(time -  0.5 * averaging_window, time + 0.5 *  averaging_window)
+            ).chunk({"time":-1}).drop(["lat","lon"])
+
+    uf = m2filter(
+        u_,
+        m2f)
+    vf = m2filter(
+        v_,
+        m2f)
+
+    dux = u_.mean("time").differentiate("xb")
+    dvy = v_.mean("time").differentiate("yb")
+    duy = u_.mean("time").differentiate("yb")
+    dvx = v_.mean("time").differentiate("xb")
+
+    nstress_u = -1 * (uf * uf).mean("time")
+    nstress_v = -1 * (vf * vf).mean("time")
+    n_strain = -1 * (dux - dvy)
+    shear = -1 * (uf * vf).mean("time")
+    shear_strain = -1 * (duy + dvx)
+
+    out = xr.Dataset(
+        {
+            "nstress_u":nstress_u,
+            "nstress_v":nstress_v,
+            "n_strain":n_strain,
+            "shear":shear,
+            "shear_strain":shear_strain,
+            "total":0.5 * ((nstress_u - nstress_v) * n_strain - shear * shear_strain)
+        }
+    )
+    # out.expand_dims("TIME").assign_coords(time=('TIME', [t_middle]))
+    # out.time.attrs = u.time.attrs
+
+    if total_only == True:
+        return out.total ## Do this to reintroduce nans for easy plotting
+
+
+    return out
+
+
+
+########################### PLOTTING #############################################
+
+def plot_ekman_pumping(data):
+    """
+    Plot the ekman pumping for the given data
+    """
+    cmap = cmocean.cm.curl
+    earth_cmap = matplotlib.cm.get_cmap("gist_earth")
+    fig,ax = plt.subplots(1,figsize = (15,12))
+    
+    data["curl"].plot(vmax = 0.5,vmin = - 0.5,ax = ax,cmap = cmap,add_colorbar = False)
+    data["bathy"].plot(cmap = earth_cmap,vmin = -1000,vmax = 1500,ax = ax,add_colorbar = False)
+    ax.set_title("Curl of Wind Stress")
+    ax.set_xlabel("Longitude")
+    ax.set_ylabel("Latitude")
+    return fig
+
+
+def plot_vorticity(data):
+    """
+    Plot the vorticity at both surface and a transect. Requires ppdata: vorticity_topdown, vorticity_transect, bathy.
+    """
+    fig,ax = plt.subplots(2,1,figsize = (20,12))
+
+
+    data["vorticity_topdown"].plot(vmin = - 0.075,vmax = 0.075,cmap = "RdBu",ax = ax[0])
+    data["vorticity_transect"].plot(vmin = - 0.05,vmax = 0.05,cmap = "RdBu",ax = ax[1])
+
+    ax[0].set_title("")
+    ax[1].set_title("")
+    ax[1].invert_yaxis()
+    plot_topo(ax[0],bathy = data["bathy"])
+    plot_topo(ax[1],bathy = data["bathy"],transect = 0)
+    ax[1].set_xlabel('km from Tas')
+    ax[0].set_ylabel('km S to N')
+    ax[0].set_xlabel('')
+    ax[1].set_ylabel('km S to N')
+    ax[1].set_title('Transect along middle of beam')
+    ax[0].set_title('Relative Vorticity')
+    ax[0].hlines(y = 0,xmin = 100,xmax = 1450,linestyles = "dashed",color = "black")
+
+    # Add text to the top right corner of the figure
+    ax[0].text(0.95, 0.95, data.time.values, transform=ax[0].transAxes, fontsize=10, va="top", ha="right")
+
+    return fig
+
+
+def plot_ke(data):
+    fig = plt.figure(figsize=(20, 12))
+    ax = fig.subplots(2,1)
+
+    cmap = matplotlib.cm.get_cmap('plasma')
+
+    ## HORIZONTAL PLOTS FIRST
+
+    data["vorticity_topdown"].plot.contour(ax = ax[0],levels = [-0.075,-0.025,0.025,0.075],cmap = "binary",linestyle = "solid")
+    (1032*(data["UU_topdown"] + data["VV_topdown"])).plot(ax = ax[0],cmap = cmap,cbar_kwargs={'label': "Kinetic Energy"},vmax = 40)
+
+    ## Add bathymetry plot
+    plot_topo(ax[0],data["bathy"])
+
+
+    ## Second axis: vertical transect
+    data["vorticity_transect"].plot.contour(ax = ax[1],levels = [-0.075,-0.025,0.025,0.075],cmap = "binary",linestyle = "solid")
+    (data["UU_transect"] + data["VV_transect"]).plot(ax = ax[1],cmap = cmap,cbar_kwargs={'label': "Kinetic Energy"},vmax = 0.02)
+    plot_topo(ax[1],data["bathy"],transect=0)
+
+    # fig.suptitle(exptname)
+    ax[1].invert_yaxis()
+    ax[0].set_xlabel('km from Tas')
+    ax[0].set_ylabel('km S to N')
+    ax[0].set_title('Kinetic Energy with Surface Speed contours')
+    ## put gridlines on plot
+    # ax[0].grid(True, which='both')
+    ax[0].hlines(y = 0,xmin = 100,xmax = 1450,linestyles = "dashed")
+    ax[1].set_xlabel('')
+    ax[1].set_ylabel('km S to N')
+    ax[1].set_title('Transect along middle of beam')
+    ax[0].text(0.95, 0.95, data["UU_transect"].time.values, transform=ax[0].transAxes, fontsize=10, va="top", ha="right")
+
+    return fig
+
+def plot_dissipation(data,vmax_topdown = 5e5,anomaly = False):
+    vmax_topdown = 5e5
+    vmin_topdown = 0
+    vmax_transect = 500
+    vmin_transect = 0
+    vmin = 0
+    cmap1 = matplotlib.cm.get_cmap('plasma')
+    cmap2 = cmap = cmocean.cm.dense_r
+    if anomaly == True:
+        vmax_topdown = 400000
+        vmin_topdown = -400000
+        vmax_transect = 200
+        vmin_transect = -200
+        vmin = -5
+        cmap = "Rdbu"
+        data["dissipation_topdown"] -= data["dissipation_topdown_mean"]
+        data["dissipation_transect"] -= data["dissipation_transect_mean"]
+
+        ## Replace all negative values with -log10 of the absolute value
+        data["dissipation_topdown"].loc[data["dissipation_topdown"] > 0] =  np.log10(np.abs(data["dissipation_topdown"].loc[data["dissipation_topdown"] > 0]))
+        data["dissipation_transect"].loc[data["dissipation_transect"] > 0] =  np.log10(np.abs(data["dissipation_transect"].loc[data["dissipation_transect"] > 0]))
+
+        ## Replace all negative values with -log10 of the absolute value
+        data["dissipation_topdown"].loc[data["dissipation_topdown"] < 0] = -1 * np.log10(np.abs(data["dissipation_topdown"].loc[data["dissipation_topdown"] < 0]))
+        data["dissipation_transect"].loc[data["dissipation_transect"] < 0] = -1 * np.log10(np.abs(data["dissipation_transect"].loc[data["dissipation_transect"] < 0]))
+
+    else:
+        data["dissipation_topdown"] = np.log10(data["dissipation_topdown"])
+        data["dissipation_transect"] = np.log10(data["dissipation_transect"])
+
+        # Replace po
+
+
+    fig = plt.figure(figsize=(20, 12))
+    ax = fig.subplots(2,1)
+
+
+    ## HORIZONTAL PLOTS FIRST
+
+    data["vorticity_topdown"].plot.contour(ax = ax[0],levels = [-0.075,-0.025,0.025,0.075],cmap = cmap1,linestyle = "solid")
+    data["dissipation_topdown"].plot(ax = ax[0],cmap = cmap2,cbar_kwargs={'label': "Dissipation"},vmax = 5,vmin = vmin)
+
+    ## Add bathymetry plot
+    plot_topo(ax[0],data["bathy"])
+
+
+    ## Second axis: vertical transect
+    data["vorticity_transect"].plot.contour(ax = ax[1],levels = [-0.075,-0.025,0.025,0.075],cmap = cmap1,linestyle = "solid")
+    data["dissipation_transect"].plot(ax = ax[1],cmap = cmap2,cbar_kwargs={'label': "Dissipation"})
+    plot_topo(ax[1],data["bathy"],transect=0)
+
+    # fig.suptitle(exptname)
+    ax[1].invert_yaxis()
+    ax[0].set_xlabel('km from Tas')
+    ax[0].set_ylabel('km S to N')
+    ax[0].set_title('Dissipation of M2 energy with vorticity contours')
+    ## put gridlines on plot
+    # ax[0].grid(True, which='both')
+    ax[0].hlines(y = 0,xmin = 100,xmax = 1450,linestyles = "dashed")
+    ax[1].set_xlabel('')
+    ax[1].set_ylabel('km S to N')
+    ax[1].set_title('Transect along middle of beam')
+    ax[0].text(0.95, 0.95, data["vorticity_transect"].time.values, transform=ax[0].transAxes, fontsize=10, va="top", ha="right")
+
+    return fig
+
+
+
+def plot_topo(ax,bathy = None,transect = None):
+    """
+    Plot the topography. If transect is not None, plot a transect at the specified yb value
+    """
+
+    earth_cmap = matplotlib.cm.get_cmap("gist_earth")
+    earth_cmap.set_bad(color = "white",alpha = 0)
+    if type(bathy) == type(None):
+        bathy = beamgrid(xr.open_mfdataset(f"/g/data/nm03/ab8992/ttide-inputs/full-20/topog_raw.nc",decode_times = False).elevation,xname = "lon",yname = "lat")
+
+
+
+    if type(transect) == type(None):
+        bathy.where(bathy > 0).plot(cmap = earth_cmap,vmin = -1000,vmax = 1500,ax = ax,add_colorbar = False)
+        return ax
+    
+    else:
+        transect = bathy.sel(yb = transect,method = "nearest")
+        ax.fill_between(transect.xb,transect * 0 + 6000,-1 * transect,color = "dimgrey")
+        return ax
+
+
+
+def make_movie(data,plot_function,runname,plotname,framerate = 5,parallel = False,plot_kwargs = {}):
+    """
+    Custom function to make a movie of a plot function. Saves to a folder in dropbox. Intermediate frames are saved to /tmp
+    data_list : dictionary of dataarrays required by plot function
+    plot_function : function to plot data
+    runname : name of the run eg full-20
+    plotname : name of the plot eg "h_energy_transfer"
+    plot_kwargs : kwargs to pass to plot function
+    """
+
+    print(f"Making movie {plotname} for {runname}")
+    tmppath = Path(f"/g/data/v45/ab8992/movies_tmp/tasman-tides/{runname}/movies/{plotname}/")
+    outpath = Path(f"/g/data/v45/ab8992/dropbox/tasman-tides/{runname}/movies/")
+    print(tmppath)
+    ## Log the start of movie making
+
+    if os.path.exists(tmppath):
+        shutil.rmtree(tmppath)
+    os.makedirs(tmppath)
+    if not os.path.exists(outpath):
+        os.makedirs(outpath)
+    
+    logmsg(f"Making movie {plotname} for {runname}")  
+
+
+    ## Make each frame of the movie and save to tmpdir
+    if parallel == True:
+        @dask.delayed
+        def process_chunk(_data,i):
+            fig = plot_function(_data,**plot_kwargs)
+            fig.savefig(tmppath / f"frame_{str(i).zfill(5)}.png")
+            plt.close()
+            return None
+        
+        frames = [process_chunk(data.isel(time = i),i) for i in range(len(data.time))]
+        dask.compute(*frames)
+
+    ## Do the same thing but in serial
+    else:
+        for i in range(len(data.time)):
+            fig = plot_function(data.isel(time = i))
+            fig.savefig(tmppath / f"frame_{str(i).zfill(5)}.png")
+            plt.close()
+
+
+    logmsg(f"Finished making frames")
+    print(f"ffmpeg -r {framerate}  -i {tmppath}/frame_%05d.png -s 1920x1080 -c:v libx264 -pix_fmt yuv420p {str(outpath) + plotname}.mp4")
+    result = subprocess.run(
+            f"ffmpeg -y -r {framerate} -i {tmppath}/frame_%05d.png -s 1920x1080 -c:v libx264 -pix_fmt yuv420p {str(outpath / plotname)}.mp4",
+            shell = True,
+            capture_output=True,
+            text=True,
+        )
+    print(f"ffmpeg finished with returncode {result.returncode} \n\n and output \n\n{result.stdout}")
+    logmsg(
+        f"ffmpeg finished with returncode {result.returncode}",
+    )
+    print(result.stderr)
+    print(result.stdout)
+    if str(result.returncode) == "1":
+        logmsg(f"ffmpeg output: {result.stdout}")
+    return
+
+def plot_hef(data,fig,i,framedim = "TIME",**kwargs):
+
+    ax = fig.subplots(2,1)
+
+    time = data["speed"].TIME.values[i]
+    hef = calculate_hef(data["u"],data["v"],time = time)
+    # exptname = "full-20" #TODO make this a kwarg
+
+    cmap = matplotlib.cm.get_cmap('RdBu')
+    data["speed"].isel(TIME = i).plot.contour(ax = ax[0],levels = [0.5,0.75,1,1.25],cmap = "copper",lineweight = 0.5,vmin = 0.25,vmax = 1.25,linewidths = 0.75)
+    hef.integrate("zl").plot(ax = ax[0],cmap = cmap,vmin = -0.05,vmax = 0.05,cbar_kwargs={'label': "Energy flux (tide to eddy)"})
+
+    ## Add bathymetry plot
+    plot_topo(ax[0],data["bathy"])
+    ## Second axis: vertical transect
+    hef.sel(yb = 0,method = "nearest").plot(ax = ax[1],cmap = cmap,vmin = -0.00001,vmax = 0.00001,cbar_kwargs={'label': "Energy flux (tide to eddy)"})
+    plot_topo(ax[1],data["bathy"],transect = 0)
+    # fig.suptitle(exptname)
+    ax[1].invert_yaxis()
+    ax[0].set_xlabel('km from Tas')
+    ax[0].set_ylabel('km S to N')
+    ax[0].set_title('M2 Horizontal Energy Transfer with Surface Speed contours')
+    ## put gridlines on plot
+    # ax[0].grid(True, which='both')
+    ax[0].hlines(y = 0,xmin = 100,xmax = 1450,linestyles = "dashed")
+    ax[1].set_xlabel('')
+    ax[1].set_ylabel('km S to N')
+    ax[1].set_title('Transect along middle of beam')
+    return
+
+
+
+
+def plot_ke(data,framedim = "TIME",**kwargs):
+
+    ax = fig.subplots(2,1)
+
+    time = data["speed"].TIME.values[i]
+    ke = calculate_ke(data["u"],data["v"],time = time)
+    exptname = "full-20" #TODO make this a kwarg
+
+    cmap = matplotlib.cm.get_cmap('plasma')
+    data["speed"].isel(TIME = i).plot.contour(ax = ax[0],levels = [0.5,0.75,1,1.25],cmap = "copper",lineweight = 0.5,vmin = 0.25,vmax = 1.25,linewidths = 0.75)
+    ke.mean("zl").plot(ax = ax[0],cmap = cmap,vmax = 12,cbar_kwargs={'label': "Energy flux (tide to eddy)"})
+
+    ## Add bathymetry plot
+    plot_topo(ax[0],data["bathy"])
+
+
+    ## Second axis: vertical transect
+    ke.sel(yb = 0,method = "nearest").plot(ax = ax[1],cmap = cmap,vmax = 12,cbar_kwargs={'label': "Kinetic Energy about M2"})
+    plot_topo(ax[1],data["bathy"],transect = 0)
+    fig.suptitle(exptname)
+    ax[1].invert_yaxis()
+    ax[0].set_xlabel('km from Tas')
+    ax[0].set_ylabel('km S to N')
+    ax[0].set_title('Kinetic Energy with Surface Speed contours')
+    ## put gridlines on plot
+    # ax[0].grid(True, which='both')
+    ax[0].hlines(y = 0,xmin = 100,xmax = 1450,linestyles = "dashed")
+    ax[1].set_xlabel('')
+    ax[1].set_ylabel('km S to N')
+    ax[1].set_title('Transect along middle of beam')
+    return
+
+def plot_surfacespeed(data,**kwargs):
+
+    cmap = cmocean.cm.dense_r
+    earth_cmap = matplotlib.cm.get_cmap("gist_earth")
+    fig,ax = plt.subplots(1,figsize = (15,12))
+    # Set the background colour to the plot to the lowest value in the cmap
+    ax.set_facecolor(cmap(0))
+    
+    data["speed"].plot(vmax = 4,vmin = 0,ax = ax,cmap = cmap,add_colorbar = False)
+    data["bathy"].plot(cmap = earth_cmap,vmin = -1000,vmax = 1500,ax = ax,add_colorbar = False)
+    ax.set_title("Surface Speed")
+    ax.set_xlabel("Longitude")
+    ax.set_ylabel("Latitude")
+
+    ax.text(0.95, 0.95, f"Day {int(data.time.values//24)}", transform=ax.transAxes, fontsize=15, va="top", ha="right",color = "linen")
+    return fig
+
+
+################################    POWER SPECTRA FUNCTIONS #####################################
+##
+## Added April 24. Originally written for the power spectrum notebook. Made general to be used for spectra in other dimensions hopefully
+
+
+def PlotKEPS(data,ax,color,label = None,linestyle = "solid",dim = "time"):
+    # Make a docstring
+    """
+    Plot power spectrum onto given axis. Fiddling with axes should be done afterwards! Also assumes you've already converted to SI units.
+    data : dataset
+        Dataset should already have chunks in transform dimension removed
+    ax : axis to plot on
+    color : color of line
+    label : label for line. Kind of deprecated if you're adding manually anyway
+    """
+
+    u = xrft.power_spectrum(data.u, dim=[dim], window='hann',true_phase = True,detrend = "linear")
+    v = xrft.power_spectrum(data.v, dim=[dim], window='hann',true_phase = True,detrend = "linear")
+    ps = 0.5*(u + v)
+    m2 = 1 / (12.45 * 3600)
+    f = 1 / (17.89 * 3600)
+
+    if "xb" in ps.dims:
+        ps = ps.mean("xb")
+    if "yb" in ps.dims:
+        ps = ps.mean("yb")
+    if "zl" in ps.dims:
+        ps = ps.mean("zl")
+    if "time" in ps.dims:
+        ps = ps.mean("time")
+
+    if label != None:
+        (ps.freq_time * ps).plot(xscale = "log",yscale = "log",ax = ax,color = color,label = label,linestyle = linestyle)
+    else:
+        (ps.freq_time * ps).plot(xscale = "log",yscale = "log",ax = ax,color = color,linestyle = linestyle)
+
+    return 
+
+def FetchForKEPS(s,timeslice =200,zrange = (10,30),lfiltered = False):
+    """
+    This function belongs with plotting spectra. It reads in and calculates the data needed to plot power spectra. Originally in the plot_spectra notebook.
+    Given a dictionary s of experiment names, such that 
+    s[i] = {"expt":"full-20","time":t0}
+    return a dictionary of data for each of these combinations
+    This can later be split up into the regions of interest
+    """
+    data = {}
+    for i in s:
+        if lfiltered == False:
+            vels = tt.collect_data(
+                s[i]["expt"],
+                rawdata = ["u","v"],timerange = (s[i]["time"] - timeslice,s[i]["time"] + timeslice)).sel(yb = slice(-50,50))
+        else:
+            vels = xr.open_mfdataset(
+                f"/g/data/nm03/ab8992/postprocessed/{s[i]['expt']}/lfiltered/t0-{s[i]['time']}/*.nc",
+                decode_times = False,
+                decode_cf = False,
+                parallel = True)
+        vels = vels.assign_coords({"time":vels.time * 3600}).chunk({"time":-1,"zl":1})
+        
+        data[i] = vels.fillna(0) #! Fillna necessary for detrend to work in shelf region where there's shallow bathy. This might mess up averages though!
+
+    return data
+
+
+def TemporalPSTidyup(ax,title):
+    """
+    Add M2 and f lines to a power spectrum plot as well as axis title.
+    """
+    m2 = 1 / (12.45 * 3600)
+    f = 1 / (17.89 * 3600)
+    maxi = 1e-2
+    ax.vlines(m2,0,maxi,color = "grey",linestyle = "dotted",alpha = 0.3)
+    ax.vlines(m2 + f,0,maxi,color = "grey",linestyle = "dotted",alpha = 0.3)
+    ax.vlines(2 * m2,0,maxi,color = "grey",linestyle = "dotted",alpha = 0.3)
+    ax.vlines(f,0,maxi,color = "grey",linestyle = "dotted",alpha = 0.3)
+    ax.vlines(2 * f,0,maxi,color = "grey",linestyle = "dotted",alpha = 0.3)
+    ax.set_xlabel("Frequency (Hz)")
+    ax.set_ylabel(r"$\omega$KE per frequency")
+    # Instead of using labels, put the text of M2 f ect on the plot near the x axis
+    ax.text(1.01 * m2,1.1 * 1e-10,"M2")
+    ax.text(0.99 * m2 + f,1.1 * 1e-10,"M2+f")
+    ax.text(1.01 * f,1.1 * 1e-10,"f")
+    ax.text(1.01 * 2 * f,1.1 * 1e-10,"2f")
+    ax.text(1.01 * 2 * m2,1.1 * 1e-10," 2M2")
+    ax.set_title(title)
+    return 
+
+def SelectRegion(data,region):
+    """
+    Slices about a region of interest given longitude extent tuples
+    """
+    data = data.sel(xb = slice(regions[region][0],regions[region][1]))
+    return data
+
+regions = {"gen": [1300,None],"prop": [700,800],"eddy": [200,250],"shelf": [100,150]}
