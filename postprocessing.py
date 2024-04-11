@@ -100,9 +100,11 @@ if __name__ == "__main__":
         # Set up the run and output directories
         mom6out = rundir /  f"archive/{output}"
         print(f"Processing {mom6out}")
-        gdataout = Path("/g/data/nm03/ab8992/outputs") / expt / f"{output}"
+        gdataout = Path("/g/data/v45/ab8992/outputs") / expt / f"{output}" #! Switch to v45 since nm03 is nearly full!
         if not gdataout.exists():
             gdataout.mkdir(parents=True)
+
+
 
         ## Simply move the surface variables to gdata. These are unchunked and for the entire domain
 
