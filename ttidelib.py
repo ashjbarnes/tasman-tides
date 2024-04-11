@@ -998,7 +998,7 @@ def PlotKEPS(data,ax,color,label = None,linestyle = "solid",dim = "time"):
 
     return 
 
-def FetchForKEPS(s,timeslice =200,zrange = (10,30),lfiltered = False):
+def FetchForKEPS(s,timeslice =200,zrange = (10,30),lfiltered = False,chunks = {"time":-1,"zl":1}):
     """
     This function belongs with plotting spectra. It reads in and calculates the data needed to plot power spectra. Originally in the plot_spectra notebook.
     Given a dictionary s of experiment names, such that 
@@ -1018,7 +1018,7 @@ def FetchForKEPS(s,timeslice =200,zrange = (10,30),lfiltered = False):
                 decode_times = False,
                 decode_cf = False,
                 parallel = True)
-        vels = vels.assign_coords({"time":vels.time * 3600}).chunk({"time":-1,"zl":1})
+        vels = vels.assign_coords({"time":vels.time * 3600}).chunk(chunks)
         
         data[i] = vels.fillna(0) #! Fillna necessary for detrend to work in shelf region where there's shallow bathy. This might mess up averages though!
 
