@@ -1009,7 +1009,7 @@ def FetchForKEPS(s,timeslice =200,zrange = (10,30),lfiltered = False):
     data = {}
     for i in s:
         if lfiltered == False:
-            vels = tt.collect_data(
+            vels = collect_data(
                 s[i]["expt"],
                 rawdata = ["u","v"],timerange = (s[i]["time"] - timeslice,s[i]["time"] + timeslice)).sel(yb = slice(-50,50))
         else:
