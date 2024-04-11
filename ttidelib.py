@@ -17,7 +17,9 @@ from pathlib import Path
 
 home = Path("/home/149/ab8992/tasman-tides")
 gdata = Path("/g/data/nm03/ab8992")
-
+m2 = 360 / 28.984104 ## Period of m2 in hours
+averaging_window = int(12 * m2) ## this comes out to be 149.0472 hours, so close enough to a multiple of tidal periods
+m2f = 1/ m2    ## Frequency of m2 in radians per hour
 ########################################### Small Utility Functions ###############################################
 
 
@@ -560,11 +562,6 @@ def cross_scale_transfer(data):
     ).rename("energy_transfer")
 
     return transfer
-
-
-m2 = 360 / 28.984104 ## Period of m2 in hours
-averaging_window = int(12 * m2) ## this comes out to be 149.0472 hours, so close enough to a multiple of tidal periods
-m2f = 1/ m2    ## Frequency of m2 in radians per hour
 
 def calculate_vorticity(rawdata):
     """
