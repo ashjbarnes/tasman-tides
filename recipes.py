@@ -432,6 +432,8 @@ def lagrange_filter(expt,zl,t0,time_window = 250,filter_window = 200,filter_cuto
 
 
 def postprocess(experiment,outputs,recompute = False):
+    if outputs == "output*":
+        outputs = "all"
     print(startdask())
     tt.postprocessing(outputs,experiment,recompute)
     return
