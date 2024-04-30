@@ -299,7 +299,7 @@ def spinup_timeseries(experiment):
 
 #### LAGRANGE FILTERING
     
-def lagrange_filter(expt,zl,t0,time_window = 250,filter_window = 200,filter_cutoff = 2*np.pi/(16*3600)):
+def lagrange_filter(expt,zl,t0,time_window = 100,filter_window = 50,filter_cutoff = 2*np.pi/(16*3600)):
     print("START LAGRANGE FILTERING")
     print("import filtering package:")
     import filtering
@@ -471,7 +471,7 @@ def qsub_lagrange_filter(experiment,zl,t0,windowsize):
 #PBS -P x77
 #PBS -q normalbw
 #PBS -l mem=112gb
-#PBS -l walltime=12:00:00
+#PBS -l walltime=6:00:00
 #PBS -l ncpus=28
 #PBS -l jobfs=100gb
 #PBS -l storage=gdata/v45+scratch/v45+scratch/x77+gdata/v45+gdata/nm03+gdata/hh5+scratch/nm03
