@@ -312,14 +312,16 @@ def lagrange_filter(expt,zl,t0,time_window = 250,filter_window = 200,filter_cuto
         zl: int, the z level(s) to process
         t0: int, the middle time of the time slice we care about
     """
+    HighFilterCutoff = 2*np.pi/(9.8*3600)  ## Same as tolerences for bandpass in Waterhouse 2018
+    LowFilterCutoff = 2*np.pi/(15*3600)
 
-    client = startdask()
+    client = tt.startdask()
     dask.config.set(scheduler="single-threaded")
     tmpstorage = os.getenv('PBS_JOBFS')
 
     rawdata = tt.collect_data(
         expt,
-        rawdata = ["u","v"],
+        rawdata = ["u","v","ahh"],
         timerange=(t0 - time_window,t0 + time_window)).isel(zl = [zl])
 
     # Save attributes to re-add later
@@ -337,34 +339,33 @@ def lagrange_filter(expt,zl,t0,time_window = 250,filter_window = 200,filter_cuto
     zl_value = rawdata.zl.values[0]
 
     ## Remove zl to make data properly 2D
-    rawdata = rawdata.isel(zl = 0)
+    _rawdata = rawdata.isel(zl = 0) # Make a copy to modify the metadata to keep lagrange filter happy
+    # We'll keep rawdata for use later.
 
     # Strip attrs since lagrange filter complains about them
-    rawdata.u.attrs = {}
-    rawdata.v.attrs = {}
-    rawdata.zl.attrs = {}
-    rawdata.time.attrs = {}
-    rawdata.yb.attrs = {}
-    rawdata.xb.attrs = {}
-    rawdata = rawdata.assign_coords({
-        "time":rawdata.time * 3600,
-        "xb":rawdata.xb * 1000,
-        "yb":rawdata.yb * 1000})
-    rawdata = rawdata.drop(["bathy","lat","lon"]) 
+    _rawdata.u.attrs = {}
+    _rawdata.v.attrs = {}
+    _rawdata.zl.attrs = {}
+    _rawdata.time.attrs = {}
+    _rawdata.yb.attrs = {}
+    _rawdata.xb.attrs = {}
+    _rawdata = _rawdata.assign_coords({
+        "time":_rawdata.time * 3600,
+        "xb":_rawdata.xb * 1000,
+        "yb":_rawdata.yb * 1000})
+    _rawdata = _rawdata.drop_vars(["bathy","lat","lon"]) 
 
     print("Saving data to temporary storage")
-    print(rawdata)
-
-    rawdata.u.to_netcdf(tmpstorage + f"/u.nc",mode="w")
-    rawdata.v.to_netcdf(tmpstorage + f"/v.nc",mode="w")
-    (rawdata.v**2).rename("vv").to_netcdf(tmpstorage + f"/vv.nc",mode="w")
-    (rawdata.u**2).rename("uu").to_netcdf(tmpstorage + f"/uu.nc",mode="w")
-    (rawdata.u*rawdata.v).rename("uv").to_netcdf(tmpstorage + f"/uv.nc",mode="w")
+    _rawdata.u.to_netcdf(tmpstorage + f"/u.nc",mode="w")
+    _rawdata.v.to_netcdf(tmpstorage + f"/v.nc",mode="w")
+    (_rawdata.v**2).rename("vv").to_netcdf(tmpstorage + f"/vv.nc",mode="w")
+    (_rawdata.u**2).rename("uu").to_netcdf(tmpstorage + f"/uu.nc",mode="w")
+    (_rawdata.u*_rawdata.v).rename("uv").to_netcdf(tmpstorage + f"/uv.nc",mode="w")
     print("done")
     client.close() ## Have to close dask client or it messes up the filtering package
 
-    f = filtering.LagrangeFilter(
-        tmpstorage + "/filtered", ## Save intermediate output to temporary storage
+    f_high = filtering.LagrangeFilter(
+        tmpstorage + "/lowpass", ## Save intermediate output to temporary storage
         {
             "U":tmpstorage + "/u.nc",
             "V":tmpstorage + "/v.nc",
@@ -374,59 +375,83 @@ def lagrange_filter(expt,zl,t0,time_window = 250,filter_window = 200,filter_cuto
         }, 
         {"U":"u","V":"v","uu":"uu","vv":"vv","uv":"uv"}, 
         {"lon":"xb","lat":"yb","time":"time"},
-        sample_variables=["U","V","vv","uu","uv"], mesh="flat",highpass_frequency = filter_cutoff,
+        sample_variables=["U","V","vv","uu","uv"], mesh="flat",highpass_frequency = HighFilterCutoff,
         advection_dt =timedelta(minutes=5).total_seconds(),
         window_size = timedelta(hours=48).total_seconds(),
     )
-    f(times = range(3600 * (time_window - filter_window),3600 * (time_window + filter_window),3600)) ## Ensure we take times either side of the point of interest
+    f_low = filtering.LagrangeFilter(
+        tmpstorage + "/highpass", ## Save intermediate output to temporary storage
+        {
+            "U":tmpstorage + "/u.nc",
+            "V":tmpstorage + "/v.nc",
+            "uu":tmpstorage + "/uu.nc",
+            "vv":tmpstorage + "/vv.nc",
+            "uv":tmpstorage + "/uv.nc"
+        }, 
+        {"U":"u","V":"v","uu":"uu","vv":"vv","uv":"uv"}, 
+        {"lon":"xb","lat":"yb","time":"time"},
+        sample_variables=["U","V","vv","uu","uv"], mesh="flat",highpass_frequency = LowFilterCutoff,
+        advection_dt =timedelta(minutes=5).total_seconds(),
+        window_size = timedelta(hours=48).total_seconds()
+    )
+    print("lowpass filter")
+    ## Ensure we take times either side of the point of interest
+    f_low(times = range(3600 * (time_window - filter_window),3600 * (time_window + filter_window),3600)) 
+    print("Highpass filter")
+    f_high(times = range(3600 * (time_window - filter_window),3600 * (time_window + filter_window),3600)) ## Ensure we take 
+
+    
 
     ## Remove stored data to save space on disk
     for i in ["u","v","uu","vv","uv"]:
         os.remove(tmpstorage + f"/{i}.nc")
 
-    client = startdask()
-
+    client = tt.startdask()
+    print(os.listdir(tmpstorage))
     ## Load the filtered data
-    filtered = xr.open_dataset(tmpstorage + "/filtered.nc",chunks = "auto")
+    highpass = xr.open_dataset(tmpstorage + "/highpass.nc",chunks = "auto")
+    lowpass = xr.open_dataset(tmpstorage + "/lowpass.nc",chunks = "auto")
 
+
+    def tidyup(filtered):
+        """Necessary tidying up of metadata and units for filtered outputs"""
     ## Re-add zl as a dimension. Expand dims, then add zl
-    filtered = filtered.expand_dims({"zl":[zl_value]})
+        filtered = filtered.expand_dims({"zl":[zl_value]})
 
-    ## Restore scale and attributes of rawdata
-    filtered = filtered.assign_coords({
-        "time":filtered.time / 3600,
-        "xb":filtered.xb / 1000,
-        "yb":filtered.yb / 1000})
+        ## Restore scale and attributes of rawdata
+        filtered = filtered.assign_coords({
+            "time":filtered.time / 3600,
+            "xb":filtered.xb / 1000,
+            "yb":filtered.yb / 1000})
 
-    ## Fix up names of filtered variables:
-    for i in filtered.data_vars:
-        filtered = filtered.rename({i:i.split("_")[1].lower()})
+        ## Fix up names of filtered variables:
+        for i in filtered.data_vars:
+            filtered = filtered.rename({i:i.split("_")[1].lower()})
 
-    filtered.attrs = attrs["base"]
-    filtered.u.attrs = attrs["u"]
-    filtered.v.attrs = attrs["v"]
-    filtered.zl.attrs = attrs["zl"]
-    filtered.time.attrs = attrs["time"]
-    filtered.yb.attrs = attrs["yb"]
-    filtered.xb.attrs = attrs["xb"]
+        filtered.attrs = attrs["base"]
+        filtered.u.attrs = attrs["u"]
+        filtered.v.attrs = attrs["v"]
+        filtered.zl.attrs = attrs["zl"]
+        filtered.time.attrs = attrs["time"]
+        filtered.yb.attrs = attrs["yb"]
+        filtered.xb.attrs = attrs["xb"]
 
-    filtered.attrs["long_name"] = "Filtered velocity data"
+        filtered.attrs["long_name"] = "Filtered velocity data"
+        return filtered
 
-    cst = tt.cross_scale_transfer(filtered)
-
-    filtered["cst"] = cst
-
-    ## Now save to the postprocessing file. 
-
+    highpass = tidyup(highpass)
+    lowpass = tidyup(lowpass)
     outfolder = Path(f"/g/data/nm03/ab8992/postprocessed/{expt}/lfiltered/t0-{t0}")
 
     if not os.path.exists(outfolder):
         os.makedirs(outfolder)
+    highpass["cst"] = tt.cross_scale_transfer(highpass)
+    lowpass["cst"] = tt.cross_scale_transfer(lowpass) 
+    highpass[["u","v","cst"]].to_netcdf(outfolder / f"highpass_{zl}.nc",mode="w")
+    lowpass[["u","v","cst"]].to_netcdf(outfolder / f"highpass_{zl}.nc",mode="w")
+    return 
 
 
-    filtered[["u","v","cst"]].to_netcdf(outfolder / f"filtered_{zl}.nc",mode="w")
-    
-    return
 
 
 
