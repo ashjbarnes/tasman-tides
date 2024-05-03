@@ -22,12 +22,12 @@ then
     # Iterate over the range and run the command
     for i in $(seq ${RANGE[0]} ${RANGE[1]})
     do
-        filepath="/g/data/nm03/ab8992/postprocessed/${evalue}/lfiltered/t0-${tvalue}/filtered_${i}.nc"
-        if [ -f "$filepath" ]
+        filepath="/g/data/nm03/ab8992/postprocessed/${evalue}/lfiltered/t0-${tvalue}/highpass_${i}.nc"
+        filepath2="/g/data/nm03/ab8992/postprocessed/${evalue}/lfiltered/t0-${tvalue}/lowpass_${i}.nc"
+        if [ -f "$filepath" ] && [ -f "$filepath2" ]
         then
             echo "File $filepath exists."
         else
-            echo "File $filepath does not exist."
             python3 recipes.py -r lagrange_filter -e $evalue -t $tvalue -z $i -w $wvalue&
         fi
     done
