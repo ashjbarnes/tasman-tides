@@ -448,7 +448,7 @@ def lagrange_filter(expt,zl,t0,time_window = 100,filter_window = 50,filter_cutof
     highpass["cst"] = tt.cross_scale_transfer(highpass)
     lowpass["cst"] = tt.cross_scale_transfer(lowpass) 
     highpass[["u","v","cst"]].to_netcdf(outfolder / f"highpass_{zl}.nc",mode="w")
-    lowpass[["u","v","cst"]].to_netcdf(outfolder / f"highpass_{zl}.nc",mode="w")
+    lowpass[["u","v","cst"]].to_netcdf(outfolder / f"lowpass_{zl}.nc",mode="w")
     return 
 
 
