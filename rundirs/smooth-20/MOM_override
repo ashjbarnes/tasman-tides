@@ -5,3 +5,4 @@
 
 
 #override TEMP_SALT_Z_INIT_FILE = "forcing/init_tracers_zinterp.nc" 
+#override TOPO_FILE = "topog_flattened.nc"
