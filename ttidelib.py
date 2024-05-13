@@ -1,5 +1,5 @@
 # A file to keep all common functions that might be used for postprocessing and analysis fo the ttide experiment
-
+import scipy
 from matplotlib import rc
 import matplotlib
 import numpy as np
@@ -224,6 +224,64 @@ def beamgrid(data,lat0 = -42.1,lon0 = 147.2,beamwidth = 400,beamlength = 1500,pl
         ax[1].set_title("Subgrid in latlon")
 
         return out
+
+def calculate_N(rho):
+    """
+    Calculate the buoyancy frequency given density rho in z* coords"""
+    N = np.sqrt(
+        ((9.8 / rho) * rho.differentiate("zl"))
+        ).rename("N").fillna(0)
+    N.attrs = {"units":"s^-1"}
+    return N
+
+def VerticalModes(data,var):
+    """
+    Use Sturm-Liouville theory to calculate the vertical modes of the data. This is done by solving the eigenvalue problem
+    
+    input:
+    data : xarray.Dataset
+        The data to be used to calculate the vertical modes. Should include rho and bathymetry! So same as when you load from tt.collect_data
+    var : str
+
+    returns:
+        Dataset with 'vrtl' and 'hztl' components of the vertical decomp.
+    
+    """
+    data["H"] = np.abs(data.bathy)
+    data["N"] = calculate_N(data.rho).rename("N").mean("time")
+
+    # data["N"] = np.linspace(data.N[0],data.N[-1],len(data["N"]))
+    zl = data.zl.values
+    def scipy_integrate(data):
+        # print(data)
+        return (data * 0) + scipy.integrate.cumulative_trapezoid(
+            data,
+            x = zl,
+            initial = 0
+            )
+
+
+    # Use np.apply_along_axis to prevent averaging over N and H!
+    horizontal = data[var].isel(zl = 0) * 0
+    vertical = data[var].isel(time = 0) * 0
+    horizontal = horizontal.expand_dims({"mode":10})
+    vertical = vertical.expand_dims({"mode":10})
+    Nbar = data.N.mean("zl")
+    for n in range(10):
+        
+        c_n = data.H * Nbar / (np.pi * n)
+        to_integrate = (n * data["N"] * np.pi) / (data.H * Nbar)
+        integrated =  np.apply_along_axis(scipy_integrate,0,to_integrate)
+        phi_n = (np.sqrt(
+            2 * data.N / (data.H * Nbar)
+        ) * np.cos(
+            integrated
+        )).fillna(0)
+        vertical[n,:,:,:] = phi_n
+        horizontal[n,:,:,:] = ((data[var] - data[var].mean("zl")).fillna(0) * phi_n).integrate("zl")
+
+    return xr.merge([vertical.rename("vrtl"),horizontal.rename("hztl")])
+
 
 def save_chunked(data,name,chunks,gdataout):
     """

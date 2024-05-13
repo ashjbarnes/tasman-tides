@@ -441,7 +441,7 @@ def lagrange_filter(expt,zl,t0,time_window = 100,filter_window = 50,filter_cutof
 
     highpass = tidyup(highpass)
     lowpass = tidyup(lowpass)
-    outfolder = Path(f"/g/data/nm03/ab8992/postprocessed/{expt}/lfiltered/t0-{t0}")
+    outfolder = Path(f"/g/data/nm03/ab8992/postprocessed/{expt}/lfiltered/bp-t0-{t0}")
 
     if not os.path.exists(outfolder):
         os.makedirs(outfolder)
