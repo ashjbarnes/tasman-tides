@@ -1,18 +1,17 @@
 project: x77
 queue: normal
 walltime: 05:00:00
-jobname: ideal-20
-ncpus: 975
+jobname: blank-20
+ncpus: 454
 jobfs: 10GB
 shortpath: /scratch/nm03
 
 model: mom6
 input:
-    - /g/data/nm03/ab8992/ttide-inputs/era5/10year
     - /g/data/nm03/ab8992/ttide-inputs/blank-20/
 
-exe: /g/data/v45/ab8992/mom_executables/jan2024-latest-everything-mod
-#exe: /g/data/v45/ab8992/mom_executables/angus_fms
+#exe: /g/data/v45/ab8992/mom_executables/ocean_only_jan_2024
+exe: /home/149/ab8992/tools/updated-mom6-ninja/mom6-ninja-nci/ocean_only_symmetric/MOM6
 collate: false
 #runlog: true
 storage:
@@ -25,7 +24,3 @@ mpi:
   module: openmpi/4.1.2
 postscript:
   postprocessing.sh
-userscripts:
-  error: resub.sh
-  run: rm -f resubmit.count
-
