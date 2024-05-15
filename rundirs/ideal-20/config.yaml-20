@@ -1,0 +1,30 @@
+project: x77
+queue: normal
+walltime: 05:00:00
+jobname: EXPTNAME
+ncpus: 454
+jobfs: 10GB
+shortpath: /scratch/nm03
+
+model: mom6
+input:
+    - /g/data/nm03/ab8992/ttide-inputs/EXPTNAME/
+
+exe: /g/data/v45/ab8992/mom_executables/jan2024-latest-everything
+collate: false
+#runlog: true
+storage:
+  gdata:
+    - ua8
+    - x77
+    - ik11
+
+mpi:
+  module: openmpi/4.1.2
+postscript:
+  postprocessing.sh
+
+
+find rundirs -name 'data_table' -print0 | while IFS= read -r -d '' file
+do
+done
