@@ -225,6 +225,7 @@ def beamgrid(data,lat0 = -42.1,lon0 = 147.2,beamwidth = 400,beamlength = 1500,pl
 
         return out
 
+import scipy
 def calculate_N(rho):
     """
     Calculate the buoyancy frequency given density rho in z* coords"""
@@ -248,7 +249,10 @@ def VerticalModes(data,var):
     
     """
     data["H"] = np.abs(data.bathy)
-    data["N"] = calculate_N(data.rho).rename("N").mean("time")
+    if "time" in data.rho.dims:
+        data["N"] = calculate_N(data.rho).rename("N").mean("time")
+    else:
+        data["N"] = calculate_N(data.rho).rename("N")
 
     # data["N"] = np.linspace(data.N[0],data.N[-1],len(data["N"]))
     zl = data.zl.values
@@ -266,7 +270,7 @@ def VerticalModes(data,var):
     vertical = data[var].isel(time = 0) * 0
     horizontal = horizontal.expand_dims({"mode":10})
     vertical = vertical.expand_dims({"mode":10})
-    Nbar = data.N.mean("zl")
+    Nbar = data.N.integrate("zl") / data.H
     for n in range(10):
         
         c_n = data.H * Nbar / (np.pi * n)
@@ -278,9 +282,14 @@ def VerticalModes(data,var):
             integrated
         )).fillna(0)
         vertical[n,:,:,:] = phi_n
-        horizontal[n,:,:,:] = ((data[var] - data[var].mean("zl")).fillna(0) * phi_n).integrate("zl")
+        baroclinic = data[var] - (data[var].fillna(0).integrate("zl") / data.H)
+        # baroclinic = data[var] 
+
+        horizontal[n,:,:,:] = (baroclinic.fillna(0) * phi_n).integrate("zl")
 
     return xr.merge([vertical.rename("vrtl"),horizontal.rename("hztl")])
+
+
 
 
 def save_chunked(data,name,chunks,gdataout):
