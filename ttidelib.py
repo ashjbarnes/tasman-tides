@@ -271,9 +271,8 @@ def VerticalModes(data,var):
     horizontal = horizontal.expand_dims({"mode":10})
     vertical = vertical.expand_dims({"mode":10})
     Nbar = data.N.integrate("zl") / data.H
-    for n in range(10):
+    for n in range(1,10): ## Start from 1 or else your first eigenfunction only depends on N!
         
-        c_n = data.H * Nbar / (np.pi * n)
         to_integrate = (n * data["N"] * np.pi) / (data.H * Nbar)
         integrated =  np.apply_along_axis(scipy_integrate,0,to_integrate)
         phi_n = (np.sqrt(
