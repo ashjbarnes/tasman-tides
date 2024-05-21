@@ -498,7 +498,7 @@ def postprocessing(to_process,expt = "full-20",recompute = False):
             shell=True
             )
 
-def collect_data(exptname,rawdata = None,ppdata = None,surface_data = None,chunks = None,timerange = (None,None)):
+def collect_data(exptname,rawdata = None,ppdata = None,lfiltered = None,chunks = None,timerange = (None,None)):
     """
     Collect all data required for analysis into a single xarray.Dataset
     expname : str
@@ -507,6 +507,7 @@ def collect_data(exptname,rawdata = None,ppdata = None,surface_data = None,chunk
         List of raw data variables to include
     ppdata : list of str
         List of postprocessed data variables to include. Note that thse aren't organised in to "outputs" given that they are often filtered temporally and so don't fit within the same output bins as model runs
+    lfiltered : str. eg: "10000-highpass"
     outputs : str
         Glob string to match the output directories
     chunks : dict
@@ -520,6 +521,32 @@ def collect_data(exptname,rawdata = None,ppdata = None,surface_data = None,chunk
         time_per_output = 15 * 24
     elif res == "40" or exptname == "blank-20":
         time_per_output = 5 * 24
+
+    data = {}
+
+
+    ## First handle the case of lfiltered data. Here, load the filtered
+    ## data first, then extract the timerange information from it. Use
+    ## this to load the raw data via a recursive collect_data call
+    if type(lfiltered) != type(None):
+        prefix = ""
+        if "-" in lfiltered:
+            prefix = lfiltered.split("-")[1]
+            t0 = lfiltered.split("-")[0]
+        else:
+            t0 = lfiltered
+        
+        ldata = xr.open_mfdataset(
+            str(Path("/g/data/nm03/ab8992/postprocessed") / exptname / "lfiltered" /  f"bp-t0-{t0}/{prefix}*.nc"),
+            decode_times = False,
+            decode_cf=False)
+        timerange = (ldata.time.values[0],ldata.time.values[-1])
+        print(f"Timerange as inferred from lfiltered data: {timerange}")
+        # iterate over every data variable in the lfiltered dataset
+        for var in ldata:
+            if var == "cst":
+                data[var] = ldata[var]
+            data[f"{var}_lf"] = ldata[var]       
 
     if None in timerange:
         rawdata_paths = list(
@@ -536,7 +563,6 @@ def collect_data(exptname,rawdata = None,ppdata = None,surface_data = None,chunk
     ppdata_path = Path("/g/data/nm03/ab8992/postprocessed/") / exptname
 
 
-    data = {}
     if type(rawdata) != type(None):
         
         for var in rawdata:
