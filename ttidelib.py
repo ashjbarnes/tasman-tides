@@ -49,9 +49,10 @@ def save(data,path):
     """
     Save the data to the path. If the path doesn't exist, create it
     """
+    path = Path(str(f"/g/data/nm03/postprocessed/" + path))
     if not path.exists():
         path.mkdir(parents=True)
-    data.to_netcdf(f"/g/data/nm03/postprocessed" + path)
+    data.to_netcdf(path)
     return
 
 def xy_to_lonlat(x,y,x0,y0):
