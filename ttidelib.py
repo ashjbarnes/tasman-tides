@@ -544,7 +544,6 @@ def collect_data(exptname,rawdata = None,ppdata = None,lfiltered = None,chunks =
             t0 = lfiltered.split("-")[0]
         else:
             t0 = lfiltered
-        print(str(Path("/g/data/nm03/ab8992/postprocessed") / exptname / "lfiltered" /  f"bp-t0-{t0}/{prefix}*.nc"))
         ldata = xr.open_mfdataset(
             str(Path("/g/data/nm03/ab8992/postprocessed") / exptname / "lfiltered" /  f"bp-t0-{t0}/{prefix}*.nc"),
             decode_times = False,
