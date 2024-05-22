@@ -619,6 +619,9 @@ def collect_data(exptname,rawdata = None,ppdata = None,lfiltered = None,chunks =
 
     data = xr.merge([data[i] for i in data])
 
+    ## Weird thing with smooth and ideal that ntiles remains a dim
+    if "ntiles" in data.dims:
+        data = data.isel(ntiles = 0)
     return data
 
 def save_ppdata(transect_data,topdown_data,basepath,recompute = False):
