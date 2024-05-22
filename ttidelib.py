@@ -45,6 +45,15 @@ def startdask():
         print(client)
     return client
 
+def save(data,path):
+    """
+    Save the data to the path. If the path doesn't exist, create it
+    """
+    if not path.exists():
+        path.mkdir(parents=True)
+    data.to_netcdf(f"/g/data/nm03/postprocessed" + path)
+    return
+
 def xy_to_lonlat(x,y,x0,y0):
     """
     All outputs are in degrees
@@ -281,8 +290,8 @@ def VerticalModes(data,var):
             integrated
         )).fillna(0)
         vertical[n,:,:,:] = phi_n
-        baroclinic = data[var] - (data[var].fillna(0).integrate("zl") / data.H)
-        # baroclinic = data[var] 
+        # baroclinic = data[var] - (data[var].fillna(0).integrate("zl") / data.H)
+        baroclinic = data[var] 
 
         horizontal[n,:,:,:] = (baroclinic.fillna(0) * phi_n).integrate("zl")
 
