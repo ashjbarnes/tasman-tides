@@ -52,7 +52,9 @@ def save(data,path):
     path = Path(str(f"/g/data/nm03/postprocessed/" + path))
     if not path.exists():
         path.mkdir(parents=True)
-    data.to_netcdf(path)
+    # Make sure this saves and overwrites existing without throwing error 
+
+    data.to_netcdf(path, mode='w')  # Add mode='w' to overwrite existing files
     return
 
 def xy_to_lonlat(x,y,x0,y0):
@@ -524,7 +526,7 @@ def collect_data(exptname,rawdata = None,ppdata = None,lfiltered = None,chunks =
         Chunks to use for dask. If "auto", use the default chunking for each variable. Surface variables are only given a time chunk
     timerange : Can choose the times instead of output. If None, use all times
     """
-
+    #! As I've made mistakes in saving data, I've been correcting the mistakes retrospectively here
     res = exptname.split("-")[-1]
 
     if res == "20" and exptname != "blank-20":
@@ -533,8 +535,6 @@ def collect_data(exptname,rawdata = None,ppdata = None,lfiltered = None,chunks =
         time_per_output = 5 * 24
 
     data = {}
-
-
     ## First handle the case of lfiltered data. Here, load the filtered
     ## data first, then extract the timerange information from it. Use
     ## this to load the raw data via a recursive collect_data call
@@ -543,6 +543,11 @@ def collect_data(exptname,rawdata = None,ppdata = None,lfiltered = None,chunks =
         if "-" in lfiltered:
             prefix = lfiltered.split("-")[1]
             t0 = lfiltered.split("-")[0]
+        if prefix == "highpass": #! This is a really lazy fix, but I mixed up lowpass and highpass in the filter script. 
+            prefix = "lowpass"   #! This undoes the mistake without having to go back and rename a bunch of stuff
+        elif prefix == "lowpass":#! while keeping analysis scripts consistent
+            prefix = "highpass"
+        
         else:
             t0 = lfiltered
         ldata = xr.open_mfdataset(
