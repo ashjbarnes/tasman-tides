@@ -263,9 +263,9 @@ def VerticalModes(data,zrange = slice(None,None),nmodes = 5):
     """
     data["H"] = np.abs(data.bathy)
     if "time" in data.rho.dims:
-        data["N"] = tt.calculate_N(data.rho).rename("N").mean("time")
+        data["N"] = calculate_N(data.rho).rename("N").mean("time")
     else:
-        data["N"] = tt.calculate_N(data.rho).rename("N")
+        data["N"] = calculate_N(data.rho).rename("N")
 
     # data["N"] = np.linspace(data.N[0],data.N[-1],len(data["N"]))
     zl = data.zl.values
