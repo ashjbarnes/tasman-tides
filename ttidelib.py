@@ -255,7 +255,10 @@ def VerticalModes(data,zrange = slice(None,None),nmodes = 5):
     input:
     data : xarray.Dataset
         dataset needs to contain u,v,rho and H. Time dimension must be "time" and vertical dimension must be "zl"
-    var : str
+    zrange : slice(min,max) 
+        The range (in metres) over which to integrate the velocities. The vertical eigenfunctions always use the entire depth, but velocities can be chosen to avoid the mixed layer.
+    nmodes : int
+        Number of modes to calculate
 
     returns:
         Dataset with u(nxyt),v(nxyt) and phi(nxyz) where phi is the eigenfunction of the vertical mode
