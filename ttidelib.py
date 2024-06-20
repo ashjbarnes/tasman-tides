@@ -247,27 +247,29 @@ def calculate_N(rho):
     N.attrs = {"units":"s^-1"}
     return N
 
-def VerticalModes(data,var):
+def VerticalModes(data,zrange = slice(None,None),nmodes = 5):
     """
-    Use Sturm-Liouville theory to calculate the vertical modes of the data. This is done by solving the eigenvalue problem
+    Use approximate Sturm-Liouville theory to calculate the vertical modes of the data. You can feed it 4D (xyzt). or 3D (xyz) data,
+    if 4D it will return a timeseries of the horizontal coefficients. Currently only does horizontal velocities! Will add vertical later.
     
     input:
     data : xarray.Dataset
-        The data to be used to calculate the vertical modes. Should include rho and bathymetry! So same as when you load from tt.collect_data
+        dataset needs to contain u,v,rho and H. Time dimension must be "time" and vertical dimension must be "zl"
     var : str
 
     returns:
-        Dataset with 'vrtl' and 'hztl' components of the vertical decomp.
+        Dataset with u(nxyt),v(nxyt) and phi(nxyz) where phi is the eigenfunction of the vertical mode
     
     """
     data["H"] = np.abs(data.bathy)
     if "time" in data.rho.dims:
-        data["N"] = calculate_N(data.rho).rename("N").mean("time")
+        data["N"] = tt.calculate_N(data.rho).rename("N").mean("time")
     else:
-        data["N"] = calculate_N(data.rho).rename("N")
+        data["N"] = tt.calculate_N(data.rho).rename("N")
 
     # data["N"] = np.linspace(data.N[0],data.N[-1],len(data["N"]))
     zl = data.zl.values
+    ## Later we need to do a cumulative integral along the z axis. This is a pain in xarray, so we'll use scipy and pass this to xarray's 'apply_along_axis' method. 
     def scipy_integrate(data):
         # print(data)
         return (data * 0) + scipy.integrate.cumulative_trapezoid(
@@ -278,27 +280,36 @@ def VerticalModes(data,var):
 
 
     # Use np.apply_along_axis to prevent averaging over N and H!
-    horizontal = data[var].isel(zl = 0) * 0
-    vertical = data[var].isel(time = 0) * 0
-    horizontal = horizontal.expand_dims({"mode":10})
-    vertical = vertical.expand_dims({"mode":10})
+    eigenvectors = (data["rho"].isel(time = 0) * 0).expand_dims({"mode":nmodes})
+
+    ## Construct empty arrays of the right dimensions to store the output
+    uout = (data["rho"].isel(zl = 0) * 0).expand_dims({"mode":nmodes})
+    vout = (data["rho"].isel(zl = 0) * 0).expand_dims({"mode":nmodes}) 
     Nbar = data.N.integrate("zl") / data.H
-    for n in range(1,10): ## Start from 1 or else your first eigenfunction only depends on N!
+
+    for n in range(1,nmodes + 1): ## Start from 1 or else your first eigenfunction only depends on N!
         
-        to_integrate = (n * data["N"] * np.pi) / (data.H * Nbar)
-        integrated =  np.apply_along_axis(scipy_integrate,0,to_integrate)
+        to_integrate = (n * data["N"] * np.pi) / (data.H * Nbar) ## This is the bit in the Approx Sturm-Liouville eqn under the integral sign within the cos term
+        # This next line is a convuluted (but computationally efficient!) way of doing the cumulative sum along the z axis.
+        integrated =  np.apply_along_axis(scipy_integrate,to_integrate.get_axis_num('zl'),to_integrate) 
+
+        # This is just the rest of the eigenfunction. Fill NANs with 0s so that integrating over bathymetry doesn't cause problems.
         phi_n = (np.sqrt(
             2 * data.N / (data.H * Nbar)
         ) * np.cos(
             integrated
         )).fillna(0)
-        vertical[n,:,:,:] = phi_n
-        # baroclinic = data[var] - (data[var].fillna(0).integrate("zl") / data.H)
-        baroclinic = data[var] 
 
-        horizontal[n,:,:,:] = (baroclinic.fillna(0) * phi_n).integrate("zl")
+        eigenvectors[n-1,:,:,:] = phi_n
+        # Handle the 3D or 3D data inputs.
+        if "time" in data.u.dims:
+            uout[n - 1,:,:,:] = (data.u.fillna(0) * phi_n).sel(zl = zrange).integrate("zl")
+            vout[n - 1,:,:,:] = (data.v.fillna(0) * phi_n).sel(zl = zrange).integrate("zl")
+        else:
+            uout[n - 1,:,:] = (data.u.fillna(0) * phi_n).sel(zl = zrange).integrate("zl")
+            vout[n - 1,:,:] = (data.v.fillna(0) * phi_n).sel(zl = zrange).integrate("zl")
 
-    return xr.merge([vertical.rename("vrtl"),horizontal.rename("hztl")])
+    return xr.merge([uout.rename("u"),vout.rename("v"),eigenvectors.rename("phi")])
 
 
 
