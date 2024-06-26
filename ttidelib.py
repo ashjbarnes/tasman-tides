@@ -274,8 +274,8 @@ def VerticalModes(data,zrange = slice(None,None),nmodes = 5):
     zl = data.zl.values
     ## Later we need to do a cumulative integral along the z axis. This is a pain in xarray, so we'll use scipy and pass this to xarray's 'apply_along_axis' method. 
     def scipy_integrate(data):
-        # print(data)
-        return (data * 0) + scipy.integrate.cumulative_trapezoid(
+        full_integral = scipy.integrate.trapz(data,x = zl)
+        return (data * 0) + full_integral - scipy.integrate.cumulative_trapezoid(
             data,
             x = zl,
             initial = 0
