@@ -1328,7 +1328,7 @@ def ShootingVmodes_parallel(data,nmodes = 5):
 def getN(rho):
     """Calculates N and smoothes it for use with SL decomposition"""
     rhofull = rho
-    Nfull = tt.calculate_N(rhofull)
+    Nfull = calculate_N(rhofull)
     return Nfull.rolling(zl = 5,center = True).mean().ffill("zl").bfill("zl")
 
 
