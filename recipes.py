@@ -459,7 +459,8 @@ def vmodes(expt,t0 = 10000):
             rawdata = ["rho"],
             timerange = (t0,t0 + 10000)
         )
-
+    if "zi" in data:
+        data = data.drop_vars("zi")
     H = -1 * data.bathy
     N = data.rho.mean("time")
 
