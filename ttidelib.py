@@ -247,75 +247,6 @@ def calculate_N(rho):
     N.attrs = {"units":"s^-1"}
     return N
 
-def VerticalModes(data,zrange = slice(None,None),nmodes = 5):
-    """
-    Use approximate Sturm-Liouville theory to calculate the vertical modes of the data. You can feed it 4D (xyzt). or 3D (xyz) data,
-    if 4D it will return a timeseries of the horizontal coefficients. Currently only does horizontal velocities! Will add vertical later.
-    
-    input:
-    data : xarray.Dataset
-        dataset needs to contain u,v,rho and H. Time dimension must be "time" and vertical dimension must be "zl"
-    zrange : slice(min,max) 
-        The range (in metres) over which to integrate the velocities. The vertical eigenfunctions always use the entire depth, but velocities can be chosen to avoid the mixed layer.
-    nmodes : int
-        Number of modes to calculate
-
-    returns:
-        Dataset with u(nxyt),v(nxyt) and phi(nxyz) where phi is the eigenfunction of the vertical mode
-    
-    """
-    data["H"] = np.abs(data.bathy)
-    if "time" in data.rho.dims:
-        data["N"] = calculate_N(data.rho).rename("N").mean("time")
-    else:
-        data["N"] = calculate_N(data.rho).rename("N")
-
-    # data["N"] = np.linspace(data.N[0],data.N[-1],len(data["N"]))
-    zl = data.zl.values
-    ## Later we need to do a cumulative integral along the z axis. This is a pain in xarray, so we'll use scipy and pass this to xarray's 'apply_along_axis' method. 
-    def scipy_integrate(data):
-        full_integral = scipy.integrate.trapz(data,x = zl)
-        return (data * 0) + full_integral - scipy.integrate.cumulative_trapezoid(
-            data,
-            x = zl,
-            initial = 0
-            )
-
-
-    # Use np.apply_along_axis to prevent averaging over N and H!
-    eigenvectors = (data["rho"].isel(time = 0) * 0).expand_dims({"mode":nmodes})
-
-    ## Construct empty arrays of the right dimensions to store the output
-    uout = (data["rho"].isel(zl = 0) * 0).expand_dims({"mode":nmodes})
-    vout = (data["rho"].isel(zl = 0) * 0).expand_dims({"mode":nmodes}) 
-    Nbar = data.N.integrate("zl") / data.H
-
-    for n in range(1,nmodes + 1): ## Start from 1 or else your first eigenfunction only depends on N!
-        
-        to_integrate = (n * data["N"] * np.pi) / (data.H * Nbar) ## This is the bit in the Approx Sturm-Liouville eqn under the integral sign within the cos term
-        # This next line is a convuluted (but computationally efficient!) way of doing the cumulative sum along the z axis.
-        integrated =  np.apply_along_axis(scipy_integrate,to_integrate.get_axis_num('zl'),to_integrate) 
-
-        # This is just the rest of the eigenfunction. Fill NANs with 0s so that integrating over bathymetry doesn't cause problems.
-        phi_n = (np.sqrt(
-            2 * data.N / (data.H * Nbar)
-        ) * np.cos(
-            integrated
-        )).fillna(0)
-
-        eigenvectors[n-1,:,:,:] = phi_n
-        # Handle the 3D or 3D data inputs.
-        if "time" in data.u.dims:
-            uout[n - 1,:,:,:] = (data.u.fillna(0) * phi_n).sel(zl = zrange).integrate("zl")
-            vout[n - 1,:,:,:] = (data.v.fillna(0) * phi_n).sel(zl = zrange).integrate("zl")
-        else:
-            uout[n - 1,:,:] = (data.u.fillna(0) * phi_n).sel(zl = zrange).integrate("zl")
-            vout[n - 1,:,:] = (data.v.fillna(0) * phi_n).sel(zl = zrange).integrate("zl")
-
-    return xr.merge([uout.rename("u"),vout.rename("v"),eigenvectors.rename("phi")])
-
-
-
 
 def save_chunked(data,name,chunks,gdataout):
     """
@@ -1180,3 +1111,223 @@ def SelectRegion(data,region):
     return data
 
 regions = {"gen": [1300,None],"prop": [700,800],"eddy": [200,250],"shelf": [100,150]}
+
+
+
+#################  STURM LIOUVILLE SOLVER FUNCTIONS #############################
+
+def ApproxVerticalModes(data,zrange = slice(None,None),nmodes = 5):
+    """
+    Use approximate Sturm-Liouville theory to calculate the vertical modes of the data. You can feed it 4D (xyzt). or 3D (xyz) data,
+    if 4D it will return a timeseries of the horizontal coefficients. Currently only does horizontal velocities! Will add vertical later.
+    
+    input:
+    data : xarray.Dataset
+        dataset needs to contain u,v,rho and H. Time dimension must be "time" and vertical dimension must be "zl"
+    zrange : slice(min,max) 
+        The range (in metres) over which to integrate the velocities. The vertical eigenfunctions always use the entire depth, but velocities can be chosen to avoid the mixed layer.
+    nmodes : int
+        Number of modes to calculate
+
+    returns:
+        Dataset with u(nxyt),v(nxyt) and phi(nxyz) where phi is the eigenfunction of the vertical mode
+    
+    """
+    data["H"] = np.abs(data.bathy)
+    if "time" in data.rho.dims:
+        data["N"] = calculate_N(data.rho).rename("N").mean("time")
+    else:
+        data["N"] = calculate_N(data.rho).rename("N")
+
+    # data["N"] = np.linspace(data.N[0],data.N[-1],len(data["N"]))
+    zl = data.zl.values
+    ## Later we need to do a cumulative integral along the z axis. This is a pain in xarray, so we'll use scipy and pass this to xarray's 'apply_along_axis' method. 
+    def scipy_integrate(data):
+        full_integral = scipy.integrate.trapz(data,x = zl)
+        return (data * 0) + full_integral - scipy.integrate.cumulative_trapezoid(
+            data,
+            x = zl,
+            initial = 0
+            )
+
+
+    # Use np.apply_along_axis to prevent averaging over N and H!
+    eigenvectors = (data["rho"].isel(time = 0) * 0).expand_dims({"mode":nmodes})
+
+    ## Construct empty arrays of the right dimensions to store the output
+    uout = (data["rho"].isel(zl = 0) * 0).expand_dims({"mode":nmodes})
+    vout = (data["rho"].isel(zl = 0) * 0).expand_dims({"mode":nmodes}) 
+    Nbar = data.N.integrate("zl") / data.H
+
+    for n in range(1,nmodes + 1): ## Start from 1 or else your first eigenfunction only depends on N!
+        
+        to_integrate = (n * data["N"] * np.pi) / (data.H * Nbar) ## This is the bit in the Approx Sturm-Liouville eqn under the integral sign within the cos term
+        # This next line is a convuluted (but computationally efficient!) way of doing the cumulative sum along the z axis.
+        integrated =  np.apply_along_axis(scipy_integrate,to_integrate.get_axis_num('zl'),to_integrate) 
+
+        # This is just the rest of the eigenfunction. Fill NANs with 0s so that integrating over bathymetry doesn't cause problems.
+        phi_n = (np.sqrt(
+            2 * data.N / (data.H * Nbar)
+        ) * np.cos(
+            integrated
+        )).fillna(0)
+
+        eigenvectors[n-1,:,:,:] = phi_n
+        # Handle the 3D or 3D data inputs.
+        if "time" in data.u.dims:
+            uout[n - 1,:,:,:] = (data.u.fillna(0) * phi_n).sel(zl = zrange).integrate("zl")
+            vout[n - 1,:,:,:] = (data.v.fillna(0) * phi_n).sel(zl = zrange).integrate("zl")
+        else:
+            uout[n - 1,:,:] = (data.u.fillna(0) * phi_n).sel(zl = zrange).integrate("zl")
+            vout[n - 1,:,:] = (data.v.fillna(0) * phi_n).sel(zl = zrange).integrate("zl")
+
+    return xr.merge([uout.rename("u"),vout.rename("v"),eigenvectors.rename("phi")])
+
+
+from scipy.optimize import fsolve
+def knGuess(N,n):
+    return np.pi * n / N.integrate("zl").values
+
+def _iterator(k,soln = False,**kwargs):
+    # print(k,end = "\t")
+
+    N = kwargs["N"]
+    z = N.zl.values
+
+    #! Need to handle H!
+    z = N.zl.values
+
+    phi = np.zeros((2,z.size))
+    x_plot = np.linspace(0, N.zl.values[-1], 100)
+    sol = scipy.integrate.solve_bvp(
+        lambda z,phi: fun(z,phi,k = k,N = N),
+        bc,
+        z,
+        phi
+        )
+    y_plot = sol.sol(x_plot)[0]
+
+    if soln:
+        return sol
+
+    # print(y_plot[-1])
+    return y_plot[-1]
+
+
+def bc(ya,yb):
+    return np.array([ya[0],ya[1] - 0.05])
+
+def fun(z,phi,**kwargs):
+    k = kwargs["k"]
+    N = kwargs["N"]
+    Ninterp = N.interp(zl = z)
+    NN = (Ninterp[0:len(z)]**2).values
+    return np.vstack((phi[1],-k**2 * NN * phi[0]))
+
+def ShootingVmodes(data,H = 5000,nmodes = 5):
+    """
+    Calculates vertical modes of both U and W. Fixes top boundary conditions as W(0) = 0, W'(0) = 1. Tweaks k until W(H) = 0.
+
+    N : xarray.DataArray. Smoothed buoyancy frequency profile. Must be on the zl grid.
+    H : float. Depth of the water column.
+    nmodes : int. Number of modes to calculate.
+
+    returns:
+    xarray.Dataset containing U and W eigenfunctions 
+    """
+    ## First need to handle for the case where we're running this on 3D data rather than single water column!
+    # data = data.drop_vars(["xb","yb"])
+
+    N = data.N.isel(xb = 0,yb = 0).drop_vars(["xb","yb"])
+    H = data.H.isel(xb = 0,yb = 0).drop_vars(["xb","yb"]).values
+
+
+    # N is on the zl grid. First add surface and seafloor values.
+    N_trunc = N.sel(zl = slice(0,H))
+    N_extend = np.zeros(N_trunc.shape[0] + 2)
+    z_extend = np.zeros(N_extend.shape[0])
+    z_extend[1:len(z_extend) - 1] = N_trunc.zl.values
+    N_extend[1:len(z_extend) - 1] = N_trunc.values
+    N_extend[0] = N_extend[1]
+    N_extend[-1] = N_extend[-2]
+    z_extend[0] = 0
+    z_extend[-1] = H
+
+    N_extend = xr.DataArray(N_extend,dims = "zl",coords = {"zl":z_extend})
+    f,M2 = 1/(17 * 3600), (28.984104 / 360) / (3600)
+
+    # Now N spans the entire water column allowing for accurate boundary conditions
+    if not N_extend.integrate("zl") == 0: ## Check the case that N is zero, need to return dummy value in this case
+        ks = [
+            fsolve(
+            lambda x:_iterator(x,soln = False,N = N_extend),
+            [knGuess(N_extend,i)]
+        )[0] for i in range(1,nmodes+1)]
+
+        efuncs = []
+        W = (N * 0).expand_dims({"mode":nmodes})
+        for i,k in enumerate(ks):
+            soln = _iterator(k,soln = True,N = N_extend)
+            Weigenfunc = xr.DataArray(
+                soln.sol(soln.x)[0],
+                dims = ["z_l"],
+                coords = {"z_l":soln.x}
+            )
+            Weigenfunc = Weigenfunc / (np.sqrt((Weigenfunc**2).integrate("z_l")))
+
+            # Ueigenfunc = Weigenfunc.differentiate("z_l").interp(z_l = N_trunc.zl.values).rename({"z_l":"zl"})
+            Ueigenfunc = Weigenfunc.differentiate("z_l").interp(z_l = N.zl.values).fillna(0).rename({"z_l":"zl"})
+            Ueigenfunc = Ueigenfunc / (np.sqrt((Ueigenfunc**2).integrate("zl")))
+
+
+            ## Now calculate the actual k from dispersion relation. Divide by sqrt(M2^2 - f^2)
+            
+            k *= np.sqrt(M2**2 - f**2)
+            h_wavelength = Ueigenfunc.isel(zl = 0).drop_vars(["zl"]).rename("Wavelength") * 0 + 1e-3/k 
+
+            efuncs.append(xr.merge([Weigenfunc.rename("W"),Ueigenfunc.rename("U"),h_wavelength]).assign_coords({"mode":i}).expand_dims("mode"))
+
+
+        efuncs = xr.concat(efuncs,dim = "mode")
+        efuncs.mode.attrs["units"] = "km"
+        efuncs.mode.attrs["short name"] = "Horizontal wavelength"
+        # assert "xb" not in efuncs
+        efuncs = efuncs.expand_dims({"xb":data.xb.values,"yb":data.yb.values})
+        # These efuncs now contain polynomial spline objects. 
+        # They should be used to generate both the vertical and horizontal eigenfunctions zi and zl points
+
+        return efuncs[["U","Wavelength"]].transpose("mode","zl","yb","xb")
+    
+    else:
+        ## In this case we return a dummy values with the right shape
+        Ueigenfunc = xr.DataArray(
+            N.zl.values * 0,
+            dims = ["zl"],
+            coords = {"zl":N.zl.values}
+        ).rename("U").expand_dims({"xb":data.xb.values,"yb":data.yb.values,"mode":np.arange(nmodes)}).transpose("mode","zl","yb","xb")
+        h_wavelength = Ueigenfunc.isel(zl = 0).drop_vars(["zl"]).rename("Wavelength")
+        return xr.merge([Ueigenfunc,h_wavelength])
+
+def ShootingVmodes_parallel(data,nmodes = 5):
+    """
+    data[N,H]: MUST ALREADY BE CHUNKED IN 1,1 HORIZONTALLY
+    
+    """
+    if len(data.zl) == 0:
+        return data
+    # print(data)
+    vmode_template = data.N.expand_dims({"mode":np.arange(nmodes)}).rename("U").drop_vars(["lat","lon"])
+    wavenumber_template = vmode_template.isel(zl = 0).drop_vars(["zl"]).rename("Wavelength")
+    template = xr.merge([vmode_template,wavenumber_template])
+    return xr.map_blocks(
+        ShootingVmodes,
+        data,kwargs = {"nmodes":nmodes},
+        template = template
+    )
+def getN(rho):
+    """Calculates N and smoothes it for use with SL decomposition"""
+    rhofull = rho
+    Nfull = tt.calculate_N(rhofull)
+    return Nfull.rolling(zl = 5,center = True).mean().ffill("zl").bfill("zl")
+
+

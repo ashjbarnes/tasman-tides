@@ -452,7 +452,28 @@ def lagrange_filter(expt,zl,t0,time_window = 100,filter_window = 50,filter_cutof
     return 
 
 
+def vmodes(expt,t0 = 10000):
+    tt.logmsg("Starting vertical modes calculation")
+    data = tt.collect_data(
+            exptname=expt,
+            rawdata = ["rho"],
+            timerange = (t0,t0 + 10000)
+        )
 
+    H = -1 * data.bathy
+    N = data.rho.mean("time")
+
+    data = xr.merge([N.rename("N"),H.rename("H")]).load()
+    data = data.chunk({"xb":1,"yb":1,"zl":-1})
+
+    tt.logmsg("Calculating vertical modes")
+    out = tt.ShootingVmodes_parallel(data,nmodes = 8).load()
+    tt.logmsg("success")
+
+    out.to_netcdf(f"/g/data/nm03/ab8992/postprocessed/{expt}/VerticalEigenfunctions.nc")
+
+    return
+    
 
 
 
