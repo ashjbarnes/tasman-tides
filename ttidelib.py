@@ -1262,7 +1262,7 @@ def ShootingVmodes(data,H = 5000,nmodes = 5):
             fsolve(
             lambda x:_iterator(x,soln = False,N = N_extend),
             [knGuess(N_extend,i)],
-            10
+            maxfev = 10
         )[0] for i in range(1,nmodes+1)]
 
         efuncs = []
