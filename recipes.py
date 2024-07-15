@@ -635,7 +635,7 @@ if __name__ == "__main__":
     parser.add_argument("-o", "--outputs", help="Specify the outputs to use",default = "output*")
     parser.add_argument("-q", "--qsub", default=1,type=int, help="Choose whether to execute directly or as qsub job")
     parser.add_argument("-c", "--recompute", action="store_true", help="Recompute completed calculations or not")
-    parser.add_argument("-t", "--t0", type=int, help="For lagrange filter: choose the midpoint of the time slice to filter")
+    parser.add_argument("-t", "--t0", type=int, default = 10000 help="For lagrange filter: choose the midpoint of the time slice to filter")
     parser.add_argument("-z", "--zl", default = 0,type=int,help="For lagrange filter: choose which z levels to include. eg 0-20 or 5")
     parser.add_argument("-w", "--windowsize", default = 200,type=int,help="For lagrange filter: choose hours either side of t0 to include")
     args = parser.parse_args()
@@ -686,3 +686,6 @@ if __name__ == "__main__":
 
     elif args.recipe == "lagrange_filter":
         lagrange_filter(args.experiment,args.zl,args.t0,args.windowsize)
+
+    elif args.recipe == "vmodes":
+        vmodes(args.experiment,args.t0)
