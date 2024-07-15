@@ -1331,3 +1331,27 @@ def getN(rho):
     return Nfull.rolling(zl = 5,center = True).mean().ffill("zl").bfill("zl")
 
 
+def DirectionalFilter(data):
+    """
+    Fourier filter into forward and backward propagating signals
+    """
+
+    FT = xrft.fft(
+        vmodesFull.u.drop(['lon', 'lat']).sel(xb = slice(200,1200)),dim = ["time","xb"]
+    ).load()
+
+    ft = np.real(xrft.ifft(
+        FT,dim = ["freq_time","freq_xb"]
+    ))
+
+    forward = np.real(xrft.ifft(
+        FT.where((FT.freq_xb >= 0) & (FT.freq_time >= 0), 0) + FT.where((FT.freq_xb <= 0) & (FT.freq_time <= 0), 0) - FT.where((FT.freq_xb == 0) & (FT.freq_time == 0), 0),
+        dim = ["freq_time","freq_xb"]
+    ))
+
+    backward = np.real(xrft.ifft(
+        FT.where((FT.freq_xb <= 0) & (FT.freq_time >= 0), 0) + FT.where((FT.freq_xb >= 0) & (FT.freq_time <= 0), 0) - FT.where((FT.freq_xb == 0) & (FT.freq_time == 0), 0),
+        dim = ["freq_time","freq_xb"]
+    ))
+
+    return xr.merge([forward.rename(f"{data.name}_forward"),backward.rename(f"{data.name}_backward")])
