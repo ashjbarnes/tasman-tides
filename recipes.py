@@ -459,13 +459,13 @@ def vmodes(expt,t0 = 10000):
                 exptname=expt,
                 rawdata = ["rho"],
                 timerange = (t0,t0 + 10000)
-            ).sel(xb = slice(100,None),yb = slice(-100,100))
+            ).sel(yb = slice(-120,120))
     except:
         data = tt.collect_data(
             exptname=expt,
             rawdata = ["rho"],
             timerange = (t0,t0 + 4000)
-        ).sel(xb = slice(100,None),yb = slice(-100,100))
+        ).sel(yb = slice(-120,120))
     if "zi" in data:
         data = data.drop_vars("zi")
     H = -1 * data.bathy
