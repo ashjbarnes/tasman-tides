@@ -454,10 +454,17 @@ def lagrange_filter(expt,zl,t0,time_window = 100,filter_window = 50,filter_cutof
 
 def vmodes(expt,t0 = 10000):
     tt.logmsg("Starting vertical modes calculation")
-    data = tt.collect_data(
+    try:
+        data = tt.collect_data(
+                exptname=expt,
+                rawdata = ["rho"],
+                timerange = (t0,t0 + 10000)
+            )
+    except:
+        data = tt.collect_data(
             exptname=expt,
             rawdata = ["rho"],
-            timerange = (t0,t0 + 10000)
+            timerange = (t0,t0 + 4000)
         )
     if "zi" in data:
         data = data.drop_vars("zi")
