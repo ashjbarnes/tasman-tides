@@ -459,13 +459,13 @@ def vmodes(expt,t0 = 10000):
                 exptname=expt,
                 rawdata = ["rho"],
                 timerange = (t0,t0 + 10000)
-            )
+            ).sel(xb = slice(100,None),yb = slice(-100,100))
     except:
         data = tt.collect_data(
             exptname=expt,
             rawdata = ["rho"],
             timerange = (t0,t0 + 4000)
-        )
+        ).sel(xb = slice(100,None),yb = slice(-100,100))
     if "zi" in data:
         data = data.drop_vars("zi")
     H = -1 * data.bathy
@@ -475,7 +475,7 @@ def vmodes(expt,t0 = 10000):
     data = data.chunk({"xb":1,"yb":1,"zl":-1})
 
     tt.logmsg("Calculating vertical modes")
-    out = tt.ShootingVmodes_parallel(data,nmodes = 8).load()
+    out = tt.ShootingVmodes_parallel(data,nmodes = 5).load()
     tt.logmsg("success")
 
     out.to_netcdf(f"/g/data/nm03/ab8992/postprocessed/{expt}/VerticalEigenfunctions.nc")
