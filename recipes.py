@@ -454,7 +454,7 @@ def lagrange_filter(expt,zl,t0,time_window = 100,filter_window = 50,filter_cutof
 
 def vmodes(expt,t0 = 10000):
     client = tt.startdask()
-
+    print(client)
     tt.logmsg("Starting vertical modes calculation")
     try:
         data = tt.collect_data(
@@ -470,8 +470,11 @@ def vmodes(expt,t0 = 10000):
         ).sel(yb = slice(-120,120))
     if "zi" in data:
         data = data.drop_vars("zi")
-    H = -1 * data.bathy
-    N = data.rho.mean("time")
+    H = data.bathy
+    if H.mean("xb").mean("yb") <= 0:
+        H *= -1
+
+    N = tt.getN(data.rho).mean("time").load()
 
     data = xr.merge([N.rename("N"),H.rename("H")]).load()
     data = data.chunk({"xb":1,"yb":1,"zl":-1})
