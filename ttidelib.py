@@ -1257,7 +1257,7 @@ def ShootingVmodes(data,H = 5000,nmodes = 5):
     f,M2 = 1/(17 * 3600), (28.984104 / 360) / (3600)
 
     # Now N spans the entire water column allowing for accurate boundary conditions
-    if not N_extend.integrate("zl") == 0 and np.diff(N_extend) >= 0: ## Check that N isn't all zeros and is monotonically increasing
+    if not N_extend.integrate("zl") == 0 and np.all(np.diff(N_extend) >= 0): ## Check that N isn't all zeros and is monotonically increasing
         ks = [
             fsolve(
             lambda x:_iterator(x,soln = False,N = N_extend),
