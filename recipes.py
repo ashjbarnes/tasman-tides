@@ -453,6 +453,8 @@ def lagrange_filter(expt,zl,t0,time_window = 100,filter_window = 50,filter_cutof
 
 
 def vmodes(expt,t0 = 10000):
+    client = tt.startdask()
+
     tt.logmsg("Starting vertical modes calculation")
     try:
         data = tt.collect_data(
