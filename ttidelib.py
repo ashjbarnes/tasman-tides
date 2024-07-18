@@ -1335,9 +1335,9 @@ def DirectionalFilter(data):
     """
     Fourier filter into forward and backward propagating signals
     """
-
+    import xrft
     FT = xrft.fft(
-        vmodesFull.u.drop(['lon', 'lat']).sel(xb = slice(200,1200)),dim = ["time","xb"]
+        data.u.drop(['lon', 'lat']).sel(xb = slice(200,1200)),dim = ["time","xb"]
     ).load()
 
     ft = np.real(xrft.ifft(
