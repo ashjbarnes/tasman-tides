@@ -1238,7 +1238,7 @@ def ShootingVmodes(data,H = 5000,nmodes = 5):
     # data = data.drop_vars(["xb","yb"])
     try:
         N = data.N.isel(xb = 0,yb = 0).drop_vars(["xb","yb"])
-        H = data.H.isel(xb = 0,yb = 0).drop_vars(["xb","yb"]).values
+        H = data.H.isel(xb = 0,yb = 0).drop_vars(["xb","yb"]).fillna(0).values
 
 
         # N is on the zl grid. First add surface and seafloor values.
