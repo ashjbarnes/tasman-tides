@@ -1236,77 +1236,82 @@ def ShootingVmodes(data,H = 5000,nmodes = 5):
     """
     ## First need to handle for the case where we're running this on 3D data rather than single water column!
     # data = data.drop_vars(["xb","yb"])
-
-    N = data.N.isel(xb = 0,yb = 0).drop_vars(["xb","yb"])
-    H = data.H.isel(xb = 0,yb = 0).drop_vars(["xb","yb"]).values
-
-
-    # N is on the zl grid. First add surface and seafloor values.
-    N_trunc = N.sel(zl = slice(0,H))
-    N_extend = np.zeros(N_trunc.shape[0] + 2)
-    z_extend = np.zeros(N_extend.shape[0])
-    z_extend[1:len(z_extend) - 1] = N_trunc.zl.values
-    N_extend[1:len(z_extend) - 1] = N_trunc.values
-    N_extend[0] = N_extend[1]
-    N_extend[-1] = N_extend[-2]
-    z_extend[0] = 0
-    z_extend[-1] = H
-
-    N_extend = xr.DataArray(N_extend,dims = "zl",coords = {"zl":z_extend})
-    f,M2 = 1/(17 * 3600), (28.984104 / 360) / (3600)
-
-    # Now N spans the entire water column allowing for accurate boundary conditions
-    if not N_extend.integrate("zl") == 0: ## Check that N isn't all zeros
-        ks = [
-            fsolve(
-            lambda x:_iterator(x,soln = False,N = N_extend),
-            [knGuess(N_extend,i)],
-            maxfev = 10
-        )[0] for i in range(1,nmodes+1)]
-
-        efuncs = []
-        W = (N * 0).expand_dims({"mode":nmodes})
-        for i,k in enumerate(ks):
-            soln = _iterator(k,soln = True,N = N_extend)
-            Weigenfunc = xr.DataArray(
-                soln.sol(soln.x)[0],
-                dims = ["z_l"],
-                coords = {"z_l":soln.x}
-            )
-            Weigenfunc = Weigenfunc / (np.sqrt((Weigenfunc**2).integrate("z_l")))
-
-            # Ueigenfunc = Weigenfunc.differentiate("z_l").interp(z_l = N_trunc.zl.values).rename({"z_l":"zl"})
-            Ueigenfunc = Weigenfunc.differentiate("z_l").interp(z_l = N.zl.values).fillna(0).rename({"z_l":"zl"})
-            Ueigenfunc = Ueigenfunc / (np.sqrt((Ueigenfunc**2).integrate("zl")))
+    try:
+        N = data.N.isel(xb = 0,yb = 0).drop_vars(["xb","yb"])
+        H = data.H.isel(xb = 0,yb = 0).drop_vars(["xb","yb"]).values
 
 
-            ## Now calculate the actual k from dispersion relation. Divide by sqrt(M2^2 - f^2)
-            
-            k *= np.sqrt(M2**2 - f**2)
-            h_wavelength = Ueigenfunc.isel(zl = 0).drop_vars(["zl"]).rename("Wavelength") * 0 + 1e-3/k 
+        # N is on the zl grid. First add surface and seafloor values.
+        N_trunc = N.sel(zl = slice(0,H))
+        N_extend = np.zeros(N_trunc.shape[0] + 2)
+        z_extend = np.zeros(N_extend.shape[0])
+        z_extend[1:len(z_extend) - 1] = N_trunc.zl.values
+        N_extend[1:len(z_extend) - 1] = N_trunc.values
+        N_extend[0] = N_extend[1]
+        N_extend[-1] = N_extend[-2]
+        z_extend[0] = 0
+        z_extend[-1] = H
 
-            efuncs.append(xr.merge([Weigenfunc.rename("W"),Ueigenfunc.rename("U"),h_wavelength]).assign_coords({"mode":i}).expand_dims("mode"))
+        N_extend = xr.DataArray(N_extend,dims = "zl",coords = {"zl":z_extend})
+        f,M2 = 1/(17 * 3600), (28.984104 / 360) / (3600)
+
+        # Now N spans the entire water column allowing for accurate boundary conditions
+        if not N_extend.integrate("zl") == 0: ## Check that N isn't all zeros
+            ks = [
+                fsolve(
+                lambda x:_iterator(x,soln = False,N = N_extend),
+                [knGuess(N_extend,i)],
+                maxfev = 10
+            )[0] for i in range(1,nmodes+1)]
+
+            efuncs = []
+            W = (N * 0).expand_dims({"mode":nmodes})
+            for i,k in enumerate(ks):
+                soln = _iterator(k,soln = True,N = N_extend)
+                Weigenfunc = xr.DataArray(
+                    soln.sol(soln.x)[0],
+                    dims = ["z_l"],
+                    coords = {"z_l":soln.x}
+                )
+                Weigenfunc = Weigenfunc / (np.sqrt((Weigenfunc**2).integrate("z_l")))
+
+                # Ueigenfunc = Weigenfunc.differentiate("z_l").interp(z_l = N_trunc.zl.values).rename({"z_l":"zl"})
+                Ueigenfunc = Weigenfunc.differentiate("z_l").interp(z_l = N.zl.values).fillna(0).rename({"z_l":"zl"})
+                Ueigenfunc = Ueigenfunc / (np.sqrt((Ueigenfunc**2).integrate("zl")))
 
 
-        efuncs = xr.concat(efuncs,dim = "mode")
-        efuncs.mode.attrs["units"] = "km"
-        efuncs.mode.attrs["short name"] = "Horizontal wavelength"
-        # assert "xb" not in efuncs
-        efuncs = efuncs.expand_dims({"xb":data.xb.values,"yb":data.yb.values})
-        # These efuncs now contain polynomial spline objects. 
-        # They should be used to generate both the vertical and horizontal eigenfunctions zi and zl points
+                ## Now calculate the actual k from dispersion relation. Divide by sqrt(M2^2 - f^2)
+                
+                k *= np.sqrt(M2**2 - f**2)
+                h_wavelength = Ueigenfunc.isel(zl = 0).drop_vars(["zl"]).rename("Wavelength") * 0 + 1e-3/k 
 
-        return efuncs[["U","Wavelength"]].transpose("mode","zl","yb","xb")
-    
-    else:
-        ## In this case we return a dummy values with the right shape
-        Ueigenfunc = xr.DataArray(
-            N.zl.values * 0,
-            dims = ["zl"],
-            coords = {"zl":N.zl.values}
-        ).rename("U").expand_dims({"xb":data.xb.values,"yb":data.yb.values,"mode":np.arange(nmodes)}).transpose("mode","zl","yb","xb")
-        h_wavelength = Ueigenfunc.isel(zl = 0).drop_vars(["zl"]).rename("Wavelength")
-        return xr.merge([Ueigenfunc,h_wavelength])
+                efuncs.append(xr.merge([Weigenfunc.rename("W"),Ueigenfunc.rename("U"),h_wavelength]).assign_coords({"mode":i}).expand_dims("mode"))
+
+
+            efuncs = xr.concat(efuncs,dim = "mode")
+            efuncs.mode.attrs["units"] = "km"
+            efuncs.mode.attrs["short name"] = "Horizontal wavelength"
+            # assert "xb" not in efuncs
+            efuncs = efuncs.expand_dims({"xb":data.xb.values,"yb":data.yb.values})
+            # These efuncs now contain polynomial spline objects. 
+            # They should be used to generate both the vertical and horizontal eigenfunctions zi and zl points
+
+            return efuncs[["U","Wavelength"]].transpose("mode","zl","yb","xb")
+        
+        else:
+            ## In this case we return a dummy values with the right shape
+            Ueigenfunc = xr.DataArray(
+                N.zl.values * 0,
+                dims = ["zl"],
+                coords = {"zl":N.zl.values}
+            ).rename("U").expand_dims({"xb":data.xb.values,"yb":data.yb.values,"mode":np.arange(nmodes)}).transpose("mode","zl","yb","xb")
+            h_wavelength = Ueigenfunc.isel(zl = 0).drop_vars(["zl"]).rename("Wavelength")
+            return xr.merge([Ueigenfunc,h_wavelength])
+        
+    except Exception as e:
+
+        raise ValueError(f" Error at xb = {data.xb.values} yb = {data.yb.values} \n\n\n {e}")
+
 
 def ShootingVmodes_parallel(data,nmodes = 5):
     """
