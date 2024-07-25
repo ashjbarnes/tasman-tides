@@ -542,7 +542,7 @@ python3 /home/149/ab8992/tasman-tides/recipes.py -r lagrange_filter -e {experime
         f"/home/149/ab8992/tasman-tides/logs/lfilter/{experiment}-{zl}_{current_date}.out",
     )
 
-def qsub(recipe, experiment, outputs,recompute):
+def qsub(recipe, experiment, outputs,recompute,t0):
     tt.logmsg(f"Submitting {recipe} for {experiment}, {outputs} to qsub")
     if not os.path.exists(f"/home/149/ab8992/tasman-tides/logs/{recipe}"):
         os.makedirs(f"/home/149/ab8992/tasman-tides/logs/{recipe}")
@@ -665,7 +665,7 @@ if __name__ == "__main__":
         if args.recipe == "lagrange_filter":
             qsub_lagrange_filter(args.experiment,args.zl,args.t0,args.windowsize)
 
-        qsub(args.recipe, args.experiment, args.outputs,args.recompute)
+        qsub(args.recipe, args.experiment, args.outputs,args.recompute,args.t0)
 
 
     elif args.recipe == "surface_speed_movie":
@@ -701,4 +701,4 @@ if __name__ == "__main__":
         lagrange_filter(args.experiment,args.zl,args.t0,args.windowsize)
 
     elif args.recipe == "vmodes":
-        vmodes(args.experiment,args.t0)
+        vmodes(args.experiment,t0 = args.t0)
