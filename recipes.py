@@ -564,7 +564,7 @@ PYTHONNOUSERSITE=1
 module use /g/data/hh5/public/modules
 module load conda/analysis3-unstable
 module list
-python3 /home/149/ab8992/tasman-tides/recipes.py -r {recipe} -e {experiment} -o {outputs} -q 0 {recompute} """
+python3 /home/149/ab8992/tasman-tides/recipes.py -r {recipe} -e {experiment} -o {outputs} -q 0 {recompute} -t {t0}"""
 
     with open(f"/home/149/ab8992/tasman-tides/logs/{recipe}/{recipe}-{experiment}.pbs", "w") as f:
         f.write(text)
