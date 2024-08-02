@@ -14,8 +14,11 @@ notide-20:
 
 full-40:
   eddy: 
-  - 5140
+  - 17359
+  - 5440
   - 2460
+  - 22276
+  - 27044 # Cyclonic!
   noeddy:
   - 6480
 
@@ -25,3 +28,7 @@ notide-40:
   noeddy:
   - 6000
 
+# Number of hours between start of 20th and 40th runs
+conversions:
+  20th_to_40th:
+   - 17784
