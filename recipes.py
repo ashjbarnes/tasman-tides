@@ -299,7 +299,7 @@ def spinup_timeseries(experiment):
 
 #### LAGRANGE FILTERING
     
-def lagrange_filter(expt,zl,t0,time_window = 100,filter_window = 50,filter_cutoff = 2*np.pi/(16*3600)):
+def lagrange_filter(expt,zl,t0,time_window = 300,filter_window = 150,filter_cutoff = 2*np.pi/(16*3600)):
     print("START LAGRANGE FILTERING")
     print("import filtering package:")
     import filtering
@@ -480,7 +480,7 @@ def vmodes(expt,t0 = 10000):
     data = data.chunk({"xb":1,"yb":1,"zl":-1})
 
     tt.logmsg("Calculating vertical modes")
-    out = tt.ShootingVmodes_parallel(data,nmodes = 5).load()
+    out = tt.ShootingVmodes_parallel(data,nmodes = 10).load()
     tt.logmsg("success")
 
     out.to_netcdf(f"/g/data/nm03/ab8992/postprocessed/{expt}/VerticalEigenfunctions.nc")
