@@ -166,6 +166,11 @@ work/INPUT/topog.nc:
   hashes:
     binhash: 7a292ab30b37cf3a79254d2ddc58e8bb
     md5: 5c322e9b4023ac3fc32b8907c3a8cb2d
+work/INPUT/topog_flattened.nc:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/blank-40/topog_flattened.nc
+  hashes:
+    binhash: aca137d57e06a473dd5c668ae123aab2
+    md5: 8702b4573aa721ee1ec0ddab83ceefc8
 work/INPUT/topog_raw.nc:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/blank-40/topog_raw.nc
   hashes:

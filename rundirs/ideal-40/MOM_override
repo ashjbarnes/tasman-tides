@@ -11,7 +11,7 @@
 #override OBC_SEGMENT_004 = "I=N,J=0:N,FLATHER" !
 
  
-#override DT=100
+#override DT=50
 #override DT_THERM=500
 
 #override TOPO_FILE="topog_flattened.nc"
