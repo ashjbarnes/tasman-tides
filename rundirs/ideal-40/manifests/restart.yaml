@@ -1,3 +1,53 @@
 format: yamanifest
 version: 1.0
---- {}
+---
+work/INPUT/MOM.res.nc:
+  fullpath: /scratch/nm03/ab8992/mom6/archive/ideal-40/restart000/MOM.res.nc
+  hashes:
+    binhash: c548d80db816d0827d50933b558a3a49
+    md5: 43105d5f4175e01bb7949f64159b0037
+work/INPUT/MOM.res_1.nc:
+  fullpath: /scratch/nm03/ab8992/mom6/archive/ideal-40/restart000/MOM.res_1.nc
+  hashes:
+    binhash: 070898b889e427a9aaef9c5b6f8664fc
+    md5: e67ba4771276e398d090678bc92d92ee
+work/INPUT/MOM.res_2.nc:
+  fullpath: /scratch/nm03/ab8992/mom6/archive/ideal-40/restart000/MOM.res_2.nc
+  hashes:
+    binhash: f0a8f0874e14954a6a3a4bc5423641c4
+    md5: c3dca17c56858d9b10952bea9f32befe
+work/INPUT/MOM.res_3.nc:
+  fullpath: /scratch/nm03/ab8992/mom6/archive/ideal-40/restart000/MOM.res_3.nc
+  hashes:
+    binhash: 2cb08150fea4baef5ea0700b55ca6f1e
+    md5: 4ff9be8a3ce9e16b93e7489f358ff8ae
+work/INPUT/MOM.res_4.nc:
+  fullpath: /scratch/nm03/ab8992/mom6/archive/ideal-40/restart000/MOM.res_4.nc
+  hashes:
+    binhash: 52322b99309a1e56b06dc895eb423bc6
+    md5: 2a6016069666a432a42cb339acb51c99
+work/INPUT/MOM.res_5.nc:
+  fullpath: /scratch/nm03/ab8992/mom6/archive/ideal-40/restart000/MOM.res_5.nc
+  hashes:
+    binhash: d25b18c6b723cdc36c60936923667ec5
+    md5: 37570cf861d4eccfa13b333801719c37
+work/INPUT/MOM.res_6.nc:
+  fullpath: /scratch/nm03/ab8992/mom6/archive/ideal-40/restart000/MOM.res_6.nc
+  hashes:
+    binhash: 5db0eef4d3825448386e9d653b32497e
+    md5: 7da9d2c8538aeb90adfcd7c1f1708c53
+work/INPUT/MOM.res_7.nc:
+  fullpath: /scratch/nm03/ab8992/mom6/archive/ideal-40/restart000/MOM.res_7.nc
+  hashes:
+    binhash: 24fc9a03a8b6868ae49493f4eebf76ee
+    md5: b5ad085a900c51b905e47a6de14520e1
+work/INPUT/MOM.res_8.nc:
+  fullpath: /scratch/nm03/ab8992/mom6/archive/ideal-40/restart000/MOM.res_8.nc
+  hashes:
+    binhash: ad480e70d63aa64eb59765b24aad408a
+    md5: e163d84e4f1f9a3e8e29a9480c3798d2
+work/INPUT/ocean_solo.res:
+  fullpath: /scratch/nm03/ab8992/mom6/archive/ideal-40/restart000/ocean_solo.res
+  hashes:
+    binhash: 03ab9cada563141c5aecf161a6e4cf8e
+    md5: 45135712b1f2c778b708153a83a6a620
