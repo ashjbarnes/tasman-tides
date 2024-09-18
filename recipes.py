@@ -480,7 +480,7 @@ def vmodes(expt,t0 = 10000):
     data = data.chunk({"xb":1,"yb":1,"zl":-1})
 
     tt.logmsg("Calculating vertical modes")
-    out = tt.ShootingVmodes_parallel(data,nmodes = 10).load()
+    out = tt.ShootingVmodes_parallel(data,nmodes = 8).load()
     tt.logmsg("success")
 
     out.to_netcdf(f"/g/data/nm03/ab8992/postprocessed/{expt}/VerticalEigenfunctions.nc")
