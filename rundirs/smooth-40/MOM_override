@@ -2,3 +2,4 @@
 #override DT=100
 #override DT_THERM=500
 #override DTBT = -0.025
+#override TOPO_FILE = "topog_flattened.nc"
