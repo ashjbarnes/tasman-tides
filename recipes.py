@@ -503,7 +503,7 @@ def qsub_lagrange_filter(experiment,zl,t0,windowsize):
 #!/bin/bash
 #PBS -N lf-{experiment}-{zl}-{t0}
 #PBS -P x77
-#PBS -q normalbw
+#PBS -q normal
 #PBS -l mem=112gb
 #PBS -l walltime=12:00:00
 #PBS -l ncpus=28
@@ -554,7 +554,7 @@ def qsub(recipe, experiment, outputs,recompute,t0):
 #!/bin/bash
 #PBS -N {recipe}-{experiment}
 #PBS -P x77
-#PBS -q normalbw
+#PBS -q normal
 #PBS -l mem=112gb
 #PBS -l walltime=12:00:00
 #PBS -l ncpus=28
