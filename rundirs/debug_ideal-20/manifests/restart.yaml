@@ -2,22 +2,22 @@ format: yamanifest
 version: 1.0
 ---
 work/INPUT/MOM.res.nc:
-  fullpath: /scratch/nm03/ab8992/mom6/archive/debug_ideal-20/restart001/MOM.res.nc
+  fullpath: /scratch/nm03/ab8992/mom6/archive/debug_ideal-20/restart002/MOM.res.nc
   hashes:
-    binhash: 4368ec5ccb5d7781734b48dc8fd7e46c
-    md5: 87a507e26c64c0a1f025154b9f19cff2
+    binhash: 5780c2ba198fd36468825ebdba0c4e7a
+    md5: 85097a66473744eace55cd07b55eb96b
 work/INPUT/MOM.res_1.nc:
-  fullpath: /scratch/nm03/ab8992/mom6/archive/debug_ideal-20/restart001/MOM.res_1.nc
+  fullpath: /scratch/nm03/ab8992/mom6/archive/debug_ideal-20/restart002/MOM.res_1.nc
   hashes:
-    binhash: c79aeecf40ce62397930026a3a35bf1e
-    md5: 761d1dee4515d5aaec614afd7d8fd245
+    binhash: 8c48c4758fe03385e9d3d9ea03392375
+    md5: f362d8eb7e3ff986dc1b726417e3c3f8
 work/INPUT/MOM.res_2.nc:
-  fullpath: /scratch/nm03/ab8992/mom6/archive/debug_ideal-20/restart001/MOM.res_2.nc
+  fullpath: /scratch/nm03/ab8992/mom6/archive/debug_ideal-20/restart002/MOM.res_2.nc
   hashes:
-    binhash: 37b6d899433a6c1531909dc5f9bc5f09
-    md5: a509886b9faff03b08ec5784e8fdba8c
+    binhash: 89fa860953c6c402aaf9f762f830bae2
+    md5: 2c045b485f85908e91ed12b5325d81f5
 work/INPUT/ocean_solo.res:
-  fullpath: /scratch/nm03/ab8992/mom6/archive/debug_ideal-20/restart001/ocean_solo.res
+  fullpath: /scratch/nm03/ab8992/mom6/archive/debug_ideal-20/restart002/ocean_solo.res
   hashes:
-    binhash: 6c66e5d6305e62c0af7b87de7f6aae09
-    md5: 0afe724fdc5149e7b6ce47342dc1e091
+    binhash: 698b386916eda9ca6a6f24a8bf22e42d
+    md5: 1c3ff8aafe6bfb3a35d165030271c5ea
