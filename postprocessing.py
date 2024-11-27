@@ -30,10 +30,6 @@ hourly_diags = {
     {"x":"xh","y":"yh","z":"z_l"},
     "ahh":
     {"x":"xh","y":"yh","z":"z_l"},
-    "kvu":
-    {"x":"xq","y":"yh","z":"z_l"},
-    "kvv":
-    {"x":"xh","y":"yq","z":"z_l"},
     "e":
     {"x":"xh","y":"yh","z":"rho2_i"}
 }
