@@ -37,16 +37,16 @@ ttide
 "ocean_model_z","u",   "u",   "u","all",.false.,"none",2
 "ocean_model_z","v",   "v",   "v","all",.false.,"none",2
 "ocean_model_z","Ahh",   "ahh",   "ahh","all",.false.,"none",2
-"ocean_model_z","rhopot2",   "rho",   "rho","all",.false.,"none",2
-"ocean_model_z","Kv_u","kvu","kvu","all",.false.,"none",2
-"ocean_model_z","KE","KE","KE","all",.false.,"none",2
-"ocean_model_z","KE_visc","KE_visc","KE_visc","all",.false.,"none",2
-"ocean_model_z","KE_horvisc","KE_horvisc","KE_horvisc","all",.false.,"none",2
-"ocean_model_z","PE_to_KE","PE_to_KE","PE_to_KE","all",.false.,"none",2
-"ocean_model_z","dKE_dt","dKE_dt","dKE_dt","all",.false.,"none",2
-"ocean_model_z","KE_stress","KE_stress","KE_stress","all",.false.,"none",2
-"ocean_model_z","KE_dia","KE_dia","KE_dia","all",.false.,"none",2
-"ocean_model_z","KE_adv","KE_adv","KE_adv","all",.false.,"none",2
+"ocean_model_z","rhopot2",   "rho",   "rho","all","mean","none",2
+"ocean_model_z","Kv_u","kvu","kvu","all","mean","none",2
+"ocean_model_z","KE","KE","KE","all","mean","none",2
+"ocean_model_z","KE_visc","KE_visc","KE_visc","all","mean","none",2
+"ocean_model_z","KE_horvisc","KE_horvisc","KE_horvisc","all","mean","none",2
+"ocean_model_z","PE_to_KE","PE_to_KE","PE_to_KE","all","mean","none",2
+"ocean_model_z","dKE_dt","dKE_dt","dKE_dt","all","mean","none",2
+"ocean_model_z","KE_stress","KE_stress","KE_stress","all","mean","none",2
+"ocean_model_z","KE_dia","KE_dia","KE_dia","all","mean","none",2
+"ocean_model_z","KE_adv","KE_adv","KE_adv","all","mean","none",2
 
 ## 3D Diagnostics on isopycnal surfaces
 "e", 1, "hours", 1, "hours", "time"
