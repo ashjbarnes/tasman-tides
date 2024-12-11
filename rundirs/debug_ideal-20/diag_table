@@ -30,7 +30,9 @@ ttide
 "KE_horvisc", 1, "hours", 1, "hours", "time"
 "PE_to_KE", 1, "hours", 1, "hours", "time"
 "dKE_dt", 1, "hours", 1, "hours", "time"
-"FrictWork", 1, "hours", 1, "hours", "time"
+"KE_stress", 1, "hours", 1, "hours", "time"
+"KE_adv", 1, "hours", 1, "hours", "time"
+"KE_dia", 1, "hours", 1, "hours", "time"
 
 "ocean_model_z","u",   "u",   "u","all",.false.,"none",2
 "ocean_model_z","v",   "v",   "v","all",.false.,"none",2
@@ -42,7 +44,10 @@ ttide
 "ocean_model_z","KE_horvisc","KE_horvisc","KE_horvisc","all",.false.,"none",2
 "ocean_model_z","PE_to_KE","PE_to_KE","PE_to_KE","all",.false.,"none",2
 "ocean_model_z","dKE_dt","dKE_dt","dKE_dt","all",.false.,"none",2
-"ocean_model_z","FrictWork","FrictWork","FrictWork","all",.false.,"none",2
+"ocean_model_z","KE_stress","KE_stress","KE_stress","all",.false.,"none",2
+"ocean_model_z","KE_dia","KE_dia","KE_dia","all",.false.,"none",2
+"ocean_model_z","KE_adv","KE_adv","KE_adv","all",.false.,"none",2
+
 ## 3D Diagnostics on isopycnal surfaces
 "e", 1, "hours", 1, "hours", "time"
 
