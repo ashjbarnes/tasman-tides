@@ -1,5 +1,5 @@
 #!/bin/bash
-#PBS -N full80-pprocess
+#PBS -N pp-full80
 #PBS -P x77
 #PBS -q normalbw
 #PBS -l mem=112gb
