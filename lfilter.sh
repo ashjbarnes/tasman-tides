@@ -11,7 +11,7 @@ do
     esac
 done
 
-wvalue=${wvalue:-200}
+
 
 # Check if the zvalue contains a dash, indicating a range
 if [[ $zvalue == *-* ]]
@@ -29,10 +29,10 @@ then
             echo "File $filepath exists."
         else
 	    echo "filtering $filepath" 
-            python3 recipes.py -r lagrange_filter -e $evalue -t $tvalue -z $i -w $wvalue&
+            python3 recipes.py -r lagrange_filter -e $evalue -t $tvalue -z $i -w $wvalue &
         fi
     done
 else
     # If the zvalue is not a range, just run the command once
-    python3 recipes.py -r lagrange_filter -e $evalue -t $tvalue -z $zvalue -w $wvalue*
+    python3 recipes.py -r lagrange_filter -e $evalue -t $tvalue -z $zvalue -w $wvalue &
 fi
