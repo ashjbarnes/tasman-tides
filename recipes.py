@@ -299,7 +299,11 @@ def spinup_timeseries(experiment):
 
 #### LAGRANGE FILTERING
     
-def lagrange_filter(expt,zl,t0,time_window = 300,filter_window = 150,filter_cutoff = 2*np.pi/(16*3600)):
+def lagrange_filter(expt,zl,t0,time_window = 149,filter_cutoff = 2*np.pi/(16*3600),buffer = 48):
+    """
+    time window: total time that'll be filtered and appear in outputs
+    buffer: the advection time for the particles. 48hrs forward and back
+    """
     print("START LAGRANGE FILTERING")
     print("import filtering package:")
     import filtering
@@ -322,7 +326,7 @@ def lagrange_filter(expt,zl,t0,time_window = 300,filter_window = 150,filter_cuto
     rawdata = tt.collect_data(
         expt,
         rawdata = ["u","v","ahh"],
-        timerange=(t0 - time_window,t0 + time_window)).isel(zl = [zl])
+        timerange=(t0 - (time_window//2 + buffer),t0 + ((time_window - time_window//2) + buffer))).isel(zl = [zl])
 
     # Save attributes to re-add later
     attrs = {
@@ -392,13 +396,13 @@ def lagrange_filter(expt,zl,t0,time_window = 300,filter_window = 150,filter_cuto
         {"lon":"xb","lat":"yb","time":"time"},
         sample_variables=["U","V","vv","uu","uv"], mesh="flat",highpass_frequency = LowFilterCutoff,
         advection_dt =timedelta(minutes=5).total_seconds(),
-        window_size = timedelta(hours=48).total_seconds()
+        window_size = timedelta(hours=buffer).total_seconds()
     )
     print("lowpass filter")
     ## Ensure we take times either side of the point of interest
-    f_low(times = range(3600 * (time_window - filter_window),3600 * (time_window + filter_window),3600)) 
+    f_low(times = range(3600 * buffer,3600 * (time_window + buffer),3600)) 
     print("Highpass filter")
-    f_high(times = range(3600 * (time_window - filter_window),3600 * (time_window + filter_window),3600)) ## Ensure we take 
+    f_high(times = range(3600 * buffer,3600 * (time_window + buffer),3600)) ## Ensure we take 
 
     
 
@@ -483,7 +487,7 @@ def vmodes(expt,t0 = 10000):
     out = tt.ShootingVmodes_parallel(data,nmodes = 8).load()
     tt.logmsg("success")
 
-    out.to_netcdf(f"/g/data/nm03/ab8992/postprocessed/{expt}/VerticalEigenfunctions.nc")
+    out.to_netcdf(f"/g/data/nm03/ab8992/postprocessed/{expt}/VerticalEigenfunctions-{t0}.nc")
 
     return
     
@@ -553,7 +557,7 @@ def qsub(recipe, experiment, outputs,recompute,t0):
     text = f"""
 #!/bin/bash
 #PBS -N {recipe}-{experiment}
-#PBS -P x77
+#PBS -P nm03
 #PBS -q normal
 #PBS -l mem=112gb
 #PBS -l walltime=12:00:00
