@@ -297,164 +297,7 @@ def spinup_timeseries(experiment):
     ke.to_netcdf(f"/g/data/nm03/ab8992/postprocessed/{experiment}/ke_timeseries.nc")
 
 
-#### LAGRANGE FILTERING
-    
-def lagrange_filter(expt,zl,t0,time_window = 149,filter_cutoff = 2*np.pi/(16*3600),buffer = 48):
-    """
-    time window: total time that'll be filtered and appear in outputs
-    buffer: the advection time for the particles. 48hrs forward and back
-    """
-    print("START LAGRANGE FILTERING")
-    print("import filtering package:")
-    import filtering
-
-    """
-    Apply the Lagrange filter to the input data. This is a wrapper around the LagrangeFilter class in filtering.py
-    Saves the outputs to `postprocessing/expt/lfiltered/t0-<t0>/filtered_<zl>.nc` with a separate file for each z level.
-    Inputs:
-        expt: str, the experiment to process
-        zl: int, the z level(s) to process
-        t0: int, the middle time of the time slice we care about
-    """
-    HighFilterCutoff = 2*np.pi/(9.8*3600)  ## Same as tolerences for bandpass in Waterhouse 2018
-    LowFilterCutoff = 2*np.pi/(15*3600)
-
-    client = tt.startdask()
-    dask.config.set(scheduler="single-threaded")
-    tmpstorage = os.getenv('PBS_JOBFS')
-
-    rawdata = tt.collect_data(
-        expt,
-        rawdata = ["u","v","ahh"],
-        timerange=(t0 - (time_window//2 + buffer),t0 + ((time_window - time_window//2) + buffer))).isel(zl = [zl])
-
-    # Save attributes to re-add later
-    attrs = {
-        "u": rawdata.u.attrs,
-        "v": rawdata.v.attrs,
-        "time": rawdata.time.attrs,
-        "xb": rawdata.xb.attrs,
-        "yb": rawdata.yb.attrs,
-        "zl": rawdata.zl.attrs,
-        "base" : rawdata.attrs
-    }
-
-    ## Save z level to re-add later
-    zl_value = rawdata.zl.values[0]
-
-    ## Remove zl to make data properly 2D
-    _rawdata = rawdata.isel(zl = 0) # Make a copy to modify the metadata to keep lagrange filter happy
-    # We'll keep rawdata for use later.
-
-    # Strip attrs since lagrange filter complains about them
-    _rawdata.u.attrs = {}
-    _rawdata.v.attrs = {}
-    _rawdata.zl.attrs = {}
-    _rawdata.time.attrs = {}
-    _rawdata.yb.attrs = {}
-    _rawdata.xb.attrs = {}
-    _rawdata = _rawdata.assign_coords({
-        "time":_rawdata.time * 3600,
-        "xb":_rawdata.xb * 1000,
-        "yb":_rawdata.yb * 1000})
-    _rawdata = _rawdata.drop_vars(["bathy","lat","lon"]) 
-
-    print("Saving data to temporary storage")
-    _rawdata.u.to_netcdf(tmpstorage + f"/u.nc",mode="w")
-    _rawdata.v.to_netcdf(tmpstorage + f"/v.nc",mode="w")
-    (_rawdata.v**2).rename("vv").to_netcdf(tmpstorage + f"/vv.nc",mode="w")
-    (_rawdata.u**2).rename("uu").to_netcdf(tmpstorage + f"/uu.nc",mode="w")
-    (_rawdata.u*_rawdata.v).rename("uv").to_netcdf(tmpstorage + f"/uv.nc",mode="w")
-    print("done")
-    client.close() ## Have to close dask client or it messes up the filtering package
-
-    f_high = filtering.LagrangeFilter(
-        tmpstorage + "/lowpass", ## Save intermediate output to temporary storage
-        {
-            "U":tmpstorage + "/u.nc",
-            "V":tmpstorage + "/v.nc",
-            "uu":tmpstorage + "/uu.nc",
-            "vv":tmpstorage + "/vv.nc",
-            "uv":tmpstorage + "/uv.nc"
-        }, 
-        {"U":"u","V":"v","uu":"uu","vv":"vv","uv":"uv"}, 
-        {"lon":"xb","lat":"yb","time":"time"},
-        sample_variables=["U","V","vv","uu","uv"], mesh="flat",highpass_frequency = HighFilterCutoff,
-        advection_dt =timedelta(minutes=5).total_seconds(),
-        window_size = timedelta(hours=48).total_seconds(),
-    )
-    f_low = filtering.LagrangeFilter(
-        tmpstorage + "/highpass", ## Save intermediate output to temporary storage
-        {
-            "U":tmpstorage + "/u.nc",
-            "V":tmpstorage + "/v.nc",
-            "uu":tmpstorage + "/uu.nc",
-            "vv":tmpstorage + "/vv.nc",
-            "uv":tmpstorage + "/uv.nc"
-        }, 
-        {"U":"u","V":"v","uu":"uu","vv":"vv","uv":"uv"}, 
-        {"lon":"xb","lat":"yb","time":"time"},
-        sample_variables=["U","V","vv","uu","uv"], mesh="flat",highpass_frequency = LowFilterCutoff,
-        advection_dt =timedelta(minutes=5).total_seconds(),
-        window_size = timedelta(hours=buffer).total_seconds()
-    )
-    print("lowpass filter")
-    ## Ensure we take times either side of the point of interest
-    f_low(times = range(3600 * buffer,3600 * (time_window + buffer),3600)) 
-    print("Highpass filter")
-    f_high(times = range(3600 * buffer,3600 * (time_window + buffer),3600)) ## Ensure we take 
-
-    
-
-    ## Remove stored data to save space on disk
-    for i in ["u","v","uu","vv","uv"]:
-        os.remove(tmpstorage + f"/{i}.nc")
-
-    client = tt.startdask()
-    print(os.listdir(tmpstorage))
-    ## Load the filtered data
-    highpass = xr.open_dataset(tmpstorage + "/highpass.nc",chunks = "auto")
-    lowpass = xr.open_dataset(tmpstorage + "/lowpass.nc",chunks = "auto")
-
-
-    def tidyup(filtered):
-        """Necessary tidying up of metadata and units for filtered outputs"""
-    ## Re-add zl as a dimension. Expand dims, then add zl
-        filtered = filtered.expand_dims({"zl":[zl_value]})
-
-        ## Restore scale and attributes of rawdata
-        filtered = filtered.assign_coords({
-            "time":filtered.time / 3600,
-            "xb":filtered.xb / 1000,
-            "yb":filtered.yb / 1000})
-
-        ## Fix up names of filtered variables:
-        for i in filtered.data_vars:
-            filtered = filtered.rename({i:i.split("_")[1].lower()})
-
-        filtered.attrs = attrs["base"]
-        filtered.u.attrs = attrs["u"]
-        filtered.v.attrs = attrs["v"]
-        filtered.zl.attrs = attrs["zl"]
-        filtered.time.attrs = attrs["time"]
-        filtered.yb.attrs = attrs["yb"]
-        filtered.xb.attrs = attrs["xb"]
-
-        filtered.attrs["long_name"] = "Filtered velocity data"
-        return filtered
-
-    highpass = tidyup(highpass)
-    lowpass = tidyup(lowpass)
-    outfolder = Path(f"/g/data/nm03/ab8992/postprocessed/{expt}/lfiltered/bp-t0-{t0}")
-
-    if not os.path.exists(outfolder):
-        os.makedirs(outfolder)
-    highpass["cst"] = tt.cross_scale_transfer(highpass)
-    lowpass["cst"] = tt.cross_scale_transfer(lowpass) 
-    highpass[["u","v","cst"]].to_netcdf(outfolder / f"highpass_{zl}.nc",mode="w")
-    lowpass[["u","v","cst"]].to_netcdf(outfolder / f"lowpass_{zl}.nc",mode="w")
-    return 
-
+   
 
 def vmodes(expt,t0 = 10000):
     client = tt.startdask()
@@ -501,34 +344,35 @@ def postprocess(experiment,outputs,recompute = False):
     tt.postprocessing(outputs,experiment,recompute)
     return
 
-def qsub_lagrange_filter(experiment,zl,t0,windowsize):
-    tt.logmsg(f"Submitting lagrange filter for {experiment}, {zl}, {t0}, {windowsize} to qsub")
+def qsub_lagrange_filter(experiment,t0,windowsize,offset):
+    tt.logmsg(f"Submitting lagrange filter for {experiment}, {t0}, {windowsize} to qsub")
     text = f"""
 #!/bin/bash
-#PBS -N lf-{experiment}-{zl}-{t0}
-#PBS -P x77
-#PBS -q normal
-#PBS -l mem=112gb
+#PBS -N lf-{experiment}-{t0}-{offset}
+#PBS -P nm03
+#PBS -q normalsr
+#PBS -l mem=192gb
 #PBS -l walltime=12:00:00
-#PBS -l ncpus=28
-#PBS -l jobfs=100gb
+#PBS -l ncpus=96
+#PBS -l jobfs=400gb
 #PBS -l storage=gdata/v45+scratch/v45+scratch/x77+gdata/v45+gdata/nm03+gdata/hh5+scratch/nm03
 PYTHONNOUSERSITE=1
 cd /scratch/v45/ab8992/tmp
-source /home/149/ab8992/libraries/conda/filtering_env/bin/activate
-python3 /home/149/ab8992/tasman-tides/recipes.py -r lagrange_filter -e {experiment}  -q 0 -t {t0} -z {zl} -w {windowsize}"""
-    with open(f"/home/149/ab8992/tasman-tides/logs/lfilter/lfilter-{experiment}-{zl}.pbs", "w") as f:
+source /g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin/activate
+python3 /home/149/ab8992/tasman-tides/lfilter.py -e full-20  -t {t0} -w {windowsize} -o {offset}
+"""
+    with open(f"/home/149/ab8992/tasman-tides/logs/lfilter/lfilter-{experiment}-{t0}-{offset}.pbs", "w") as f:
         f.write(text)
 
     result = subprocess.run(
-        f"qsub /home/149/ab8992/tasman-tides/logs/lfilter/lfilter-{experiment}-{zl}.pbs",
+        f"qsub /home/149/ab8992/tasman-tides/logs/lfilter/lfilter-{experiment}-{t0}-{offset}.pbs",
         shell=True,
         capture_output=True,
         text=True,
         cwd = f"/home/149/ab8992/tasman-tides/logs/lfilter",
     )
-    pbs_error = f"lfilter-{experiment}-{zl}.e{result.stdout.split('.')[0]}"
-    pbs_log = f"lfilter-{experiment}-{zl}.o{result.stdout.split('.')[0]}"
+    pbs_error = f"lf-{experiment}-{t0}-{offset}.e{result.stdout.split('.')[0]}"
+    pbs_log = f"lf-{experiment}-{t0}-{offset}.o{result.stdout.split('.')[0]}"
 
 
     # Wait until the PBS logfile appears in the log folder
@@ -539,11 +383,11 @@ python3 /home/149/ab8992/tasman-tides/recipes.py -r lagrange_filter -e {experime
     current_date = time.strftime("%b_%d_%H-%M-%S").lower()
     os.rename(
         f"/home/149/ab8992/tasman-tides/logs/lfilter/{pbs_error}",
-        f"/home/149/ab8992/tasman-tides/logs/lfilter/{experiment}-{zl}_{current_date}.err",
+        f"/home/149/ab8992/tasman-tides/logs/lfilter/{experiment}-{offset}_{current_date}.err",
     )
     os.rename(
         f"/home/149/ab8992/tasman-tides/logs/lfilter/{pbs_log}",
-        f"/home/149/ab8992/tasman-tides/logs/lfilter/{experiment}-{zl}_{current_date}.out",
+        f"/home/149/ab8992/tasman-tides/logs/lfilter/{experiment}-{offset}_{current_date}.out",
     )
 
 def qsub(recipe, experiment, outputs,recompute,t0):
@@ -650,6 +494,7 @@ if __name__ == "__main__":
     parser.add_argument("-r", "--recipe", help="Select the recipe to execute",default=None)
     parser.add_argument("-e", "--experiment", help="Specify the experiment to apply the recipe to")
     parser.add_argument("-o", "--outputs", help="Specify the outputs to use",default = "output*")
+    parser.add_argument("-n", "--offset", help="Offset from t0. Used by lfilter",default = "output*")
     parser.add_argument("-q", "--qsub", default=1,type=int, help="Choose whether to execute directly or as qsub job")
     parser.add_argument("-c", "--recompute", action="store_true", help="Recompute completed calculations or not")
     parser.add_argument("-t", "--t0", type=int, default = 10000, help="For lagrange filter: choose the midpoint of the time slice to filter")
@@ -667,7 +512,7 @@ if __name__ == "__main__":
 
     elif args.qsub == 1:
         if args.recipe == "lagrange_filter":
-            qsub_lagrange_filter(args.experiment,args.zl,args.t0,args.windowsize)
+            qsub_lagrange_filter(args.experiment,args.t0,args.windowsize,args.offset)
 
         qsub(args.recipe, args.experiment, args.outputs,args.recompute,args.t0)
 
