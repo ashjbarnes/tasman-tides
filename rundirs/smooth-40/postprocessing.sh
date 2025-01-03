@@ -1,6 +1,6 @@
 #!/bin/bash
 #PBS -N smooth-40pp
-#PBS -P v45
+#PBS -P nm03
 #PBS -q normalbw
 #PBS -l mem=112gb
 #PBS -l walltime=6:00:00
