@@ -359,7 +359,7 @@ def qsub_lagrange_filter(experiment,t0,windowsize,offset):
 PYTHONNOUSERSITE=1
 cd /scratch/v45/ab8992/tmp
 source /g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin/activate
-python3 /home/149/ab8992/tasman-tides/lfilter.py -e full-20  -t {t0} -w {windowsize} -o {offset}
+python3 /home/149/ab8992/tasman-tides/lfilter.py -e {experiment} -t {t0} -w {windowsize} -o {offset}
 """
     with open(f"/home/149/ab8992/tasman-tides/logs/lfilter/lfilter-{experiment}-{t0}-{offset}.pbs", "w") as f:
         f.write(text)
