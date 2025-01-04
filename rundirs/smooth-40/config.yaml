@@ -5,7 +5,7 @@ jobname: smooth-40
 ncpus: 1435
 #ncpus: 3639
 jobfs: 10GB
-shortpath: /scratch/x77
+shortpath: /scratch/nm03
 
 model: mom6
 input:
