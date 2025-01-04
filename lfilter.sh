@@ -14,6 +14,13 @@ done
 # Check if the zvalue contains a dash, indicating a range
 
     # Iterate over the range and run the command
+if [ -f "/g/data/nm03/ab8992/postprocessed/vertical_eigenfunctions/vmode-t0-$(tvalue).nc" ]
+then
+    echo "Vmodes already exist"
+else
+    echo "Running vmodes"
+    python3 recipes.py -r vmodes -e $evalue -t $tvalue -q 1 &
+fi
 for i in $(seq 0 9)
     do
         filepath="/g/data/nm03/ab8992/postprocessed/${evalue}/lfiltered/t0-${tvalue}/FastFilter${i}.nc"
