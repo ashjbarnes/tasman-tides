@@ -1,0 +1,29 @@
+&mom_input_nml
+    output_directory = '.'
+    input_filename = 'n'
+    restart_input_dir = 'INPUT'
+    restart_output_dir = 'RESTART'
+    parameter_filename = 'MOM_input', 'MOM_override', 'MOM_layout'
+/
+
+&fms_nml
+    domains_stack_size = 1600000
+    stack_size = 0
+    clock_grain = 'LOOP'
+/
+
+&fms2_io_nml
+    netcdf_default_format = 'netcdf4'
+    shuffle = .true.
+    deflate = 5
+/
+
+&ocean_solo_nml
+    months = 0
+    days = 5
+    date_init = 2010, 1, 1, 0, 0, 0
+    hours = 0
+    minutes = 0
+    seconds = 0
+    calendar = 'JULIAN'
+/
