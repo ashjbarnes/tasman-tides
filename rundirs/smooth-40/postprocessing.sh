@@ -1,10 +1,10 @@
 #!/bin/bash
-#PBS -N full20-pprocess
-#PBS -P v45
-#PBS -q normalbw
+#PBS -N full40-pprocess
+#PBS -P nm03
+#PBS -q normal
 #PBS -l mem=112gb
 #PBS -l walltime=6:00:00
-#PBS -l ncpus=28
+#PBS -l ncpus=48
 #PBS -l storage=gdata/v45+scratch/v45+scratch/x77+gdata/v45+gdata/nm03+gdata/hh5+scratch/nm03
 cd $PBS_O_WORKDIR
 PYTHONNOUSERSITE=1
