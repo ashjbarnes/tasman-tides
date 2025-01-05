@@ -27,13 +27,19 @@ def startdask(nthreads = 4):
 def save_data_for_filter(expt,zl,t0,tmpstorage,sample_window = 250):
 
     client = startdask()
-
-    rawdata = tt.collect_data(
-        expt,
-        rawdata = ["u","v"],
-        timerange=(
-            t0 - sample_window // 2,t0 + sample_window // 2 + sample_window % 2
-            )).isel(zl = zl).load()
+    retry = 0
+    while retry < 20:
+        try:
+            rawdata = tt.collect_data(
+                expt,
+                rawdata = ["u","v"],
+                timerange=(
+                    t0 - sample_window // 2,t0 + sample_window // 2 + sample_window % 2
+                    )).isel(zl = zl).load()
+            retry = 100
+        except:
+            print("Retry loading data")
+            retry +=1
     attrs = {
         "u": rawdata.u.attrs,
         "v": rawdata.v.attrs,
