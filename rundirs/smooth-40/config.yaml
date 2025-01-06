@@ -14,7 +14,7 @@ input:
     - /g/data/nm03/ab8992/ttide-inputs/smooth-40
 exe: /g/data/v45/ab8992/mom_executables/jan2024-latest-everything-mod
 collate: false
-#runlog: true
+runlog: false
 storage:
   gdata:
     - ua8
