@@ -1,7 +1,7 @@
 ## Add override files here
 #override DT=400
 #override DT_THERM=1600
-#override DTBT = -0.2
+#override DTBT = -0.1
 
 
 #override TEMP_SALT_Z_INIT_FILE = "forcing/init_tracers_zinterp.nc" 
