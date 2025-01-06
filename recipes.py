@@ -453,7 +453,7 @@ def stocktake():
         Path('/g/data/nm03/ab8992/outputs')
     ]
     expts = [
-        "full-20","full-40","full-80","notide-20","notide-40","notide-80","blank-20","blank-40","blank-80"
+        "full-20","full-40","full-80","notide-20","notide-40","notide-80","blank-20","blank-40","blank-80","smooth-20","smooth-40"
     ]
     outstr = "Expt\t\t Last \t End Date \t Total Days\n"
     for expt in expts:
