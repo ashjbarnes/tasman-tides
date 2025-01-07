@@ -1,5 +1,5 @@
 ## Add override files here
-#override DT=120
-#override DT_THERM=480
+#override DT=100
+#override DT_THERM=400
 #override DTBT = -0.01
 #override TOPO_FILE = "topog_flattened.nc"

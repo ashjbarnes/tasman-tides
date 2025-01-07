@@ -52,7 +52,7 @@ if __name__ == "__main__":
     print(f"Running postprocessing for experiment {expt}")
 
 
-    tt.postprocess(to_process,expt,recompute = True)
+    tt.postprocessing(to_process,expt,recompute = True)
 
     # if to_process == "last":
     #     # Find most recent output folder

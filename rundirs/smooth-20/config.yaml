@@ -14,7 +14,7 @@ input:
 exe: /g/data/v45/ab8992/mom_executables/jan2024-latest-everything-mod
 #exe: /g/data/v45/ab8992/mom_executables/angus_fms
 collate: false
-#runlog: true
+runlog: false
 storage:
   gdata:
     - ua8
