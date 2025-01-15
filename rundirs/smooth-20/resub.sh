@@ -2,19 +2,21 @@
 
 logfile='resubmit.log'
 counterfile='resubmit.count'
-outfile='resub.err'
+outfile='mom6.err'
 
 MAX_RESUBMISSIONS=5
 date >> ${logfile}
 
 # Define errors from which a resubmit is appropriate
 declare -a errors=(
+	           "Segmentation"
                    "Segmentation fault: address not mapped to object"
                    "Segmentation fault: invalid permissions for mapped object"
                    "Transport retry count exceeded"
                    "atmosphere/input.nml"
                    "ORTE has lost communication with a remote daemon"
                    "MPI_ERRORS_ARE_FATAL"
+                   "eta has dropped below bathyT"
 		  )
 
 resub=false
@@ -49,8 +51,9 @@ echo "Resubmission counter: ${PAYU_N_RESUB}" >> ${logfile}
 if [[ "${PAYU_N_RESUB}" -gt 0 ]]
 then
   # Sweep and re-run
-  ${PAYU_PATH}/payu sweep >> ${logfile}
-  ${PAYU_PATH}/payu run -n ${PAYU_N_RUNS} >> ${logfile}
+  cp MOM_override_smallstep MOM_override
+  payu sweep >> ${logfile}
+  payu run -n 50 -f  >> ${logfile}
   # Decrement resub counter and save to counter file
   ((PAYU_N_RESUB=PAYU_N_RESUB-1))
   echo "${PAYU_N_RESUB}" > ${counterfile}

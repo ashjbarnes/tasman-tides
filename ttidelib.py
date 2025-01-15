@@ -34,14 +34,14 @@ def logmsg(message,logfile = home / "logs" /"mainlog"):
         f.write(current_time + ":\t" + message + "\n")
     return 
 
-def startdask():
+def startdask(nthreads = 4):
     try:
     # Try to get the existing Dask client
         client = default_client()
         print(client)
     except ValueError:
         # If there's no existing client, create a new one
-        client = Client()
+        client = Client(threads_per_worker = nthreads)
         print(client)
     return client
 
@@ -260,7 +260,7 @@ def save_chunked(data,name,chunks,gdataout):
             {
                 "yb" : slice(i*chunks,(i+1)*chunks)
                 }
-                ).to_netcdf(gdataout / f"{name}" / f"{name}_y{i:02d}.nc")
+                ).load().to_netcdf(gdataout / f"{name}" / f"{name}_y{i:02d}.nc")
         i += 1
 
 def postprocessing(to_process,expt = "full-20",recompute = False):
@@ -336,8 +336,12 @@ def postprocessing(to_process,expt = "full-20",recompute = False):
         mom6out = rundir /  f"archive/{output}"
         print(f"Processing {mom6out}")
         gdataout = Path("/g/data/nm03/ab8992/outputs") / expt / f"{output}"
-        if not gdataout.exists():
+        if gdataout.exists():
+            shutil.rmtree(gdataout)
             gdataout.mkdir(parents=True)
+        else:
+            gdataout.mkdir(parents=True)
+
 
         ## Simply move the surface variables to gdata. These are unchunked and for the entire domain
 
@@ -441,7 +445,7 @@ def postprocessing(to_process,expt = "full-20",recompute = False):
             surface_transect = xr.merge([eta,speed,taux,tauy])
         else:
             surface_transect = xr.merge([eta,speed])
-        surface_transect.to_netcdf(gdataout / "surface_transect.nc")
+        surface_transect.load().to_netcdf(gdataout / "surface_transect.nc")
         del eta
         del speed
         if not "blank" in expt:
@@ -476,6 +480,8 @@ def collect_data(exptname,rawdata = None,ppdata = None,lfiltered = None,chunks =
 
     if res == "20" and exptname != "blank-20":
         time_per_output = 15 * 24
+    elif res == "10":
+        time_per_output = 30 * 24
     elif res == "40" or exptname == "blank-20":
         time_per_output = 5 * 24
 
@@ -497,7 +503,7 @@ def collect_data(exptname,rawdata = None,ppdata = None,lfiltered = None,chunks =
             t0 = lfiltered
         ldata = xr.open_mfdataset(
             str(Path("/g/data/nm03/ab8992/postprocessed") / exptname / "lfiltered" /  f"bp-t0-{t0}/{prefix}*.nc"),
-            decode_times = False,
+            decode_times = False,lock = False,
             decode_cf=False)
         timerange = (ldata.time.values[0],ldata.time.values[-1])
         print(f"Timerange as inferred from lfiltered data: {timerange}")
@@ -555,16 +561,16 @@ def collect_data(exptname,rawdata = None,ppdata = None,lfiltered = None,chunks =
         for var in ppdata:
             print(f"loading {var} topdown...",end = "\t" )
             data[var + "_topdown"] = xr.open_mfdataset(
-                str(ppdata_path / var / "topdown" / "*.nc"),chunks = chunks,decode_times = False,parallel = True,decode_cf = False).sel(time = slice(timerange[0],timerange[1])
+                str(ppdata_path / var / "topdown" / "*.nc"),chunks = chunks,decode_times = False,lock = False,parallel = True,decode_cf = False).sel(time = slice(timerange[0],timerange[1])
             )[var].rename(f"{var}_topdown")
             print("done. loading transect...",end = "\t")
             data[var + "_transect"] = xr.open_mfdataset(
-                str(ppdata_path / var / "transect" / "*.nc"),chunks = chunks,decode_times = False,parallel = True,decode_cf = False).sel(time = slice(timerange[0],timerange[1])
+                str(ppdata_path / var / "transect" / "*.nc"),chunks = chunks,decode_times = False,lock = False,parallel = True,decode_cf = False).sel(time = slice(timerange[0],timerange[1])
             )[var].rename(f"{var}_transect")
             print("done.")
 
 
-    data["bathy"] = xr.open_mfdataset(str(Path("/g/data/nm03/ab8992/outputs/") / exptname / "bathy_transect.nc")).rename({"elevation":"bathy"})
+    data["bathy"] = xr.open_mfdataset(str(Path("/g/data/nm03/ab8992/outputs/") / exptname / "bathy_transect.nc")).rename({"depth":"bathy"})
 
 
     data = xr.merge([data[i] for i in data])
@@ -1070,7 +1076,7 @@ def FetchForKEPS(s,timeslice =200,zrange = (10,30),lfiltered = False,chunks = {"
         else:
             vels = xr.open_mfdataset(
                 f"/g/data/nm03/ab8992/postprocessed/{s[i]['expt']}/lfiltered/t0-{s[i]['time']}/*.nc",
-                decode_times = False,
+                decode_times = False,lock = False,
                 decode_cf = False,
                 parallel = True)
         vels = vels.assign_coords({"time":vels.time * 3600}).chunk(chunks)

@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import argparse
 import ttidelib as tt
+import glob
 import os
 import subprocess
 import time
@@ -300,7 +301,7 @@ def spinup_timeseries(experiment):
    
 
 def vmodes(expt,t0 = 10000):
-    client = tt.startdask()
+    client = tt.startdask(nthreads = 1)
     print(client)
     tt.logmsg(f"Starting vertical modes calculation for {expt} {t0}")
     try:
@@ -335,7 +336,43 @@ def vmodes(expt,t0 = 10000):
 
     return
     
+def check_outputs(expt,rerun = True):
+    print(expt,end = "\n\n")
+    if "40" in expt:
+        no = 34
+    elif "10" in expt:
+        no = 10
+    else:
+        no = 17
 
+    dirs = os.listdir(f"/g/data/nm03/ab8992/outputs/{expt}")
+    vars = ["ahh","v","u","e","rho"]
+    # tell me how many files in each directory
+    # print(dirs)
+    for dir in dirs:
+        if dir[0] != "o":
+            continue
+
+        bad = False
+        for var in vars:
+            # print(len(os.listdir(f"/g/data/nm03/ab8992/outputs/{expt}/" + dir + "/" + var)))
+            if not os.path.exists(f"/g/data/nm03/ab8992/outputs/{expt}/" + dir + "/" + var):
+
+                bad = True
+            if os.path.exists(f"/g/data/nm03/ab8992/outputs/{expt}/" + dir + "/" + var) and len(glob.glob(f"/g/data/nm03/ab8992/outputs/{expt}/" + dir + "/" + var + "/*.nc")) != no:
+                
+                bad = True
+
+                
+        if bad:
+            print("\t" + dir,end = "\n")
+            if rerun:
+                subprocess.run(
+                        f"python3 recipes.py -r postprocess -e {expt} -o {int(dir.split('output')[-1])} & ",
+                        shell=True,
+                        text=True,
+                        cwd = f"/home/149/ab8992/tasman-tides",
+                        )
 
 
 def postprocess(experiment,outputs,recompute = False):
@@ -402,22 +439,22 @@ def qsub(recipe, experiment, outputs,recompute,t0):
     text = f"""
 #!/bin/bash
 #PBS -N {recipe}-{experiment}
-#PBS -P nm03
-#PBS -q normalsr
+#PBS -P x77
+#PBS -q normalbw
 #PBS -l mem=180gb
 #PBS -l walltime=12:00:00
-#PBS -l ncpus=96
+#PBS -l ncpus=28
 #PBS -l jobfs=400gb
 #PBS -l storage=gdata/v45+scratch/v45+scratch/x77+gdata/v45+gdata/nm03+gdata/hh5+scratch/nm03
 PYTHONNOUSERSITE=1
 source /g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin/activate
 python3 /home/149/ab8992/tasman-tides/recipes.py -r {recipe} -e {experiment} -o {outputs} -q 0 {recompute} -t {t0}"""
 
-    with open(f"/home/149/ab8992/tasman-tides/logs/{recipe}/{recipe}-{experiment}.pbs", "w") as f:
+    with open(f"/home/149/ab8992/tasman-tides/logs/{recipe}/{recipe}-{experiment}-{outputs}.pbs", "w") as f:
         f.write(text)
 
     result = subprocess.run(
-        f"qsub /home/149/ab8992/tasman-tides/logs/{recipe}/{recipe}-{experiment}.pbs",
+        f"qsub /home/149/ab8992/tasman-tides/logs/{recipe}/{recipe}-{experiment}-{outputs}.pbs",
         shell=True,
         capture_output=True,
         text=True,
@@ -512,8 +549,12 @@ if __name__ == "__main__":
     elif args.qsub == 1:
         if args.recipe == "lagrange_filter":
             qsub_lagrange_filter(args.experiment,args.t0,args.windowsize,args.offset)
-
-        qsub(args.recipe, args.experiment, args.outputs,args.recompute,args.t0)
+        
+        elif args.recipe == "check_outputs":
+            for expt in ["smooth-20","smooth-40","smooth-10","beamless-10","beamless-20","beamless-40","full-10"]:
+                check_outputs(expt)
+        else:
+            qsub(args.recipe, args.experiment, args.outputs,args.recompute,args.t0)
 
 
     elif args.recipe == "surface_speed_movie":
@@ -541,6 +582,10 @@ if __name__ == "__main__":
 
     elif args.recipe == "ekman_pumping_movie":
         ekman_pumping_movie(args.experiment)
+
+    elif args.recipe == "check_outputs":
+        for expt in ["smooth-20","smooth-40","smooth-10","beamless-10","beamless-20","beamless-40","full-10"]:
+            check_outputs(expt)
 
     elif args.recipe == "postprocess":
         postprocess(args.experiment,args.outputs,args.recompute)

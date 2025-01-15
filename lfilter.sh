@@ -23,8 +23,8 @@ else
 fi
 for i in $(seq 0 9)
     do
-        filepath="/g/data/nm03/ab8992/postprocessed/${evalue}/lfiltered/t0-${tvalue}/FastFilter${i}.nc"
-        filepath2="/g/data/nm03/ab8992/postprocessed/${evalue}/lfiltered/t0-${tvalue}/SlowFilter${i}.nc"
+        filepath="/g/data/nm03/ab8992/postprocessed/${evalue}/filtered-u-v-rho/t0-${tvalue}/FastFilter${i}.nc"
+        filepath2="/g/data/nm03/ab8992/postprocessed/${evalue}/filtered-u-v-rho/t0-${tvalue}/SlowFilter${i}.nc"
         if [ -f "$filepath" ] && [ -f "$filepath2" ]
         then
             echo "File $filepath exists."

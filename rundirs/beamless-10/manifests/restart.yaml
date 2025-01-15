@@ -1,0 +1,18 @@
+format: yamanifest
+version: 1.0
+---
+work/INPUT/MOM.res.nc:
+  fullpath: /scratch/nm03/ab8992/mom6/archive/beamless-10/restart132/MOM.res.nc
+  hashes:
+    binhash: f83048526c549040442bebe44c53c3b5
+    md5: af9b952d440afe5f5e4dd28e33ad051d
+work/INPUT/coupler.res:
+  fullpath: /scratch/nm03/ab8992/mom6/archive/beamless-10/restart132/coupler.res
+  hashes:
+    binhash: 3fa58117f3b517aec0437fc8898024df
+    md5: e901e696c52b5e43b27c41b66a7d3a42
+work/INPUT/ice_model.res.nc:
+  fullpath: /scratch/nm03/ab8992/mom6/archive/beamless-10/restart132/ice_model.res.nc
+  hashes:
+    binhash: 1155a54245788d608f8580a3b5fb3453
+    md5: c7da2e451538e92f06b051fe2551f44b

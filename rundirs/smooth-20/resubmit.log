@@ -30,3 +30,91 @@ Error not found: atmosphere/input.nml
 Error not found: ORTE has lost communication with a remote daemon
 Error not found: MPI_ERRORS_ARE_FATAL
 Error not eligible for resubmission
+Tue Jan  7 17:18:39 AEDT 2025
+Error not found: Segmentation fault: address not mapped to object
+Error not found: Segmentation fault: invalid permissions for mapped object
+Error not found: Transport retry count exceeded
+Error not found: atmosphere/input.nml
+Error not found: ORTE has lost communication with a remote daemon
+Error not found: MPI_ERRORS_ARE_FATAL
+Error not eligible for resubmission
+Wed Jan  8 00:08:39 AEDT 2025
+Error not found: Segmentation fault: address not mapped to object
+Error not found: Segmentation fault: invalid permissions for mapped object
+Error not found: Transport retry count exceeded
+Error not found: atmosphere/input.nml
+Error not found: ORTE has lost communication with a remote daemon
+Error not found: MPI_ERRORS_ARE_FATAL
+Error not eligible for resubmission
+Wed Jan  8 15:49:10 AEDT 2025
+Error found: Segmentation fault: address not mapped to object
+Reset resubmission counter
+Resubmission counter: 5
+laboratory path:  /scratch/nm03/ab8992/mom6
+binary path:  /scratch/nm03/ab8992/mom6/bin
+input path:  /scratch/nm03/ab8992/mom6/input
+work path:  /scratch/nm03/ab8992/mom6/work
+archive path:  /scratch/nm03/ab8992/mom6/archive
+Moving log smooth-20.o131974423
+Moving log smooth-20.e131974423
+Moving log smooth-20.o131976408
+Moving log smooth-20.e131976408
+Moving log smooth-20.o131979563
+Moving log smooth-20.e131979563
+Moving log smooth-20.o131983126
+Moving log smooth-20.e131983126
+Moving log smooth-20.o131986768
+Moving log smooth-20.e131986768
+Moving log smooth-20.o131991207
+Moving log smooth-20.e131991207
+Removing work path /scratch/nm03/ab8992/mom6/work/smooth-20
+Removing symlink /home/149/ab8992/tasman-tides/rundirs/smooth-20/work
+131998112.gadi-pbs
+payu: warning: Job request includes 33 unused CPUs.
+payu: warning: CPU request increased from 975 to 1008
+Loading input manifest: manifests/input.yaml
+Loading restart manifest: manifests/restart.yaml
+Loading exe manifest: manifests/exe.yaml
+payu: Found modules in /opt/Modules/v4.3.0
+qsub -q normal -P x77 -l walltime=05:00:00 -l ncpus=1008 -l mem=4032GB -l jobfs=10GB -N smooth-20 -l wd -j n -v PAYU_PATH=/g/data/hh5/public/apps/miniconda3/envs/analysis3-23.04/bin,PAYU_N_RUNS=194,MODULESHOME=/opt/Modules/v4.3.0,MODULES_CMD=/opt/Modules/v4.3.0/libexec/modulecmd.tcl,MODULEPATH=/g/data/hh5/public/modules:/etc/scl/modulefiles:/opt/Modules/modulefiles:/opt/Modules/v4.3.0/modulefiles:/apps/Modules/modulefiles -l storage=gdata/hh5+gdata/ik11+gdata/nm03+gdata/ua8+gdata/v45+gdata/x77+scratch/nm03 -- /g/data/hh5/public/apps/miniconda3/envs/analysis3-23.04/bin/python3.9 /g/data/hh5/public/apps/miniconda3/envs/analysis3-23.04/bin/payu-run
+
+Thu Jan  9 04:49:44 AEDT 2025
+Error not found: Segmentation fault: address not mapped to object
+Error not found: Segmentation fault: invalid permissions for mapped object
+Error not found: Transport retry count exceeded
+Error not found: atmosphere/input.nml
+Error not found: ORTE has lost communication with a remote daemon
+Error not found: MPI_ERRORS_ARE_FATAL
+Error not eligible for resubmission
+Thu Jan  9 17:10:55 AEDT 2025
+Error not found: Segmentation fault: address not mapped to object
+Error not found: Segmentation fault: invalid permissions for mapped object
+Error not found: Transport retry count exceeded
+Error not found: atmosphere/input.nml
+Error not found: ORTE has lost communication with a remote daemon
+Error not found: MPI_ERRORS_ARE_FATAL
+Error not eligible for resubmission
+Fri Jan 10 00:49:16 AEDT 2025
+Error not found: Segmentation fault: address not mapped to object
+Error not found: Segmentation fault: invalid permissions for mapped object
+Error not found: Transport retry count exceeded
+Error not found: atmosphere/input.nml
+Error not found: ORTE has lost communication with a remote daemon
+Error not found: MPI_ERRORS_ARE_FATAL
+Error not eligible for resubmission
+Fri Jan 10 10:13:55 AEDT 2025
+Error not found: Segmentation fault: address not mapped to object
+Error not found: Segmentation fault: invalid permissions for mapped object
+Error not found: Transport retry count exceeded
+Error not found: atmosphere/input.nml
+Error not found: ORTE has lost communication with a remote daemon
+Error not found: MPI_ERRORS_ARE_FATAL
+Error not eligible for resubmission
+Fri Jan 10 16:05:10 AEDT 2025
+Error not found: Segmentation fault: address not mapped to object
+Error not found: Segmentation fault: invalid permissions for mapped object
+Error not found: Transport retry count exceeded
+Error not found: atmosphere/input.nml
+Error not found: ORTE has lost communication with a remote daemon
+Error not found: MPI_ERRORS_ARE_FATAL
+Error not eligible for resubmission

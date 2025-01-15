@@ -1,0 +1,51 @@
+ttide
+2010 1 1 0 0 0
+
+## 2D Diagnostics at 6hrs frequency. Mostly for tracking eddies 
+"surface",            6, "hours",   1, "hours", "time"
+
+"ocean_model",   "zos",          "zos",              "surface",         "all", "mean", "none",2
+"ocean_model",   "tos",       "tos",           "surface",         "all", "mean", "none",2
+"ocean_model",   "speed",        "speed",            "surface",         "all", "mean", "none",2
+"ocean_model",	 "sst_global", "sst_global", "surface", "all", "mean", "none",2
+"ocean_model",	 "sss_global", "sss_global", "surface",	"all", "mean", "none",2
+"ocean_model",	 "sss", "sss", "surface",	"all", "mean", "none",2
+"ocean_model","taux",   "taux",   "surface","all","mean","none",2
+"ocean_model","tauy",   "tauy",   "surface","all","mean","none",2
+"ocean_model","net_heat_surface",   "net_heat_surface",   "surface","all","mean","none",2
+"ocean_model","net_heat_surface_ga",   "net_heat_surface_ga",   "surface","all","mean","none",2
+## Instead of regional selection, split the variables of interest into separate files and slice afterwards in Python
+
+## 3D Diagnostifcs on z*
+"u", 1, "hours", 1, "hours", "time"
+"v", 1, "hours", 1, "hours", "time"
+"rho", 1, "hours", 1, "hours", "time"
+"ahh", 1, "hours", 1, "hours", "time"
+
+"ocean_model_z","u",   "u",   "u","all",.false.,"none",2
+"ocean_model_z","v",   "v",   "v","all",.false.,"none",2
+"ocean_model_z","Ahh",   "ahh",   "ahh","all",.false.,"none",2
+"ocean_model_z","rhopot2",   "rho",   "rho","all",.false.,"none",2
+
+
+## 3D Diagnostics on isopycnal surfaces
+"e", 1, "hours", 1, "hours", "time"
+
+"ocean_model_rho2","e","e","e","all",.false.,"none",2
+
+## 3D mixing diagnostics on isoycnal surfaces. Daily averages
+#"KE_stress", 1, "days", 1, "hours", "time"
+#"KE_visc", 1, "days", 1, "hours", "time"
+#"KE_horvisc", 1, "days", 1, "hours", "time"
+#"PE_to_KE", 1, "days", 1, "hours", "time"
+#"dKE_dt", 1, "days", 1, "hours", "time"
+
+#"ocean_model_z","KE_stress",   "KE_stress",   "KE_stress","all","mean","none",2
+#"ocean_model_z","KE_visc",   "KE_visc",   "KE_visc","all","mean","none",2
+#"ocean_model_z","KE_horvisc",   "KE_horvisc",   "KE_horvisc","all","mean","none",2
+#"ocean_model_z","PE_to_KE",   "PE_to_KE",   "PE_to_KE","all","mean","none",2
+#"ocean_model_z","dKE_dt",   "dKE_dt",   "dKE_dt","all","mean","none",2
+
+
+
+

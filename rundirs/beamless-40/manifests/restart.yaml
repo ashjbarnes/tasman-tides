@@ -1,0 +1,63 @@
+format: yamanifest
+version: 1.0
+---
+work/INPUT/MOM.res.nc:
+  fullpath: /scratch/nm03/ab8992/mom6/archive/beamless-40/restart056/MOM.res.nc
+  hashes:
+    binhash: 53dd8479cce09f8ac7e0a07501d2822e
+    md5: 57321b10c12d1482dc5fe2f9d858836a
+work/INPUT/MOM.res_1.nc:
+  fullpath: /scratch/nm03/ab8992/mom6/archive/beamless-40/restart056/MOM.res_1.nc
+  hashes:
+    binhash: eaaad4b3ea927530ed5a1742223e63ab
+    md5: e6b4681382c2f97dcc88db6d95ca018a
+work/INPUT/MOM.res_2.nc:
+  fullpath: /scratch/nm03/ab8992/mom6/archive/beamless-40/restart056/MOM.res_2.nc
+  hashes:
+    binhash: 1b91f28d16e3b356b3c1f078c0eeb76a
+    md5: de537d8f3ae8d1580c7d6ad35d5baee9
+work/INPUT/MOM.res_3.nc:
+  fullpath: /scratch/nm03/ab8992/mom6/archive/beamless-40/restart056/MOM.res_3.nc
+  hashes:
+    binhash: 83ee4aa17a546ddd2bbe8aa308690673
+    md5: 1fd9599a36c671c6cd44811567af8835
+work/INPUT/MOM.res_4.nc:
+  fullpath: /scratch/nm03/ab8992/mom6/archive/beamless-40/restart056/MOM.res_4.nc
+  hashes:
+    binhash: 292cf637b0ec1081cd82ed471ee63c44
+    md5: 4bf660eae1926829b864704343cd86bf
+work/INPUT/MOM.res_5.nc:
+  fullpath: /scratch/nm03/ab8992/mom6/archive/beamless-40/restart056/MOM.res_5.nc
+  hashes:
+    binhash: f54de7ad5971e7797aaf04c421fdaf80
+    md5: e5de018cebbba01548ae854a26336689
+work/INPUT/MOM.res_6.nc:
+  fullpath: /scratch/nm03/ab8992/mom6/archive/beamless-40/restart056/MOM.res_6.nc
+  hashes:
+    binhash: eb8c99c26d50da3c377d98421e2dbc0b
+    md5: e7e63dc5d63a250c0e1af754df7bc5e2
+work/INPUT/MOM.res_7.nc:
+  fullpath: /scratch/nm03/ab8992/mom6/archive/beamless-40/restart056/MOM.res_7.nc
+  hashes:
+    binhash: 77a5433ef910e916b2bbd4d9fdc0991d
+    md5: 6c6f96c2694427a471264963f927c692
+work/INPUT/MOM.res_8.nc:
+  fullpath: /scratch/nm03/ab8992/mom6/archive/beamless-40/restart056/MOM.res_8.nc
+  hashes:
+    binhash: b2aae77271c9669fdaa641234094e15a
+    md5: 9ff2e0742014e4e17924f8f10cbf240f
+work/INPUT/MOM.res_9.nc:
+  fullpath: /scratch/nm03/ab8992/mom6/archive/beamless-40/restart056/MOM.res_9.nc
+  hashes:
+    binhash: b002b6da3d0226706b61b4d3d58dfc57
+    md5: 8e2c5611a81681cbb77e054f02350a01
+work/INPUT/coupler.res:
+  fullpath: /scratch/nm03/ab8992/mom6/archive/beamless-40/restart056/coupler.res
+  hashes:
+    binhash: 09998bc6023c3d38fd750ae321970937
+    md5: d90c1a461fc4d8e8b86698fbc03a7d65
+work/INPUT/ice_model.res.nc:
+  fullpath: /scratch/nm03/ab8992/mom6/archive/beamless-40/restart056/ice_model.res.nc
+  hashes:
+    binhash: 518688eb21c0f0db09f52eddb7b97b38
+    md5: 0ca5e48e00bdaa296c274cc4e2e93dd3

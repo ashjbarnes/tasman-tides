@@ -32,7 +32,7 @@ def save_data_for_filter(expt,zl,t0,tmpstorage,sample_window = 250):
         try:
             rawdata = tt.collect_data(
                 expt,
-                rawdata = ["u","v"],
+                rawdata = ["u","v","rho"],
                 timerange=(
                     t0 - sample_window // 2,t0 + sample_window // 2 + sample_window % 2
                     )).isel(zl = zl).load()
@@ -70,9 +70,7 @@ def save_data_for_filter(expt,zl,t0,tmpstorage,sample_window = 250):
         [
             rawdata.u,
             rawdata.v,
-            (rawdata.v**2).rename("vv"),
-            (rawdata.u**2).rename("uu"),
-            (rawdata.u*rawdata.v).rename("uv"),
+            rawdata.rho,
         ]
     )
 
@@ -102,9 +100,7 @@ def lagrange_filter(zl,tmpstorage,filter_window = 2,sample_window = 250):
     data_map = {
             "U":tmpstorage + f"/raw_{zl}.nc",
             "V":tmpstorage + f"/raw_{zl}.nc",
-            "uu":tmpstorage + f"/raw_{zl}.nc",
-            "vv":tmpstorage + f"/raw_{zl}.nc",
-            "uv":tmpstorage + f"/raw_{zl}.nc"
+            "rho":tmpstorage + f"/raw_{zl}.nc",
         }
     if os.path.exists(tmpstorage + f"/SlowFilter_{zl}.nc"):
         os.remove(tmpstorage + f"/SlowFilter_{zl}.nc")
@@ -115,18 +111,18 @@ def lagrange_filter(zl,tmpstorage,filter_window = 2,sample_window = 250):
     FastFilter = filtering.LagrangeFilter(
         tmpstorage + f"/FastFilter_{zl}", ## Save intermediate output to temporary storage
         data_map, 
-        {"U":"u","V":"v","uu":"uu","vv":"vv","uv":"uv"}, 
+        {"U":"u","V":"v","rho":"rho"}, 
         {"lon":"xb","lat":"yb","time":"time"},
-        sample_variables=["U","V","vv","uu","uv"], mesh="flat",highpass_frequency = FastCutoff,
+        sample_variables=["U","V","rho"], mesh="flat",highpass_frequency = FastCutoff,
         advection_dt =timedelta(minutes=5).total_seconds(),
         window_size = timedelta(hours=48).total_seconds(),
     )
     SlowFilter = filtering.LagrangeFilter(
         tmpstorage + f"/SlowFilter_{zl}", ## Save intermediate output to temporary storage
         data_map, 
-        {"U":"u","V":"v","uu":"uu","vv":"vv","uv":"uv"}, 
+        {"U":"u","V":"v","rho":"rho"}, 
         {"lon":"xb","lat":"yb","time":"time"},
-        sample_variables=["U","V","vv","uu","uv"], mesh="flat",highpass_frequency = SlowCutoff,
+        sample_variables=["U","V","vv"], mesh="flat",highpass_frequency = SlowCutoff,
         advection_dt =timedelta(minutes=5).total_seconds(),
         window_size = timedelta(hours=48).total_seconds()
     )
@@ -181,9 +177,7 @@ def lfilter_tidyup(tmpstorage,outputfolder,offset = -1):
         data.xb.attrs = {'long_name': 'Distance along beam from Tasmania towards Macquarie Ridge', 'units': 'km'}
         data.yb.attrs = {'long_name': 'Distance perpendicular to beam referened from beam centre', 'units': 'km'}
         data.attrs["long_name"] = f"{i}filtered velocity data"
-        cst = tt.cross_scale_transfer(data)
-        data["cst"] = cst
-        data[["u","v","cst"]].to_netcdf(outputfolder / f"{i}Filter{offset}.nc",mode="w")
+        data[["u","v","rho"]].to_netcdf(outputfolder / f"{i}Filter{offset}.nc",mode="w")
     return 
 
 
@@ -212,7 +206,7 @@ if __name__ == "__main__":
         if offset == 9:
             filter_window = 14
 
-    outputfolder = Path(f"/g/data/nm03/ab8992/postprocessed/{expt}/lfiltered/t0-{t0}")
+    outputfolder = Path(f"/g/data/nm03/ab8992/postprocessed/{expt}/filter-u-v-rho/t0-{t0}")
     if not os.path.exists(tmpstorage):
         os.makedirs(tmpstorage)
 
