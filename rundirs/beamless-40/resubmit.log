@@ -1,0 +1,761 @@
+Fri Jan  3 16:38:14 AEDT 2025
+Error not found: Segmentation fault: address not mapped to object
+Error not found: Segmentation fault: invalid permissions for mapped object
+Error not found: Transport retry count exceeded
+Error not found: atmosphere/input.nml
+Error not found: ORTE has lost communication with a remote daemon
+Error not found: MPI_ERRORS_ARE_FATAL
+Error not eligible for resubmission
+Fri Jan  3 18:53:57 AEDT 2025
+Error not found: Segmentation fault: address not mapped to object
+Error not found: Segmentation fault: invalid permissions for mapped object
+Error not found: Transport retry count exceeded
+Error not found: atmosphere/input.nml
+Error not found: ORTE has lost communication with a remote daemon
+Error not found: MPI_ERRORS_ARE_FATAL
+Error not eligible for resubmission
+Fri Jan  3 21:39:37 AEDT 2025
+Error not found: Segmentation fault: address not mapped to object
+Error not found: Segmentation fault: invalid permissions for mapped object
+Error not found: Transport retry count exceeded
+Error not found: atmosphere/input.nml
+Error not found: ORTE has lost communication with a remote daemon
+Error not found: MPI_ERRORS_ARE_FATAL
+Error not eligible for resubmission
+Sat Jan  4 12:36:08 AEDT 2025
+Error not found: Segmentation fault: address not mapped to object
+Error not found: Segmentation fault: invalid permissions for mapped object
+Error not found: Segmentation fault: address not mapped to object at address
+Error not found: Transport retry count exceeded
+Error not found: atmosphere/input.nml
+Error not found: ORTE has lost communication with a remote daemon
+Error not found: MPI_ERRORS_ARE_FATAL
+Error not eligible for resubmission
+Mon Jan  6 14:28:54 AEDT 2025
+Error not found: Segmentation fault: address not mapped to object
+Error not found: Segmentation fault: invalid permissions for mapped object
+Error not found: Segmentation fault: address not mapped to object at address
+Error not found: Transport retry count exceeded
+Error not found: atmosphere/input.nml
+Error not found: ORTE has lost communication with a remote daemon
+Error not found: MPI_ERRORS_ARE_FATAL
+Error not eligible for resubmission
+Mon Jan  6 23:34:03 AEDT 2025
+Error not found: Segmentation fault: address not mapped to object
+Error not found: Segmentation fault: invalid permissions for mapped object
+Error not found: Segmentation fault: address not mapped to object at address
+Error not found: Transport retry count exceeded
+Error not found: atmosphere/input.nml
+Error not found: ORTE has lost communication with a remote daemon
+Error not found: MPI_ERRORS_ARE_FATAL
+Error not eligible for resubmission
+Wed Jan  8 00:20:14 AEDT 2025
+Error not found: Segmentation fault: address not mapped to object
+Error not found: Segmentation fault: invalid permissions for mapped object
+Error not found: Segmentation fault: address not mapped to object at address
+Error not found: Transport retry count exceeded
+Error not found: atmosphere/input.nml
+Error not found: ORTE has lost communication with a remote daemon
+Error not found: MPI_ERRORS_ARE_FATAL
+Error not eligible for resubmission
+Wed Jan  8 11:47:50 AEDT 2025
+Error found: Segmentation
+Reset resubmission counter
+Resubmission counter: 5
+laboratory path:  /scratch/nm03/ab8992/mom6
+binary path:  /scratch/nm03/ab8992/mom6/bin
+input path:  /scratch/nm03/ab8992/mom6/input
+work path:  /scratch/nm03/ab8992/mom6/work
+archive path:  /scratch/nm03/ab8992/mom6/archive
+Moving log smooth-40.o131974439
+Moving log smooth-40.e131974439
+Removing work path /scratch/nm03/ab8992/mom6/work/smooth-40
+Removing symlink /home/149/ab8992/tasman-tides/rundirs/smooth-40/work
+131980991.gadi-pbs
+payu: warning: Job request includes 9 unused CPUs.
+payu: warning: CPU request increased from 3639 to 3648
+Loading input manifest: manifests/input.yaml
+Loading restart manifest: manifests/restart.yaml
+Loading exe manifest: manifests/exe.yaml
+payu: Found modules in /opt/Modules/v4.3.0
+qsub -q normal -P x77 -l walltime=05:00:00 -l ncpus=3648 -l mem=14592GB -l jobfs=10GB -N smooth-40 -l wd -j n -v PAYU_PATH=/g/data/hh5/public/apps/miniconda3/envs/analysis3-23.04/bin,PAYU_N_RUNS=199,MODULESHOME=/opt/Modules/v4.3.0,MODULES_CMD=/opt/Modules/v4.3.0/libexec/modulecmd.tcl,MODULEPATH=/g/data/hh5/public/modules:/etc/scl/modulefiles:/opt/Modules/modulefiles:/opt/Modules/v4.3.0/modulefiles:/apps/Modules/modulefiles -l storage=gdata/hh5+gdata/ik11+gdata/nm03+gdata/ua8+gdata/v45+gdata/x77+scratch/nm03 -- /g/data/hh5/public/apps/miniconda3/envs/analysis3-23.04/bin/python3.9 /g/data/hh5/public/apps/miniconda3/envs/analysis3-23.04/bin/payu-run
+
+Wed Jan  8 12:18:03 AEDT 2025
+Error found: Segmentation
+Resubmission counter: 4
+laboratory path:  /scratch/nm03/ab8992/mom6
+binary path:  /scratch/nm03/ab8992/mom6/bin
+input path:  /scratch/nm03/ab8992/mom6/input
+work path:  /scratch/nm03/ab8992/mom6/work
+archive path:  /scratch/nm03/ab8992/mom6/archive
+Removing work path /scratch/nm03/ab8992/mom6/work/beamless-40
+Removing symlink /home/149/ab8992/tasman-tides/rundirs/beamless-40/work
+131982456.gadi-pbs
+payu: warning: Job request includes 9 unused CPUs.
+payu: warning: CPU request increased from 3639 to 3648
+Loading input manifest: manifests/input.yaml
+Loading restart manifest: manifests/restart.yaml
+Loading exe manifest: manifests/exe.yaml
+payu: Found modules in /opt/Modules/v4.3.0
+qsub -q normal -P x77 -l walltime=05:00:00 -l ncpus=3648 -l mem=14592GB -l jobfs=10GB -N beamless-40 -l wd -j n -v PAYU_PATH=/g/data/hh5/public/apps/miniconda3/envs/analysis3-23.04/bin,PAYU_N_RUNS=200,MODULESHOME=/opt/Modules/v4.3.0,MODULES_CMD=/opt/Modules/v4.3.0/libexec/modulecmd.tcl,MODULEPATH=/g/data/hh5/public/modules:/etc/scl/modulefiles:/opt/Modules/modulefiles:/opt/Modules/v4.3.0/modulefiles:/apps/Modules/modulefiles -l storage=gdata/hh5+gdata/ik11+gdata/nm03+gdata/ua8+gdata/v45+gdata/x77+scratch/nm03 -- /g/data/hh5/public/apps/miniconda3/envs/analysis3-23.04/bin/python3.9 /g/data/hh5/public/apps/miniconda3/envs/analysis3-23.04/bin/payu-run
+
+Wed Jan  8 12:19:05 AEDT 2025
+Error found: Segmentation
+Resubmission counter: 3
+laboratory path:  /scratch/nm03/ab8992/mom6
+binary path:  /scratch/nm03/ab8992/mom6/bin
+input path:  /scratch/nm03/ab8992/mom6/input
+work path:  /scratch/nm03/ab8992/mom6/work
+archive path:  /scratch/nm03/ab8992/mom6/archive
+Moving log beamless-40.o131982423
+Moving log beamless-40.e131982423
+Removing work path /scratch/nm03/ab8992/mom6/work/beamless-40
+Removing symlink /home/149/ab8992/tasman-tides/rundirs/beamless-40/work
+131982495.gadi-pbs
+payu: warning: Job request includes 9 unused CPUs.
+payu: warning: CPU request increased from 3639 to 3648
+Loading input manifest: manifests/input.yaml
+Loading restart manifest: manifests/restart.yaml
+Loading exe manifest: manifests/exe.yaml
+payu: Found modules in /opt/Modules/v4.3.0
+qsub -q normal -P x77 -l walltime=05:00:00 -l ncpus=3648 -l mem=14592GB -l jobfs=10GB -N beamless-40 -l wd -j n -v PAYU_PATH=/g/data/hh5/public/apps/miniconda3/envs/analysis3-23.04/bin,PAYU_N_RUNS=200,MODULESHOME=/opt/Modules/v4.3.0,MODULES_CMD=/opt/Modules/v4.3.0/libexec/modulecmd.tcl,MODULEPATH=/g/data/hh5/public/modules:/etc/scl/modulefiles:/opt/Modules/modulefiles:/opt/Modules/v4.3.0/modulefiles:/apps/Modules/modulefiles -l storage=gdata/hh5+gdata/ik11+gdata/nm03+gdata/ua8+gdata/v45+gdata/x77+scratch/nm03 -- /g/data/hh5/public/apps/miniconda3/envs/analysis3-23.04/bin/python3.9 /g/data/hh5/public/apps/miniconda3/envs/analysis3-23.04/bin/payu-run
+
+Wed Jan  8 12:20:00 AEDT 2025
+Error found: Segmentation
+Resubmission counter: 2
+laboratory path:  /scratch/nm03/ab8992/mom6
+binary path:  /scratch/nm03/ab8992/mom6/bin
+input path:  /scratch/nm03/ab8992/mom6/input
+work path:  /scratch/nm03/ab8992/mom6/work
+archive path:  /scratch/nm03/ab8992/mom6/archive
+Moving log beamless-40.o131982456
+Moving log beamless-40.e131982456
+Removing work path /scratch/nm03/ab8992/mom6/work/beamless-40
+Removing symlink /home/149/ab8992/tasman-tides/rundirs/beamless-40/work
+131982526.gadi-pbs
+payu: warning: Job request includes 9 unused CPUs.
+payu: warning: CPU request increased from 3639 to 3648
+Loading input manifest: manifests/input.yaml
+Loading restart manifest: manifests/restart.yaml
+Loading exe manifest: manifests/exe.yaml
+payu: Found modules in /opt/Modules/v4.3.0
+qsub -q normal -P x77 -l walltime=05:00:00 -l ncpus=3648 -l mem=14592GB -l jobfs=10GB -N beamless-40 -l wd -j n -v PAYU_PATH=/g/data/hh5/public/apps/miniconda3/envs/analysis3-23.04/bin,PAYU_N_RUNS=200,MODULESHOME=/opt/Modules/v4.3.0,MODULES_CMD=/opt/Modules/v4.3.0/libexec/modulecmd.tcl,MODULEPATH=/g/data/hh5/public/modules:/etc/scl/modulefiles:/opt/Modules/modulefiles:/opt/Modules/v4.3.0/modulefiles:/apps/Modules/modulefiles -l storage=gdata/hh5+gdata/ik11+gdata/nm03+gdata/ua8+gdata/v45+gdata/x77+scratch/nm03 -- /g/data/hh5/public/apps/miniconda3/envs/analysis3-23.04/bin/python3.9 /g/data/hh5/public/apps/miniconda3/envs/analysis3-23.04/bin/payu-run
+
+Wed Jan  8 12:20:49 AEDT 2025
+Error not found: Segmentation
+Error not found: Segmentation fault: address not mapped to object
+Error not found: Segmentation fault: invalid permissions for mapped object
+Error not found: Transport retry count exceeded
+Error not found: atmosphere/input.nml
+Error not found: ORTE has lost communication with a remote daemon
+Error not found: MPI_ERRORS_ARE_FATAL
+Error not eligible for resubmission
+Wed Jan  8 12:24:39 AEDT 2025
+Error not found: Segmentation
+Error not found: Segmentation fault: address not mapped to object
+Error not found: Segmentation fault: invalid permissions for mapped object
+Error not found: Transport retry count exceeded
+Error not found: atmosphere/input.nml
+Error not found: ORTE has lost communication with a remote daemon
+Error not found: MPI_ERRORS_ARE_FATAL
+Error not eligible for resubmission
+Thu Jan  9 04:49:47 AEDT 2025
+Error not found: Segmentation
+Error not found: Segmentation fault: address not mapped to object
+Error not found: Segmentation fault: invalid permissions for mapped object
+Error not found: Transport retry count exceeded
+Error not found: atmosphere/input.nml
+Error not found: ORTE has lost communication with a remote daemon
+Error not found: MPI_ERRORS_ARE_FATAL
+Error not eligible for resubmission
+Fri Jan 10 08:19:24 AEDT 2025
+Error found: Segmentation
+Reset resubmission counter
+Resubmission counter: 5
+laboratory path:  /scratch/nm03/ab8992/mom6
+binary path:  /scratch/nm03/ab8992/mom6/bin
+input path:  /scratch/nm03/ab8992/mom6/input
+work path:  /scratch/nm03/ab8992/mom6/work
+archive path:  /scratch/nm03/ab8992/mom6/archive
+Moving log beamless-40.o132056569
+Moving log beamless-40.e132056569
+Moving log beamless-40.o132066019
+Moving log beamless-40.e132066019
+Moving log beamless-40.o132068936
+Moving log beamless-40.e132068936
+Moving log beamless-40.o132071772
+Moving log beamless-40.e132071772
+Moving log beamless-40.o132074086
+Moving log beamless-40.e132074086
+Moving log beamless-40.o132076906
+Moving log beamless-40.e132076906
+Moving log beamless-40.o132077727
+Moving log beamless-40.e132077727
+Moving log beamless-40.o132078327
+Moving log beamless-40.e132078327
+Moving log beamless-40.o132080363
+Moving log beamless-40.e132080363
+Moving log beamless-40.o132081257
+Moving log beamless-40.e132081257
+Moving log beamless-40.o132081738
+Moving log beamless-40.e132081738
+Moving log beamless-40.o132082996
+Moving log beamless-40.e132082996
+Moving log beamless-40.o132084857
+Moving log beamless-40.e132084857
+Moving log beamless-40.o132086140
+Moving log beamless-40.e132086140
+Removing work path /scratch/nm03/ab8992/mom6/work/beamless-40
+Removing symlink /home/149/ab8992/tasman-tides/rundirs/beamless-40/work
+132088139.gadi-pbs
+payu: warning: Job request includes 9 unused CPUs.
+payu: warning: CPU request increased from 3639 to 3648
+Loading input manifest: manifests/input.yaml
+Loading restart manifest: manifests/restart.yaml
+Loading exe manifest: manifests/exe.yaml
+payu: Found modules in /opt/Modules/v4.3.0
+qsub -q normal -P x77 -l walltime=05:00:00 -l ncpus=3648 -l mem=14592GB -l jobfs=10GB -N beamless-40 -l wd -j n -v PAYU_PATH=/g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin,PAYU_N_RUNS=85,MODULESHOME=/opt/Modules/v4.3.0,MODULES_CMD=/opt/Modules/v4.3.0/libexec/modulecmd.tcl,MODULEPATH=/g/data/hh5/public/modules:/etc/scl/modulefiles:/opt/Modules/modulefiles:/opt/Modules/v4.3.0/modulefiles:/apps/Modules/modulefiles -l storage=gdata/hh5+gdata/ik11+gdata/nm03+gdata/ua8+gdata/v45+gdata/x77+scratch/nm03 -- /g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin/python3.10 /g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin/payu-run
+
+Fri Jan 10 15:16:39 AEDT 2025
+Error found: Segmentation
+Reset resubmission counter
+Resubmission counter: 5
+laboratory path:  /scratch/nm03/ab8992/mom6
+binary path:  /scratch/nm03/ab8992/mom6/bin
+input path:  /scratch/nm03/ab8992/mom6/input
+work path:  /scratch/nm03/ab8992/mom6/work
+archive path:  /scratch/nm03/ab8992/mom6/archive
+Moving log beamless-40.o132088139
+Moving log beamless-40.o132086827
+Moving log beamless-40.e132086827
+Moving log beamless-40.e132088139
+Moving log beamless-40.o132090219
+Moving log beamless-40.e132090219
+Moving log beamless-40.o132096832
+Moving log beamless-40.e132096832
+Moving log beamless-40.o132102098
+Moving log beamless-40.e132102098
+Moving log beamless-40.o132104640
+Moving log beamless-40.e132104640
+Removing work path /scratch/nm03/ab8992/mom6/work/beamless-40
+Removing symlink /home/149/ab8992/tasman-tides/rundirs/beamless-40/work
+132111752.gadi-pbs
+payu: warning: Job request includes 9 unused CPUs.
+payu: warning: CPU request increased from 3639 to 3648
+Loading input manifest: manifests/input.yaml
+Loading restart manifest: manifests/restart.yaml
+Loading exe manifest: manifests/exe.yaml
+payu: Found modules in /opt/Modules/v4.3.0
+qsub -q normal -P x77 -l walltime=05:00:00 -l ncpus=3648 -l mem=14592GB -l jobfs=10GB -N beamless-40 -l wd -j n -v PAYU_PATH=/g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin,PAYU_N_RUNS=80,MODULESHOME=/opt/Modules/v4.3.0,MODULES_CMD=/opt/Modules/v4.3.0/libexec/modulecmd.tcl,MODULEPATH=/g/data/hh5/public/modules:/etc/scl/modulefiles:/opt/Modules/modulefiles:/opt/Modules/v4.3.0/modulefiles:/apps/Modules/modulefiles -l storage=gdata/hh5+gdata/ik11+gdata/nm03+gdata/ua8+gdata/v45+gdata/x77+scratch/nm03 -- /g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin/python3.10 /g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin/payu-run
+
+Fri Jan 10 23:50:03 AEDT 2025
+Error not found: Segmentation
+Error not found: Segmentation fault: address not mapped to object
+Error not found: Segmentation fault: invalid permissions for mapped object
+Error not found: Transport retry count exceeded
+Error not found: atmosphere/input.nml
+Error not found: ORTE has lost communication with a remote daemon
+Error not found: MPI_ERRORS_ARE_FATAL
+Error not eligible for resubmission
+Mon Jan 13 09:40:36 AEDT 2025
+Error not found: Segmentation
+Error not found: Segmentation fault: address not mapped to object
+Error not found: Segmentation fault: invalid permissions for mapped object
+Error not found: Transport retry count exceeded
+Error not found: atmosphere/input.nml
+Error not found: ORTE has lost communication with a remote daemon
+Error not found: MPI_ERRORS_ARE_FATAL
+Error found: eta has dropped below bathyT
+Reset resubmission counter
+Resubmission counter: 5
+laboratory path:  /scratch/nm03/ab8992/mom6
+binary path:  /scratch/nm03/ab8992/mom6/bin
+input path:  /scratch/nm03/ab8992/mom6/input
+work path:  /scratch/nm03/ab8992/mom6/work
+archive path:  /scratch/nm03/ab8992/mom6/archive
+Removing work path /scratch/nm03/ab8992/mom6/work/beamless-40
+Removing symlink /home/149/ab8992/tasman-tides/rundirs/beamless-40/work
+132189549.gadi-pbs
+payu: warning: Job request includes 9 unused CPUs.
+payu: warning: CPU request increased from 3639 to 3648
+Loading input manifest: manifests/input.yaml
+Loading restart manifest: manifests/restart.yaml
+Loading exe manifest: manifests/exe.yaml
+payu: Found modules in /opt/Modules/v4.3.0
+qsub -q normal -P x77 -l walltime=05:00:00 -l ncpus=3648 -l mem=14592GB -l jobfs=10GB -N beamless-40 -l wd -j n -v PAYU_PATH=/g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin,PAYU_N_RUNS=100,MODULESHOME=/opt/Modules/v4.3.0,MODULES_CMD=/opt/Modules/v4.3.0/libexec/modulecmd.tcl,MODULEPATH=/g/data/hh5/public/modules:/etc/scl/modulefiles:/opt/Modules/modulefiles:/opt/Modules/v4.3.0/modulefiles:/apps/Modules/modulefiles -l storage=gdata/hh5+gdata/ik11+gdata/nm03+gdata/ua8+gdata/v45+gdata/x77+scratch/nm03 -- /g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin/python3.10 /g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin/payu-run
+
+Mon Jan 13 09:43:49 AEDT 2025
+Error not found: Segmentation
+Error not found: Segmentation fault: address not mapped to object
+Error not found: Segmentation fault: invalid permissions for mapped object
+Error not found: Transport retry count exceeded
+Error not found: atmosphere/input.nml
+Error not found: ORTE has lost communication with a remote daemon
+Error not found: MPI_ERRORS_ARE_FATAL
+Error found: eta has dropped below bathyT
+Resubmission counter: 4
+laboratory path:  /scratch/nm03/ab8992/mom6
+binary path:  /scratch/nm03/ab8992/mom6/bin
+input path:  /scratch/nm03/ab8992/mom6/input
+work path:  /scratch/nm03/ab8992/mom6/work
+archive path:  /scratch/nm03/ab8992/mom6/archive
+Moving log beamless-40.o132189488
+Moving log beamless-40.e132189488
+Removing work path /scratch/nm03/ab8992/mom6/work/beamless-40
+Removing symlink /home/149/ab8992/tasman-tides/rundirs/beamless-40/work
+132189756.gadi-pbs
+payu: warning: Job request includes 9 unused CPUs.
+payu: warning: CPU request increased from 3639 to 3648
+Loading input manifest: manifests/input.yaml
+Loading restart manifest: manifests/restart.yaml
+Loading exe manifest: manifests/exe.yaml
+payu: Found modules in /opt/Modules/v4.3.0
+qsub -q normal -P x77 -l walltime=05:00:00 -l ncpus=3648 -l mem=14592GB -l jobfs=10GB -N beamless-40 -l wd -j n -v PAYU_PATH=/g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin,PAYU_N_RUNS=100,MODULESHOME=/opt/Modules/v4.3.0,MODULES_CMD=/opt/Modules/v4.3.0/libexec/modulecmd.tcl,MODULEPATH=/g/data/hh5/public/modules:/etc/scl/modulefiles:/opt/Modules/modulefiles:/opt/Modules/v4.3.0/modulefiles:/apps/Modules/modulefiles -l storage=gdata/hh5+gdata/ik11+gdata/nm03+gdata/ua8+gdata/v45+gdata/x77+scratch/nm03 -- /g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin/python3.10 /g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin/payu-run
+
+Mon Jan 13 09:46:48 AEDT 2025
+Error not found: Segmentation
+Error not found: Segmentation fault: address not mapped to object
+Error not found: Segmentation fault: invalid permissions for mapped object
+Error not found: Transport retry count exceeded
+Error not found: atmosphere/input.nml
+Error not found: ORTE has lost communication with a remote daemon
+Error not found: MPI_ERRORS_ARE_FATAL
+Error found: eta has dropped below bathyT
+Resubmission counter: 3
+laboratory path:  /scratch/nm03/ab8992/mom6
+binary path:  /scratch/nm03/ab8992/mom6/bin
+input path:  /scratch/nm03/ab8992/mom6/input
+work path:  /scratch/nm03/ab8992/mom6/work
+archive path:  /scratch/nm03/ab8992/mom6/archive
+Moving log beamless-40.o132189549
+Moving log beamless-40.e132189549
+Removing work path /scratch/nm03/ab8992/mom6/work/beamless-40
+Removing symlink /home/149/ab8992/tasman-tides/rundirs/beamless-40/work
+132190162.gadi-pbs
+payu: warning: Job request includes 9 unused CPUs.
+payu: warning: CPU request increased from 3639 to 3648
+Loading input manifest: manifests/input.yaml
+Loading restart manifest: manifests/restart.yaml
+Loading exe manifest: manifests/exe.yaml
+payu: Found modules in /opt/Modules/v4.3.0
+qsub -q normal -P x77 -l walltime=05:00:00 -l ncpus=3648 -l mem=14592GB -l jobfs=10GB -N beamless-40 -l wd -j n -v PAYU_PATH=/g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin,PAYU_N_RUNS=100,MODULESHOME=/opt/Modules/v4.3.0,MODULES_CMD=/opt/Modules/v4.3.0/libexec/modulecmd.tcl,MODULEPATH=/g/data/hh5/public/modules:/etc/scl/modulefiles:/opt/Modules/modulefiles:/opt/Modules/v4.3.0/modulefiles:/apps/Modules/modulefiles -l storage=gdata/hh5+gdata/ik11+gdata/nm03+gdata/ua8+gdata/v45+gdata/x77+scratch/nm03 -- /g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin/python3.10 /g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin/payu-run
+
+Mon Jan 13 09:49:40 AEDT 2025
+Error not found: Segmentation
+Error not found: Segmentation fault: address not mapped to object
+Error not found: Segmentation fault: invalid permissions for mapped object
+Error not found: Transport retry count exceeded
+Error not found: atmosphere/input.nml
+Error not found: ORTE has lost communication with a remote daemon
+Error not found: MPI_ERRORS_ARE_FATAL
+Error found: eta has dropped below bathyT
+Resubmission counter: 2
+laboratory path:  /scratch/nm03/ab8992/mom6
+binary path:  /scratch/nm03/ab8992/mom6/bin
+input path:  /scratch/nm03/ab8992/mom6/input
+work path:  /scratch/nm03/ab8992/mom6/work
+archive path:  /scratch/nm03/ab8992/mom6/archive
+Moving log beamless-40.o132189756
+Moving log beamless-40.e132189756
+Removing work path /scratch/nm03/ab8992/mom6/work/beamless-40
+Removing symlink /home/149/ab8992/tasman-tides/rundirs/beamless-40/work
+132190380.gadi-pbs
+payu: warning: Job request includes 9 unused CPUs.
+payu: warning: CPU request increased from 3639 to 3648
+Loading input manifest: manifests/input.yaml
+Loading restart manifest: manifests/restart.yaml
+Loading exe manifest: manifests/exe.yaml
+payu: Found modules in /opt/Modules/v4.3.0
+qsub -q normal -P x77 -l walltime=05:00:00 -l ncpus=3648 -l mem=14592GB -l jobfs=10GB -N beamless-40 -l wd -j n -v PAYU_PATH=/g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin,PAYU_N_RUNS=100,MODULESHOME=/opt/Modules/v4.3.0,MODULES_CMD=/opt/Modules/v4.3.0/libexec/modulecmd.tcl,MODULEPATH=/g/data/hh5/public/modules:/etc/scl/modulefiles:/opt/Modules/modulefiles:/opt/Modules/v4.3.0/modulefiles:/apps/Modules/modulefiles -l storage=gdata/hh5+gdata/ik11+gdata/nm03+gdata/ua8+gdata/v45+gdata/x77+scratch/nm03 -- /g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin/python3.10 /g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin/payu-run
+
+Mon Jan 13 09:52:34 AEDT 2025
+Error not found: Segmentation
+Error not found: Segmentation fault: address not mapped to object
+Error not found: Segmentation fault: invalid permissions for mapped object
+Error not found: Transport retry count exceeded
+Error not found: atmosphere/input.nml
+Error not found: ORTE has lost communication with a remote daemon
+Error not found: MPI_ERRORS_ARE_FATAL
+Error found: eta has dropped below bathyT
+Resubmission counter: 1
+laboratory path:  /scratch/nm03/ab8992/mom6
+binary path:  /scratch/nm03/ab8992/mom6/bin
+input path:  /scratch/nm03/ab8992/mom6/input
+work path:  /scratch/nm03/ab8992/mom6/work
+archive path:  /scratch/nm03/ab8992/mom6/archive
+Moving log beamless-40.o132190162
+Moving log beamless-40.e132190162
+Removing work path /scratch/nm03/ab8992/mom6/work/beamless-40
+Removing symlink /home/149/ab8992/tasman-tides/rundirs/beamless-40/work
+132190564.gadi-pbs
+payu: warning: Job request includes 9 unused CPUs.
+payu: warning: CPU request increased from 3639 to 3648
+Loading input manifest: manifests/input.yaml
+Loading restart manifest: manifests/restart.yaml
+Loading exe manifest: manifests/exe.yaml
+payu: Found modules in /opt/Modules/v4.3.0
+qsub -q normal -P x77 -l walltime=05:00:00 -l ncpus=3648 -l mem=14592GB -l jobfs=10GB -N beamless-40 -l wd -j n -v PAYU_PATH=/g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin,PAYU_N_RUNS=100,MODULESHOME=/opt/Modules/v4.3.0,MODULES_CMD=/opt/Modules/v4.3.0/libexec/modulecmd.tcl,MODULEPATH=/g/data/hh5/public/modules:/etc/scl/modulefiles:/opt/Modules/modulefiles:/opt/Modules/v4.3.0/modulefiles:/apps/Modules/modulefiles -l storage=gdata/hh5+gdata/ik11+gdata/nm03+gdata/ua8+gdata/v45+gdata/x77+scratch/nm03 -- /g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin/python3.10 /g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin/payu-run
+
+Mon Jan 13 09:55:30 AEDT 2025
+Error not found: Segmentation
+Error not found: Segmentation fault: address not mapped to object
+Error not found: Segmentation fault: invalid permissions for mapped object
+Error not found: Transport retry count exceeded
+Error not found: atmosphere/input.nml
+Error not found: ORTE has lost communication with a remote daemon
+Error not found: MPI_ERRORS_ARE_FATAL
+Error found: eta has dropped below bathyT
+Resubmission counter: 0
+Resubmit limit reached ... 
+
+Mon Jan 13 09:59:04 AEDT 2025
+Error not found: Segmentation
+Error not found: Segmentation fault: address not mapped to object
+Error not found: Segmentation fault: invalid permissions for mapped object
+Error not found: Transport retry count exceeded
+Error not found: atmosphere/input.nml
+Error not found: ORTE has lost communication with a remote daemon
+Error not found: MPI_ERRORS_ARE_FATAL
+Error found: eta has dropped below bathyT
+Resubmission counter: 20
+
+Mon Jan 13 09:59:19 AEDT 2025
+Error not found: Segmentation
+Error not found: Segmentation fault: address not mapped to object
+Error not found: Segmentation fault: invalid permissions for mapped object
+Error not found: Transport retry count exceeded
+Error not found: atmosphere/input.nml
+Error not found: ORTE has lost communication with a remote daemon
+Error not found: MPI_ERRORS_ARE_FATAL
+Error found: eta has dropped below bathyT
+Resubmission counter: 19
+
+Mon Jan 13 09:59:52 AEDT 2025
+Error not found: Segmentation
+Error not found: Segmentation fault: address not mapped to object
+Error not found: Segmentation fault: invalid permissions for mapped object
+Error not found: Transport retry count exceeded
+Error not found: atmosphere/input.nml
+Error not found: ORTE has lost communication with a remote daemon
+Error not found: MPI_ERRORS_ARE_FATAL
+Error found: eta has dropped below bathyT
+Resubmission counter: 18
+laboratory path:  /scratch/nm03/ab8992/mom6
+binary path:  /scratch/nm03/ab8992/mom6/bin
+input path:  /scratch/nm03/ab8992/mom6/input
+work path:  /scratch/nm03/ab8992/mom6/work
+archive path:  /scratch/nm03/ab8992/mom6/archive
+Moving log beamless-40.o132190380
+Moving log beamless-40.e132190380
+Moving log beamless-40.o132190564
+Moving log beamless-40.e132190564
+Removing work path /scratch/nm03/ab8992/mom6/work/beamless-40
+Removing symlink /home/149/ab8992/tasman-tides/rundirs/beamless-40/work
+
+Mon Jan 13 10:00:20 AEDT 2025
+Error not found: Segmentation
+Error not found: Segmentation fault: address not mapped to object
+Error not found: Segmentation fault: invalid permissions for mapped object
+Error not found: Transport retry count exceeded
+Error not found: atmosphere/input.nml
+Error not found: ORTE has lost communication with a remote daemon
+Error not found: MPI_ERRORS_ARE_FATAL
+Error not found: eta has dropped below bathyT
+Error not eligible for resubmission
+Mon Jan 13 10:03:54 AEDT 2025
+Error not found: Segmentation
+Error not found: Segmentation fault: address not mapped to object
+Error not found: Segmentation fault: invalid permissions for mapped object
+Error not found: Transport retry count exceeded
+Error not found: atmosphere/input.nml
+Error not found: ORTE has lost communication with a remote daemon
+Error not found: MPI_ERRORS_ARE_FATAL
+Error found: eta has dropped below bathyT
+Resubmission counter: 17
+
+Mon Jan 13 15:05:31 AEDT 2025
+Error not found: Segmentation
+Error not found: Segmentation fault: address not mapped to object
+Error not found: Segmentation fault: invalid permissions for mapped object
+Error not found: Transport retry count exceeded
+Error not found: atmosphere/input.nml
+Error not found: ORTE has lost communication with a remote daemon
+Error not found: MPI_ERRORS_ARE_FATAL
+Error found: eta has dropped below bathyT
+Reset resubmission counter
+Resubmission counter: 5
+
+Mon Jan 13 15:08:15 AEDT 2025
+Error not found: Segmentation
+Error not found: Segmentation fault: address not mapped to object
+Error not found: Segmentation fault: invalid permissions for mapped object
+Error not found: Transport retry count exceeded
+Error not found: atmosphere/input.nml
+Error not found: ORTE has lost communication with a remote daemon
+Error not found: MPI_ERRORS_ARE_FATAL
+Error found: eta has dropped below bathyT
+Resubmission counter: 4
+
+Mon Jan 13 15:09:19 AEDT 2025
+Error not found: Segmentation
+Error not found: Segmentation fault: address not mapped to object
+Error not found: Segmentation fault: invalid permissions for mapped object
+Error not found: Transport retry count exceeded
+Error not found: atmosphere/input.nml
+Error not found: ORTE has lost communication with a remote daemon
+Error not found: MPI_ERRORS_ARE_FATAL
+Error found: eta has dropped below bathyT
+Resubmission counter: 3
+Mon Jan 13 15:09:35 AEDT 2025
+Error not found: Segmentation
+Error not found: Segmentation fault: address not mapped to object
+Error not found: Segmentation fault: invalid permissions for mapped object
+Error not found: Transport retry count exceeded
+Error not found: atmosphere/input.nml
+Error not found: ORTE has lost communication with a remote daemon
+Error not found: MPI_ERRORS_ARE_FATAL
+Error found: eta has dropped below bathyT
+Resubmission counter: 3
+laboratory path:  /scratch/nm03/ab8992/mom6
+binary path:  /scratch/nm03/ab8992/mom6/bin
+input path:  /scratch/nm03/ab8992/mom6/input
+work path:  /scratch/nm03/ab8992/mom6/work
+archive path:  /scratch/nm03/ab8992/mom6/archive
+Removing work path /scratch/nm03/ab8992/mom6/work/beamless-40
+Removing symlink /home/149/ab8992/tasman-tides/rundirs/beamless-40/work
+
+Mon Jan 13 15:10:01 AEDT 2025
+Error not found: Segmentation
+Error not found: Segmentation fault: address not mapped to object
+Error not found: Segmentation fault: invalid permissions for mapped object
+Error not found: Transport retry count exceeded
+Error not found: atmosphere/input.nml
+Error not found: ORTE has lost communication with a remote daemon
+Error not found: MPI_ERRORS_ARE_FATAL
+Error not found: eta has dropped below bathyT
+Error not eligible for resubmission
+Mon Jan 13 23:16:24 AEDT 2025
+Error not found: Segmentation
+Error not found: Segmentation fault: address not mapped to object
+Error not found: Segmentation fault: invalid permissions for mapped object
+Error not found: Transport retry count exceeded
+Error not found: atmosphere/input.nml
+Error not found: ORTE has lost communication with a remote daemon
+Error not found: MPI_ERRORS_ARE_FATAL
+Error found: eta has dropped below bathyT
+Reset resubmission counter
+Resubmission counter: 5
+
+Tue Jan 14 16:31:29 AEDT 2025
+Error not found: Segmentation
+Error not found: Segmentation fault: address not mapped to object
+Error not found: Segmentation fault: invalid permissions for mapped object
+Error not found: Transport retry count exceeded
+Error not found: atmosphere/input.nml
+Error not found: ORTE has lost communication with a remote daemon
+Error not found: MPI_ERRORS_ARE_FATAL
+Error found: eta has dropped below bathyT
+Reset resubmission counter
+Resubmission counter: 5
+
+Tue Jan 14 16:36:52 AEDT 2025
+Error not found: Segmentation
+Error not found: Segmentation fault: address not mapped to object
+Error not found: Segmentation fault: invalid permissions for mapped object
+Error not found: Transport retry count exceeded
+Error not found: atmosphere/input.nml
+Error not found: ORTE has lost communication with a remote daemon
+Error not found: MPI_ERRORS_ARE_FATAL
+Error found: eta has dropped below bathyT
+Resubmission counter: 4
+laboratory path:  /scratch/nm03/ab8992/mom6
+binary path:  /scratch/nm03/ab8992/mom6/bin
+input path:  /scratch/nm03/ab8992/mom6/input
+work path:  /scratch/nm03/ab8992/mom6/work
+archive path:  /scratch/nm03/ab8992/mom6/archive
+Moving log beamless-40.o132255419
+Moving log beamless-40.e132255419
+Moving log beamless-40.o132262103
+Moving log beamless-40.e132262103
+Moving log beamless-40.o132268349
+Moving log beamless-40.e132268349
+Moving log beamless-40.o132276085
+Moving log beamless-40.e132276085
+Moving log beamless-40.o132280087
+Moving log beamless-40.e132280087
+Removing work path /scratch/nm03/ab8992/mom6/work/beamless-40
+Removing symlink /home/149/ab8992/tasman-tides/rundirs/beamless-40/work
+132283380.gadi-pbs
+payu: warning: Job request includes 9 unused CPUs.
+payu: warning: CPU request increased from 3639 to 3648
+Loading input manifest: manifests/input.yaml
+Loading restart manifest: manifests/restart.yaml
+Loading exe manifest: manifests/exe.yaml
+payu: Found modules in /opt/Modules/v4.3.0
+qsub -q normal -P x77 -l walltime=05:00:00 -l ncpus=3648 -l mem=14592GB -l jobfs=10GB -N beamless-40 -l wd -j n -v PAYU_PATH=/g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin,PAYU_N_RUNS=50,PAYU_FORCE=True,MODULESHOME=/opt/Modules/v4.3.0,MODULES_CMD=/opt/Modules/v4.3.0/libexec/modulecmd.tcl,MODULEPATH=/g/data/hh5/public/modules:/etc/scl/modulefiles:/opt/Modules/modulefiles:/opt/Modules/v4.3.0/modulefiles:/apps/Modules/modulefiles -l storage=gdata/hh5+gdata/ik11+gdata/nm03+gdata/ua8+gdata/v45+gdata/x77+scratch/nm03 -- /g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin/python3.10 /g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin/payu-run
+
+Tue Jan 14 21:17:46 AEDT 2025
+Error not found: Segmentation
+Error not found: Segmentation fault: address not mapped to object
+Error not found: Segmentation fault: invalid permissions for mapped object
+Error not found: Transport retry count exceeded
+Error not found: atmosphere/input.nml
+Error not found: ORTE has lost communication with a remote daemon
+Error not found: MPI_ERRORS_ARE_FATAL
+Error found: eta has dropped below bathyT
+Reset resubmission counter
+Resubmission counter: 5
+laboratory path:  /scratch/nm03/ab8992/mom6
+binary path:  /scratch/nm03/ab8992/mom6/bin
+input path:  /scratch/nm03/ab8992/mom6/input
+work path:  /scratch/nm03/ab8992/mom6/work
+archive path:  /scratch/nm03/ab8992/mom6/archive
+Moving log beamless-40.o132283380
+Moving log beamless-40.e132283380
+Moving log beamless-40.o132289513
+Moving log beamless-40.e132289513
+Removing work path /scratch/nm03/ab8992/mom6/work/beamless-40
+Removing symlink /home/149/ab8992/tasman-tides/rundirs/beamless-40/work
+132297439.gadi-pbs
+payu: warning: Job request includes 9 unused CPUs.
+payu: warning: CPU request increased from 3639 to 3648
+Loading input manifest: manifests/input.yaml
+Loading restart manifest: manifests/restart.yaml
+Loading exe manifest: manifests/exe.yaml
+payu: Found modules in /opt/Modules/v4.3.0
+qsub -q normal -P x77 -l walltime=05:00:00 -l ncpus=3648 -l mem=14592GB -l jobfs=10GB -N beamless-40 -l wd -j n -v PAYU_PATH=/g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin,PAYU_N_RUNS=50,PAYU_FORCE=True,MODULESHOME=/opt/Modules/v4.3.0,MODULES_CMD=/opt/Modules/v4.3.0/libexec/modulecmd.tcl,MODULEPATH=/g/data/hh5/public/modules:/etc/scl/modulefiles:/opt/Modules/modulefiles:/opt/Modules/v4.3.0/modulefiles:/apps/Modules/modulefiles -l storage=gdata/hh5+gdata/ik11+gdata/nm03+gdata/ua8+gdata/v45+gdata/x77+scratch/nm03 -- /g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin/python3.10 /g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin/payu-run
+
+Wed Jan 15 04:21:12 AEDT 2025
+Error not found: Segmentation
+Error not found: Segmentation fault: address not mapped to object
+Error not found: Segmentation fault: invalid permissions for mapped object
+Error not found: Transport retry count exceeded
+Error not found: atmosphere/input.nml
+Error not found: ORTE has lost communication with a remote daemon
+Error not found: MPI_ERRORS_ARE_FATAL
+Error found: eta has dropped below bathyT
+Reset resubmission counter
+Resubmission counter: 5
+laboratory path:  /scratch/nm03/ab8992/mom6
+binary path:  /scratch/nm03/ab8992/mom6/bin
+input path:  /scratch/nm03/ab8992/mom6/input
+work path:  /scratch/nm03/ab8992/mom6/work
+archive path:  /scratch/nm03/ab8992/mom6/archive
+Moving log beamless-40.o132297385
+Moving log beamless-40.e132297385
+Moving log beamless-40.o132297439
+Moving log beamless-40.e132297439
+Moving log beamless-40.o132302005
+Moving log beamless-40.e132302005
+Moving log beamless-40.o132303307
+Moving log beamless-40.e132303307
+Removing work path /scratch/nm03/ab8992/mom6/work/beamless-40
+Removing symlink /home/149/ab8992/tasman-tides/rundirs/beamless-40/work
+132303778.gadi-pbs
+payu: warning: Job request includes 9 unused CPUs.
+payu: warning: CPU request increased from 3639 to 3648
+Loading input manifest: manifests/input.yaml
+Loading restart manifest: manifests/restart.yaml
+Loading exe manifest: manifests/exe.yaml
+payu: Found modules in /opt/Modules/v4.3.0
+qsub -q normal -P x77 -l walltime=05:00:00 -l ncpus=3648 -l mem=14592GB -l jobfs=10GB -N beamless-40 -l wd -j n -v PAYU_PATH=/g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin,PAYU_N_RUNS=50,PAYU_FORCE=True,MODULESHOME=/opt/Modules/v4.3.0,MODULES_CMD=/opt/Modules/v4.3.0/libexec/modulecmd.tcl,MODULEPATH=/g/data/hh5/public/modules:/etc/scl/modulefiles:/opt/Modules/modulefiles:/opt/Modules/v4.3.0/modulefiles:/apps/Modules/modulefiles -l storage=gdata/hh5+gdata/ik11+gdata/nm03+gdata/ua8+gdata/v45+gdata/x77+scratch/nm03 -- /g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin/python3.10 /g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin/payu-run
+
+Wed Jan 15 04:33:52 AEDT 2025
+Error found: Segmentation
+Resubmission counter: 4
+laboratory path:  /scratch/nm03/ab8992/mom6
+binary path:  /scratch/nm03/ab8992/mom6/bin
+input path:  /scratch/nm03/ab8992/mom6/input
+work path:  /scratch/nm03/ab8992/mom6/work
+archive path:  /scratch/nm03/ab8992/mom6/archive
+Moving log beamless-40.o132303706
+Moving log beamless-40.e132303706
+Removing work path /scratch/nm03/ab8992/mom6/work/beamless-40
+Removing symlink /home/149/ab8992/tasman-tides/rundirs/beamless-40/work
+132303822.gadi-pbs
+payu: warning: Job request includes 9 unused CPUs.
+payu: warning: CPU request increased from 3639 to 3648
+Loading input manifest: manifests/input.yaml
+Loading restart manifest: manifests/restart.yaml
+Loading exe manifest: manifests/exe.yaml
+payu: Found modules in /opt/Modules/v4.3.0
+qsub -q normal -P x77 -l walltime=05:00:00 -l ncpus=3648 -l mem=14592GB -l jobfs=10GB -N beamless-40 -l wd -j n -v PAYU_PATH=/g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin,PAYU_N_RUNS=50,PAYU_FORCE=True,MODULESHOME=/opt/Modules/v4.3.0,MODULES_CMD=/opt/Modules/v4.3.0/libexec/modulecmd.tcl,MODULEPATH=/g/data/hh5/public/modules:/etc/scl/modulefiles:/opt/Modules/modulefiles:/opt/Modules/v4.3.0/modulefiles:/apps/Modules/modulefiles -l storage=gdata/hh5+gdata/ik11+gdata/nm03+gdata/ua8+gdata/v45+gdata/x77+scratch/nm03 -- /g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin/python3.10 /g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin/payu-run
+
+Wed Jan 15 09:07:56 AEDT 2025
+Error found: Segmentation
+Reset resubmission counter
+Resubmission counter: 5
+laboratory path:  /scratch/nm03/ab8992/mom6
+binary path:  /scratch/nm03/ab8992/mom6/bin
+input path:  /scratch/nm03/ab8992/mom6/input
+work path:  /scratch/nm03/ab8992/mom6/work
+archive path:  /scratch/nm03/ab8992/mom6/archive
+Moving log beamless-40.o132303778
+Moving log beamless-40.e132303778
+Moving log beamless-40.o132303822
+Moving log beamless-40.e132303822
+Moving log beamless-40.o132304160
+Moving log beamless-40.e132304160
+Removing work path /scratch/nm03/ab8992/mom6/work/beamless-40
+Removing symlink /home/149/ab8992/tasman-tides/rundirs/beamless-40/work
+132304968.gadi-pbs
+payu: warning: Job request includes 9 unused CPUs.
+payu: warning: CPU request increased from 3639 to 3648
+Loading input manifest: manifests/input.yaml
+Loading restart manifest: manifests/restart.yaml
+Loading exe manifest: manifests/exe.yaml
+payu: Found modules in /opt/Modules/v4.3.0
+qsub -q normal -P x77 -l walltime=05:00:00 -l ncpus=3648 -l mem=14592GB -l jobfs=10GB -N beamless-40 -l wd -j n -v PAYU_PATH=/g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin,PAYU_N_RUNS=50,PAYU_FORCE=True,MODULESHOME=/opt/Modules/v4.3.0,MODULES_CMD=/opt/Modules/v4.3.0/libexec/modulecmd.tcl,MODULEPATH=/g/data/hh5/public/modules:/etc/scl/modulefiles:/opt/Modules/modulefiles:/opt/Modules/v4.3.0/modulefiles:/apps/Modules/modulefiles -l storage=gdata/hh5+gdata/ik11+gdata/nm03+gdata/ua8+gdata/v45+gdata/x77+scratch/nm03 -- /g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin/python3.10 /g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin/payu-run
+
+Wed Jan 15 11:26:06 AEDT 2025
+Error not found: Segmentation
+Error not found: Segmentation fault: address not mapped to object
+Error not found: Segmentation fault: invalid permissions for mapped object
+Error not found: Transport retry count exceeded
+Error not found: atmosphere/input.nml
+Error not found: ORTE has lost communication with a remote daemon
+Error not found: MPI_ERRORS_ARE_FATAL
+Error found: eta has dropped below bathyT
+Reset resubmission counter
+Resubmission counter: 5
+laboratory path:  /scratch/nm03/ab8992/mom6
+binary path:  /scratch/nm03/ab8992/mom6/bin
+input path:  /scratch/nm03/ab8992/mom6/input
+work path:  /scratch/nm03/ab8992/mom6/work
+archive path:  /scratch/nm03/ab8992/mom6/archive
+Moving log beamless-40.o132304953
+Moving log beamless-40.e132304953
+Moving log beamless-40.o132304968
+Moving log beamless-40.e132304968
+Removing work path /scratch/nm03/ab8992/mom6/work/beamless-40
+Removing symlink /home/149/ab8992/tasman-tides/rundirs/beamless-40/work
+132309892.gadi-pbs
+payu: warning: Job request includes 9 unused CPUs.
+payu: warning: CPU request increased from 3639 to 3648
+Loading input manifest: manifests/input.yaml
+Loading restart manifest: manifests/restart.yaml
+Loading exe manifest: manifests/exe.yaml
+payu: Found modules in /opt/Modules/v4.3.0
+qsub -q normal -P x77 -l walltime=05:00:00 -l ncpus=3648 -l mem=14592GB -l jobfs=10GB -N beamless-40 -l wd -j n -v PAYU_PATH=/g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin,PAYU_N_RUNS=50,PAYU_FORCE=True,MODULESHOME=/opt/Modules/v4.3.0,MODULES_CMD=/opt/Modules/v4.3.0/libexec/modulecmd.tcl,MODULEPATH=/g/data/hh5/public/modules:/etc/scl/modulefiles:/opt/Modules/modulefiles:/opt/Modules/v4.3.0/modulefiles:/apps/Modules/modulefiles -l storage=gdata/hh5+gdata/ik11+gdata/nm03+gdata/ua8+gdata/v45+gdata/x77+scratch/nm03 -- /g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin/python3.10 /g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin/payu-run
+
+Wed Jan 15 11:31:38 AEDT 2025
+Error found: Segmentation
+Resubmission counter: 4
+laboratory path:  /scratch/nm03/ab8992/mom6
+binary path:  /scratch/nm03/ab8992/mom6/bin
+input path:  /scratch/nm03/ab8992/mom6/input
+work path:  /scratch/nm03/ab8992/mom6/work
+archive path:  /scratch/nm03/ab8992/mom6/archive
+Moving log beamless-40.o132309676
+Moving log beamless-40.e132309676
+Removing work path /scratch/nm03/ab8992/mom6/work/beamless-40
+Removing symlink /home/149/ab8992/tasman-tides/rundirs/beamless-40/work
+132310075.gadi-pbs
+payu: warning: Job request includes 9 unused CPUs.
+payu: warning: CPU request increased from 3639 to 3648
+Loading input manifest: manifests/input.yaml
+Loading restart manifest: manifests/restart.yaml
+Loading exe manifest: manifests/exe.yaml
+payu: Found modules in /opt/Modules/v4.3.0
+qsub -q normal -P x77 -l walltime=05:00:00 -l ncpus=3648 -l mem=14592GB -l jobfs=10GB -N beamless-40 -l wd -j n -v PAYU_PATH=/g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin,PAYU_N_RUNS=50,PAYU_FORCE=True,MODULESHOME=/opt/Modules/v4.3.0,MODULES_CMD=/opt/Modules/v4.3.0/libexec/modulecmd.tcl,MODULEPATH=/g/data/hh5/public/modules:/etc/scl/modulefiles:/opt/Modules/modulefiles:/opt/Modules/v4.3.0/modulefiles:/apps/Modules/modulefiles -l storage=gdata/hh5+gdata/ik11+gdata/nm03+gdata/ua8+gdata/v45+gdata/x77+scratch/nm03 -- /g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin/python3.10 /g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin/payu-run
+

@@ -1,0 +1,9 @@
+## Add override files here
+#override DT=1200
+#override DT_THERM=4800
+#override DTBT = -0.9
+
+
+!#override TEMP_SALT_Z_INIT_FILE = "forcing/init_tracers_zinterp.nc" 
+#override TOPO_FILE = "topog_noridge.nc"
+#override SAVE_INITIAL_CONDS = True

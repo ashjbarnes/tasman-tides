@@ -49,3 +49,712 @@ Error not found: atmosphere/input.nml
 Error not found: ORTE has lost communication with a remote daemon
 Error not found: MPI_ERRORS_ARE_FATAL
 Error not eligible for resubmission
+Wed Jan  8 00:20:14 AEDT 2025
+Error not found: Segmentation fault: address not mapped to object
+Error not found: Segmentation fault: invalid permissions for mapped object
+Error not found: Segmentation fault: address not mapped to object at address
+Error not found: Transport retry count exceeded
+Error not found: atmosphere/input.nml
+Error not found: ORTE has lost communication with a remote daemon
+Error not found: MPI_ERRORS_ARE_FATAL
+Error not eligible for resubmission
+Wed Jan  8 11:47:50 AEDT 2025
+Error found: Segmentation
+Reset resubmission counter
+Resubmission counter: 5
+laboratory path:  /scratch/nm03/ab8992/mom6
+binary path:  /scratch/nm03/ab8992/mom6/bin
+input path:  /scratch/nm03/ab8992/mom6/input
+work path:  /scratch/nm03/ab8992/mom6/work
+archive path:  /scratch/nm03/ab8992/mom6/archive
+Moving log smooth-40.o131974439
+Moving log smooth-40.e131974439
+Removing work path /scratch/nm03/ab8992/mom6/work/smooth-40
+Removing symlink /home/149/ab8992/tasman-tides/rundirs/smooth-40/work
+131980991.gadi-pbs
+payu: warning: Job request includes 9 unused CPUs.
+payu: warning: CPU request increased from 3639 to 3648
+Loading input manifest: manifests/input.yaml
+Loading restart manifest: manifests/restart.yaml
+Loading exe manifest: manifests/exe.yaml
+payu: Found modules in /opt/Modules/v4.3.0
+qsub -q normal -P x77 -l walltime=05:00:00 -l ncpus=3648 -l mem=14592GB -l jobfs=10GB -N smooth-40 -l wd -j n -v PAYU_PATH=/g/data/hh5/public/apps/miniconda3/envs/analysis3-23.04/bin,PAYU_N_RUNS=199,MODULESHOME=/opt/Modules/v4.3.0,MODULES_CMD=/opt/Modules/v4.3.0/libexec/modulecmd.tcl,MODULEPATH=/g/data/hh5/public/modules:/etc/scl/modulefiles:/opt/Modules/modulefiles:/opt/Modules/v4.3.0/modulefiles:/apps/Modules/modulefiles -l storage=gdata/hh5+gdata/ik11+gdata/nm03+gdata/ua8+gdata/v45+gdata/x77+scratch/nm03 -- /g/data/hh5/public/apps/miniconda3/envs/analysis3-23.04/bin/python3.9 /g/data/hh5/public/apps/miniconda3/envs/analysis3-23.04/bin/payu-run
+
+Thu Jan  9 04:49:47 AEDT 2025
+Error not found: Segmentation
+Error not found: Segmentation fault: address not mapped to object
+Error not found: Segmentation fault: invalid permissions for mapped object
+Error not found: Transport retry count exceeded
+Error not found: atmosphere/input.nml
+Error not found: ORTE has lost communication with a remote daemon
+Error not found: MPI_ERRORS_ARE_FATAL
+Error not eligible for resubmission
+Fri Jan 10 02:23:29 AEDT 2025
+Error found: Segmentation
+Reset resubmission counter
+Resubmission counter: 5
+laboratory path:  /scratch/nm03/ab8992/mom6
+binary path:  /scratch/nm03/ab8992/mom6/bin
+input path:  /scratch/nm03/ab8992/mom6/input
+work path:  /scratch/nm03/ab8992/mom6/work
+archive path:  /scratch/nm03/ab8992/mom6/archive
+Moving log smooth-40.o132044897
+Moving log smooth-40.e132044897
+Moving log smooth-40.o132053697
+Moving log smooth-40.e132053697
+Moving log smooth-40.o132063747
+Moving log smooth-40.e132063747
+Moving log smooth-40.o132068907
+Moving log smooth-40.e132068907
+Moving log smooth-40.o132071764
+Moving log smooth-40.e132071764
+Moving log smooth-40.o132074076
+Moving log smooth-40.e132074076
+Moving log smooth-40.o132076979
+Moving log smooth-40.e132076979
+Moving log smooth-40.o132077733
+Moving log smooth-40.e132077733
+Moving log smooth-40.o132078323
+Moving log smooth-40.e132078323
+Moving log smooth-40.o132080355
+Moving log smooth-40.e132080355
+Removing work path /scratch/nm03/ab8992/mom6/work/smooth-40
+Removing symlink /home/149/ab8992/tasman-tides/rundirs/smooth-40/work
+132081418.gadi-pbs
+payu: warning: Job request includes 9 unused CPUs.
+payu: warning: CPU request increased from 3639 to 3648
+Loading input manifest: manifests/input.yaml
+Loading restart manifest: manifests/restart.yaml
+Loading exe manifest: manifests/exe.yaml
+payu: Found modules in /opt/Modules/v4.3.0
+qsub -q normal -P x77 -l walltime=05:00:00 -l ncpus=3648 -l mem=14592GB -l jobfs=10GB -N smooth-40 -l wd -j n -v PAYU_PATH=/g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin,PAYU_N_RUNS=90,MODULESHOME=/opt/Modules/v4.3.0,MODULES_CMD=/opt/Modules/v4.3.0/libexec/modulecmd.tcl,MODULEPATH=/g/data/hh5/public/modules:/etc/scl/modulefiles:/opt/Modules/modulefiles:/opt/Modules/v4.3.0/modulefiles:/apps/Modules/modulefiles -l storage=gdata/hh5+gdata/ik11+gdata/nm03+gdata/ua8+gdata/v45+gdata/x77+scratch/nm03 -- /g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin/python3.10 /g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin/payu-run
+
+Fri Jan 10 05:41:57 AEDT 2025
+Error found: Segmentation
+Reset resubmission counter
+Resubmission counter: 5
+laboratory path:  /scratch/nm03/ab8992/mom6
+binary path:  /scratch/nm03/ab8992/mom6/bin
+input path:  /scratch/nm03/ab8992/mom6/input
+work path:  /scratch/nm03/ab8992/mom6/work
+archive path:  /scratch/nm03/ab8992/mom6/archive
+Moving log smooth-40.o132081254
+Moving log smooth-40.e132081254
+Moving log smooth-40.o132081418
+Moving log smooth-40.e132081418
+Moving log smooth-40.o132081922
+Moving log smooth-40.e132081922
+Removing work path /scratch/nm03/ab8992/mom6/work/smooth-40
+Removing symlink /home/149/ab8992/tasman-tides/rundirs/smooth-40/work
+132085224.gadi-pbs
+payu: warning: Job request includes 9 unused CPUs.
+payu: warning: CPU request increased from 3639 to 3648
+Loading input manifest: manifests/input.yaml
+Loading restart manifest: manifests/restart.yaml
+Loading exe manifest: manifests/exe.yaml
+payu: Found modules in /opt/Modules/v4.3.0
+qsub -q normal -P x77 -l walltime=05:00:00 -l ncpus=3648 -l mem=14592GB -l jobfs=10GB -N smooth-40 -l wd -j n -v PAYU_PATH=/g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin,PAYU_N_RUNS=88,MODULESHOME=/opt/Modules/v4.3.0,MODULES_CMD=/opt/Modules/v4.3.0/libexec/modulecmd.tcl,MODULEPATH=/g/data/hh5/public/modules:/etc/scl/modulefiles:/opt/Modules/modulefiles:/opt/Modules/v4.3.0/modulefiles:/apps/Modules/modulefiles -l storage=gdata/hh5+gdata/ik11+gdata/nm03+gdata/ua8+gdata/v45+gdata/x77+scratch/nm03 -- /g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin/python3.10 /g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin/payu-run
+
+Fri Jan 10 07:10:31 AEDT 2025
+Error found: Segmentation
+Reset resubmission counter
+Resubmission counter: 5
+laboratory path:  /scratch/nm03/ab8992/mom6
+binary path:  /scratch/nm03/ab8992/mom6/bin
+input path:  /scratch/nm03/ab8992/mom6/input
+work path:  /scratch/nm03/ab8992/mom6/work
+archive path:  /scratch/nm03/ab8992/mom6/archive
+Moving log smooth-40.o132083772
+Moving log smooth-40.e132083772
+Moving log smooth-40.o132085224
+Moving log smooth-40.e132085224
+Removing work path /scratch/nm03/ab8992/mom6/work/smooth-40
+Removing symlink /home/149/ab8992/tasman-tides/rundirs/smooth-40/work
+132086368.gadi-pbs
+payu: warning: Job request includes 9 unused CPUs.
+payu: warning: CPU request increased from 3639 to 3648
+Loading input manifest: manifests/input.yaml
+Loading restart manifest: manifests/restart.yaml
+Loading exe manifest: manifests/exe.yaml
+payu: Found modules in /opt/Modules/v4.3.0
+qsub -q normal -P x77 -l walltime=05:00:00 -l ncpus=3648 -l mem=14592GB -l jobfs=10GB -N smooth-40 -l wd -j n -v PAYU_PATH=/g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin,PAYU_N_RUNS=87,MODULESHOME=/opt/Modules/v4.3.0,MODULES_CMD=/opt/Modules/v4.3.0/libexec/modulecmd.tcl,MODULEPATH=/g/data/hh5/public/modules:/etc/scl/modulefiles:/opt/Modules/modulefiles:/opt/Modules/v4.3.0/modulefiles:/apps/Modules/modulefiles -l storage=gdata/hh5+gdata/ik11+gdata/nm03+gdata/ua8+gdata/v45+gdata/x77+scratch/nm03 -- /g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin/python3.10 /g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin/payu-run
+
+Fri Jan 10 15:35:26 AEDT 2025
+Error found: Segmentation
+Reset resubmission counter
+Resubmission counter: 5
+laboratory path:  /scratch/nm03/ab8992/mom6
+binary path:  /scratch/nm03/ab8992/mom6/bin
+input path:  /scratch/nm03/ab8992/mom6/input
+work path:  /scratch/nm03/ab8992/mom6/work
+archive path:  /scratch/nm03/ab8992/mom6/archive
+Moving log smooth-40.o132086199
+Moving log smooth-40.e132086199
+Moving log smooth-40.o132086368
+Moving log smooth-40.e132086368
+Moving log smooth-40.o132088420
+Moving log smooth-40.e132088420
+Moving log smooth-40.o132090227
+Moving log smooth-40.e132090227
+Moving log smooth-40.o132097075
+Moving log smooth-40.e132097075
+Moving log smooth-40.o132102163
+Moving log smooth-40.e132102163
+Moving log smooth-40.o132104760
+Moving log smooth-40.e132104760
+Moving log smooth-40.o132107449
+Moving log smooth-40.e132107449
+Removing work path /scratch/nm03/ab8992/mom6/work/smooth-40
+Removing symlink /home/149/ab8992/tasman-tides/rundirs/smooth-40/work
+132112217.gadi-pbs
+payu: warning: Job request includes 9 unused CPUs.
+payu: warning: CPU request increased from 3639 to 3648
+Loading input manifest: manifests/input.yaml
+Loading restart manifest: manifests/restart.yaml
+Loading exe manifest: manifests/exe.yaml
+payu: Found modules in /opt/Modules/v4.3.0
+qsub -q normal -P x77 -l walltime=05:00:00 -l ncpus=3648 -l mem=14592GB -l jobfs=10GB -N smooth-40 -l wd -j n -v PAYU_PATH=/g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin,PAYU_N_RUNS=80,MODULESHOME=/opt/Modules/v4.3.0,MODULES_CMD=/opt/Modules/v4.3.0/libexec/modulecmd.tcl,MODULEPATH=/g/data/hh5/public/modules:/etc/scl/modulefiles:/opt/Modules/modulefiles:/opt/Modules/v4.3.0/modulefiles:/apps/Modules/modulefiles -l storage=gdata/hh5+gdata/ik11+gdata/nm03+gdata/ua8+gdata/v45+gdata/x77+scratch/nm03 -- /g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin/python3.10 /g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin/payu-run
+
+Fri Jan 10 20:01:15 AEDT 2025
+Error not found: Segmentation
+Error not found: Segmentation fault: address not mapped to object
+Error not found: Segmentation fault: invalid permissions for mapped object
+Error not found: Transport retry count exceeded
+Error not found: atmosphere/input.nml
+Error not found: ORTE has lost communication with a remote daemon
+Error not found: MPI_ERRORS_ARE_FATAL
+Error not eligible for resubmission
+Mon Jan 13 11:49:12 AEDT 2025
+Error found: Segmentation
+Reset resubmission counter
+Resubmission counter: 5
+laboratory path:  /scratch/nm03/ab8992/mom6
+binary path:  /scratch/nm03/ab8992/mom6/bin
+input path:  /scratch/nm03/ab8992/mom6/input
+work path:  /scratch/nm03/ab8992/mom6/work
+archive path:  /scratch/nm03/ab8992/mom6/archive
+Moving log smooth-40.o132192751
+Moving log smooth-40.e132192751
+Removing work path /scratch/nm03/ab8992/mom6/work/smooth-40
+Removing symlink /home/149/ab8992/tasman-tides/rundirs/smooth-40/work
+132200909.gadi-pbs
+payu: warning: Job request includes 9 unused CPUs.
+payu: warning: CPU request increased from 3639 to 3648
+Loading input manifest: manifests/input.yaml
+Loading restart manifest: manifests/restart.yaml
+Loading exe manifest: manifests/exe.yaml
+payu: Found modules in /opt/Modules/v4.3.0
+qsub -q normal -P x77 -l walltime=05:00:00 -l ncpus=3648 -l mem=14592GB -l jobfs=10GB -N smooth-40 -l wd -j n -v PAYU_PATH=/g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin,PAYU_N_RUNS=99,MODULESHOME=/opt/Modules/v4.3.0,MODULES_CMD=/opt/Modules/v4.3.0/libexec/modulecmd.tcl,MODULEPATH=/g/data/hh5/public/modules:/etc/scl/modulefiles:/opt/Modules/modulefiles:/opt/Modules/v4.3.0/modulefiles:/apps/Modules/modulefiles -l storage=gdata/hh5+gdata/ik11+gdata/nm03+gdata/ua8+gdata/v45+gdata/x77+scratch/nm03 -- /g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin/python3.10 /g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin/payu-run
+
+Mon Jan 13 13:13:44 AEDT 2025
+Error found: Segmentation
+Reset resubmission counter
+Resubmission counter: 5
+laboratory path:  /scratch/nm03/ab8992/mom6
+binary path:  /scratch/nm03/ab8992/mom6/bin
+input path:  /scratch/nm03/ab8992/mom6/input
+work path:  /scratch/nm03/ab8992/mom6/work
+archive path:  /scratch/nm03/ab8992/mom6/archive
+Moving log smooth-40.o132200047
+Moving log smooth-40.e132200047
+Moving log smooth-40.o132200909
+Moving log smooth-40.e132200909
+Removing work path /scratch/nm03/ab8992/mom6/work/smooth-40
+Removing symlink /home/149/ab8992/tasman-tides/rundirs/smooth-40/work
+132207932.gadi-pbs
+payu: warning: Job request includes 9 unused CPUs.
+payu: warning: CPU request increased from 3639 to 3648
+Loading input manifest: manifests/input.yaml
+Loading restart manifest: manifests/restart.yaml
+Loading exe manifest: manifests/exe.yaml
+payu: Found modules in /opt/Modules/v4.3.0
+qsub -q normal -P x77 -l walltime=05:00:00 -l ncpus=3648 -l mem=14592GB -l jobfs=10GB -N smooth-40 -l wd -j n -v PAYU_PATH=/g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin,PAYU_N_RUNS=98,MODULESHOME=/opt/Modules/v4.3.0,MODULES_CMD=/opt/Modules/v4.3.0/libexec/modulecmd.tcl,MODULEPATH=/g/data/hh5/public/modules:/etc/scl/modulefiles:/opt/Modules/modulefiles:/opt/Modules/v4.3.0/modulefiles:/apps/Modules/modulefiles -l storage=gdata/hh5+gdata/ik11+gdata/nm03+gdata/ua8+gdata/v45+gdata/x77+scratch/nm03 -- /g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin/python3.10 /g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin/payu-run
+
+Mon Jan 13 14:31:27 AEDT 2025
+Error not found: Segmentation
+Error not found: Segmentation fault: address not mapped to object
+Error not found: Segmentation fault: invalid permissions for mapped object
+Error not found: Transport retry count exceeded
+Error not found: atmosphere/input.nml
+Error not found: ORTE has lost communication with a remote daemon
+Error not found: MPI_ERRORS_ARE_FATAL
+Error found: eta has dropped below bathyT
+Reset resubmission counter
+Resubmission counter: 5
+laboratory path:  /scratch/nm03/ab8992/mom6
+binary path:  /scratch/nm03/ab8992/mom6/bin
+input path:  /scratch/nm03/ab8992/mom6/input
+work path:  /scratch/nm03/ab8992/mom6/work
+archive path:  /scratch/nm03/ab8992/mom6/archive
+Moving log smooth-40.o132207406
+Moving log smooth-40.e132207406
+Moving log smooth-40.o132207932
+Moving log smooth-40.e132207932
+Removing work path /scratch/nm03/ab8992/mom6/work/smooth-40
+Removing symlink /home/149/ab8992/tasman-tides/rundirs/smooth-40/work
+132218328.gadi-pbs
+payu: warning: Job request includes 9 unused CPUs.
+payu: warning: CPU request increased from 3639 to 3648
+Loading input manifest: manifests/input.yaml
+Loading restart manifest: manifests/restart.yaml
+Loading exe manifest: manifests/exe.yaml
+payu: Found modules in /opt/Modules/v4.3.0
+qsub -q normal -P x77 -l walltime=05:00:00 -l ncpus=3648 -l mem=14592GB -l jobfs=10GB -N smooth-40 -l wd -j n -v PAYU_PATH=/g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin,PAYU_N_RUNS=97,MODULESHOME=/opt/Modules/v4.3.0,MODULES_CMD=/opt/Modules/v4.3.0/libexec/modulecmd.tcl,MODULEPATH=/g/data/hh5/public/modules:/etc/scl/modulefiles:/opt/Modules/modulefiles:/opt/Modules/v4.3.0/modulefiles:/apps/Modules/modulefiles -l storage=gdata/hh5+gdata/ik11+gdata/nm03+gdata/ua8+gdata/v45+gdata/x77+scratch/nm03 -- /g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin/python3.10 /g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin/payu-run
+
+Mon Jan 13 14:35:39 AEDT 2025
+Error not found: Segmentation
+Error not found: Segmentation fault: address not mapped to object
+Error not found: Segmentation fault: invalid permissions for mapped object
+Error not found: Transport retry count exceeded
+Error not found: atmosphere/input.nml
+Error not found: ORTE has lost communication with a remote daemon
+Error not found: MPI_ERRORS_ARE_FATAL
+Error found: eta has dropped below bathyT
+Resubmission counter: 4
+laboratory path:  /scratch/nm03/ab8992/mom6
+binary path:  /scratch/nm03/ab8992/mom6/bin
+input path:  /scratch/nm03/ab8992/mom6/input
+work path:  /scratch/nm03/ab8992/mom6/work
+archive path:  /scratch/nm03/ab8992/mom6/archive
+Moving log smooth-40.o132218020
+Moving log smooth-40.e132218020
+Removing work path /scratch/nm03/ab8992/mom6/work/smooth-40
+Removing symlink /home/149/ab8992/tasman-tides/rundirs/smooth-40/work
+132219495.gadi-pbs
+payu: warning: Job request includes 9 unused CPUs.
+payu: warning: CPU request increased from 3639 to 3648
+Loading input manifest: manifests/input.yaml
+Loading restart manifest: manifests/restart.yaml
+Loading exe manifest: manifests/exe.yaml
+payu: Found modules in /opt/Modules/v4.3.0
+qsub -q normal -P x77 -l walltime=05:00:00 -l ncpus=3648 -l mem=14592GB -l jobfs=10GB -N smooth-40 -l wd -j n -v PAYU_PATH=/g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin,PAYU_N_RUNS=97,MODULESHOME=/opt/Modules/v4.3.0,MODULES_CMD=/opt/Modules/v4.3.0/libexec/modulecmd.tcl,MODULEPATH=/g/data/hh5/public/modules:/etc/scl/modulefiles:/opt/Modules/modulefiles:/opt/Modules/v4.3.0/modulefiles:/apps/Modules/modulefiles -l storage=gdata/hh5+gdata/ik11+gdata/nm03+gdata/ua8+gdata/v45+gdata/x77+scratch/nm03 -- /g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin/python3.10 /g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin/payu-run
+
+Mon Jan 13 14:39:56 AEDT 2025
+Error not found: Segmentation
+Error not found: Segmentation fault: address not mapped to object
+Error not found: Segmentation fault: invalid permissions for mapped object
+Error not found: Transport retry count exceeded
+Error not found: atmosphere/input.nml
+Error not found: ORTE has lost communication with a remote daemon
+Error not found: MPI_ERRORS_ARE_FATAL
+Error found: eta has dropped below bathyT
+Resubmission counter: 3
+laboratory path:  /scratch/nm03/ab8992/mom6
+binary path:  /scratch/nm03/ab8992/mom6/bin
+input path:  /scratch/nm03/ab8992/mom6/input
+work path:  /scratch/nm03/ab8992/mom6/work
+archive path:  /scratch/nm03/ab8992/mom6/archive
+Moving log smooth-40.o132218328
+Moving log smooth-40.e132218328
+Removing work path /scratch/nm03/ab8992/mom6/work/smooth-40
+Removing symlink /home/149/ab8992/tasman-tides/rundirs/smooth-40/work
+132221850.gadi-pbs
+payu: warning: Job request includes 9 unused CPUs.
+payu: warning: CPU request increased from 3639 to 3648
+Loading input manifest: manifests/input.yaml
+Loading restart manifest: manifests/restart.yaml
+Loading exe manifest: manifests/exe.yaml
+payu: Found modules in /opt/Modules/v4.3.0
+qsub -q normal -P x77 -l walltime=05:00:00 -l ncpus=3648 -l mem=14592GB -l jobfs=10GB -N smooth-40 -l wd -j n -v PAYU_PATH=/g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin,PAYU_N_RUNS=97,MODULESHOME=/opt/Modules/v4.3.0,MODULES_CMD=/opt/Modules/v4.3.0/libexec/modulecmd.tcl,MODULEPATH=/g/data/hh5/public/modules:/etc/scl/modulefiles:/opt/Modules/modulefiles:/opt/Modules/v4.3.0/modulefiles:/apps/Modules/modulefiles -l storage=gdata/hh5+gdata/ik11+gdata/nm03+gdata/ua8+gdata/v45+gdata/x77+scratch/nm03 -- /g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin/python3.10 /g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin/payu-run
+
+Mon Jan 13 14:44:10 AEDT 2025
+Error not found: Segmentation
+Error not found: Segmentation fault: address not mapped to object
+Error not found: Segmentation fault: invalid permissions for mapped object
+Error not found: Transport retry count exceeded
+Error not found: atmosphere/input.nml
+Error not found: ORTE has lost communication with a remote daemon
+Error not found: MPI_ERRORS_ARE_FATAL
+Error found: eta has dropped below bathyT
+Resubmission counter: 2
+laboratory path:  /scratch/nm03/ab8992/mom6
+binary path:  /scratch/nm03/ab8992/mom6/bin
+input path:  /scratch/nm03/ab8992/mom6/input
+work path:  /scratch/nm03/ab8992/mom6/work
+archive path:  /scratch/nm03/ab8992/mom6/archive
+Moving log smooth-40.o132219495
+Moving log smooth-40.e132219495
+Removing work path /scratch/nm03/ab8992/mom6/work/smooth-40
+Removing symlink /home/149/ab8992/tasman-tides/rundirs/smooth-40/work
+132222525.gadi-pbs
+payu: warning: Job request includes 9 unused CPUs.
+payu: warning: CPU request increased from 3639 to 3648
+Loading input manifest: manifests/input.yaml
+Loading restart manifest: manifests/restart.yaml
+Loading exe manifest: manifests/exe.yaml
+payu: Found modules in /opt/Modules/v4.3.0
+qsub -q normal -P x77 -l walltime=05:00:00 -l ncpus=3648 -l mem=14592GB -l jobfs=10GB -N smooth-40 -l wd -j n -v PAYU_PATH=/g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin,PAYU_N_RUNS=97,MODULESHOME=/opt/Modules/v4.3.0,MODULES_CMD=/opt/Modules/v4.3.0/libexec/modulecmd.tcl,MODULEPATH=/g/data/hh5/public/modules:/etc/scl/modulefiles:/opt/Modules/modulefiles:/opt/Modules/v4.3.0/modulefiles:/apps/Modules/modulefiles -l storage=gdata/hh5+gdata/ik11+gdata/nm03+gdata/ua8+gdata/v45+gdata/x77+scratch/nm03 -- /g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin/python3.10 /g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin/payu-run
+
+Mon Jan 13 14:48:05 AEDT 2025
+Error not found: Segmentation
+Error not found: Segmentation fault: address not mapped to object
+Error not found: Segmentation fault: invalid permissions for mapped object
+Error not found: Transport retry count exceeded
+Error not found: atmosphere/input.nml
+Error not found: ORTE has lost communication with a remote daemon
+Error not found: MPI_ERRORS_ARE_FATAL
+Error found: eta has dropped below bathyT
+Resubmission counter: 1
+laboratory path:  /scratch/nm03/ab8992/mom6
+binary path:  /scratch/nm03/ab8992/mom6/bin
+input path:  /scratch/nm03/ab8992/mom6/input
+work path:  /scratch/nm03/ab8992/mom6/work
+archive path:  /scratch/nm03/ab8992/mom6/archive
+Moving log smooth-40.o132221850
+Moving log smooth-40.e132221850
+Removing work path /scratch/nm03/ab8992/mom6/work/smooth-40
+Removing symlink /home/149/ab8992/tasman-tides/rundirs/smooth-40/work
+132222656.gadi-pbs
+payu: warning: Job request includes 9 unused CPUs.
+payu: warning: CPU request increased from 3639 to 3648
+Loading input manifest: manifests/input.yaml
+Loading restart manifest: manifests/restart.yaml
+Loading exe manifest: manifests/exe.yaml
+payu: Found modules in /opt/Modules/v4.3.0
+qsub -q normal -P x77 -l walltime=05:00:00 -l ncpus=3648 -l mem=14592GB -l jobfs=10GB -N smooth-40 -l wd -j n -v PAYU_PATH=/g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin,PAYU_N_RUNS=97,MODULESHOME=/opt/Modules/v4.3.0,MODULES_CMD=/opt/Modules/v4.3.0/libexec/modulecmd.tcl,MODULEPATH=/g/data/hh5/public/modules:/etc/scl/modulefiles:/opt/Modules/modulefiles:/opt/Modules/v4.3.0/modulefiles:/apps/Modules/modulefiles -l storage=gdata/hh5+gdata/ik11+gdata/nm03+gdata/ua8+gdata/v45+gdata/x77+scratch/nm03 -- /g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin/python3.10 /g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin/payu-run
+
+Mon Jan 13 14:52:05 AEDT 2025
+Error not found: Segmentation
+Error not found: Segmentation fault: address not mapped to object
+Error not found: Segmentation fault: invalid permissions for mapped object
+Error not found: Transport retry count exceeded
+Error not found: atmosphere/input.nml
+Error not found: ORTE has lost communication with a remote daemon
+Error not found: MPI_ERRORS_ARE_FATAL
+Error found: eta has dropped below bathyT
+Resubmission counter: 0
+Resubmit limit reached ... 
+
+Mon Jan 13 15:02:08 AEDT 2025
+Error not found: Segmentation
+Error not found: Segmentation fault: address not mapped to object
+Error not found: Segmentation fault: invalid permissions for mapped object
+Error not found: Transport retry count exceeded
+Error not found: atmosphere/input.nml
+Error not found: ORTE has lost communication with a remote daemon
+Error not found: MPI_ERRORS_ARE_FATAL
+Error found: eta has dropped below bathyT
+Reset resubmission counter
+Resubmission counter: 5
+laboratory path:  /scratch/nm03/ab8992/mom6
+binary path:  /scratch/nm03/ab8992/mom6/bin
+input path:  /scratch/nm03/ab8992/mom6/input
+work path:  /scratch/nm03/ab8992/mom6/work
+archive path:  /scratch/nm03/ab8992/mom6/archive
+Removing work path /scratch/nm03/ab8992/mom6/work/smooth-40
+Removing symlink /home/149/ab8992/tasman-tides/rundirs/smooth-40/work
+132223576.gadi-pbs
+payu: warning: Job request includes 9 unused CPUs.
+payu: warning: CPU request increased from 3639 to 3648
+Loading input manifest: manifests/input.yaml
+Loading restart manifest: manifests/restart.yaml
+Loading exe manifest: manifests/exe.yaml
+payu: Found modules in /opt/Modules/v4.3.0
+qsub -q normal -P x77 -l walltime=05:00:00 -l ncpus=3648 -l mem=14592GB -l jobfs=10GB -N smooth-40 -l wd -j n -v PAYU_PATH=/g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin,PAYU_N_RUNS=100,MODULESHOME=/opt/Modules/v4.3.0,MODULES_CMD=/opt/Modules/v4.3.0/libexec/modulecmd.tcl,MODULEPATH=/g/data/hh5/public/modules:/etc/scl/modulefiles:/opt/Modules/modulefiles:/opt/Modules/v4.3.0/modulefiles:/apps/Modules/modulefiles -l storage=gdata/hh5+gdata/ik11+gdata/nm03+gdata/ua8+gdata/v45+gdata/x77+scratch/nm03 -- /g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin/python3.10 /g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin/payu-run
+
+Mon Jan 13 15:06:04 AEDT 2025
+Error not found: Segmentation
+Error not found: Segmentation fault: address not mapped to object
+Error not found: Segmentation fault: invalid permissions for mapped object
+Error not found: Transport retry count exceeded
+Error not found: atmosphere/input.nml
+Error not found: ORTE has lost communication with a remote daemon
+Error not found: MPI_ERRORS_ARE_FATAL
+Error found: eta has dropped below bathyT
+Resubmission counter: 4
+laboratory path:  /scratch/nm03/ab8992/mom6
+binary path:  /scratch/nm03/ab8992/mom6/bin
+input path:  /scratch/nm03/ab8992/mom6/input
+work path:  /scratch/nm03/ab8992/mom6/work
+archive path:  /scratch/nm03/ab8992/mom6/archive
+Moving log smooth-40.o132223319
+Moving log smooth-40.e132223319
+Removing work path /scratch/nm03/ab8992/mom6/work/smooth-40
+Removing symlink /home/149/ab8992/tasman-tides/rundirs/smooth-40/work
+132223941.gadi-pbs
+payu: warning: Job request includes 9 unused CPUs.
+payu: warning: CPU request increased from 3639 to 3648
+Loading input manifest: manifests/input.yaml
+Loading restart manifest: manifests/restart.yaml
+Loading exe manifest: manifests/exe.yaml
+payu: Found modules in /opt/Modules/v4.3.0
+qsub -q normal -P x77 -l walltime=05:00:00 -l ncpus=3648 -l mem=14592GB -l jobfs=10GB -N smooth-40 -l wd -j n -v PAYU_PATH=/g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin,PAYU_N_RUNS=100,MODULESHOME=/opt/Modules/v4.3.0,MODULES_CMD=/opt/Modules/v4.3.0/libexec/modulecmd.tcl,MODULEPATH=/g/data/hh5/public/modules:/etc/scl/modulefiles:/opt/Modules/modulefiles:/opt/Modules/v4.3.0/modulefiles:/apps/Modules/modulefiles -l storage=gdata/hh5+gdata/ik11+gdata/nm03+gdata/ua8+gdata/v45+gdata/x77+scratch/nm03 -- /g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin/python3.10 /g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin/payu-run
+
+Mon Jan 13 15:10:18 AEDT 2025
+Error not found: Segmentation
+Error not found: Segmentation fault: address not mapped to object
+Error not found: Segmentation fault: invalid permissions for mapped object
+Error not found: Transport retry count exceeded
+Error not found: atmosphere/input.nml
+Error not found: ORTE has lost communication with a remote daemon
+Error not found: MPI_ERRORS_ARE_FATAL
+Error found: eta has dropped below bathyT
+Resubmission counter: 3
+laboratory path:  /scratch/nm03/ab8992/mom6
+binary path:  /scratch/nm03/ab8992/mom6/bin
+input path:  /scratch/nm03/ab8992/mom6/input
+work path:  /scratch/nm03/ab8992/mom6/work
+archive path:  /scratch/nm03/ab8992/mom6/archive
+Moving log smooth-40.o132223576
+Moving log smooth-40.e132223576
+Removing work path /scratch/nm03/ab8992/mom6/work/smooth-40
+Removing symlink /home/149/ab8992/tasman-tides/rundirs/smooth-40/work
+132224652.gadi-pbs
+payu: warning: Job request includes 9 unused CPUs.
+payu: warning: CPU request increased from 3639 to 3648
+Loading input manifest: manifests/input.yaml
+Loading restart manifest: manifests/restart.yaml
+Loading exe manifest: manifests/exe.yaml
+payu: Found modules in /opt/Modules/v4.3.0
+qsub -q normal -P x77 -l walltime=05:00:00 -l ncpus=3648 -l mem=14592GB -l jobfs=10GB -N smooth-40 -l wd -j n -v PAYU_PATH=/g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin,PAYU_N_RUNS=100,MODULESHOME=/opt/Modules/v4.3.0,MODULES_CMD=/opt/Modules/v4.3.0/libexec/modulecmd.tcl,MODULEPATH=/g/data/hh5/public/modules:/etc/scl/modulefiles:/opt/Modules/modulefiles:/opt/Modules/v4.3.0/modulefiles:/apps/Modules/modulefiles -l storage=gdata/hh5+gdata/ik11+gdata/nm03+gdata/ua8+gdata/v45+gdata/x77+scratch/nm03 -- /g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin/python3.10 /g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin/payu-run
+
+Mon Jan 13 15:14:22 AEDT 2025
+Error not found: Segmentation
+Error not found: Segmentation fault: address not mapped to object
+Error not found: Segmentation fault: invalid permissions for mapped object
+Error not found: Transport retry count exceeded
+Error not found: atmosphere/input.nml
+Error not found: ORTE has lost communication with a remote daemon
+Error not found: MPI_ERRORS_ARE_FATAL
+Error found: eta has dropped below bathyT
+Resubmission counter: 2
+
+Mon Jan 13 18:24:55 AEDT 2025
+Error found: Segmentation
+Reset resubmission counter
+Resubmission counter: 5
+
+Tue Jan 14 14:26:02 AEDT 2025
+Error not found: Segmentation
+Error not found: Segmentation fault: address not mapped to object
+Error not found: Segmentation fault: invalid permissions for mapped object
+Error not found: Transport retry count exceeded
+Error not found: atmosphere/input.nml
+Error not found: ORTE has lost communication with a remote daemon
+Error not found: MPI_ERRORS_ARE_FATAL
+Error found: eta has dropped below bathyT
+Resubmission counter: 5
+laboratory path:  /scratch/nm03/ab8992/mom6
+binary path:  /scratch/nm03/ab8992/mom6/bin
+input path:  /scratch/nm03/ab8992/mom6/input
+work path:  /scratch/nm03/ab8992/mom6/work
+archive path:  /scratch/nm03/ab8992/mom6/archive
+Moving log smooth-40.o132255460
+Moving log smooth-40.e132255460
+Moving log smooth-40.o132260782
+Moving log smooth-40.e132260782
+Moving log smooth-40.o132266430
+Moving log smooth-40.e132266430
+Removing work path /scratch/nm03/ab8992/mom6/work/smooth-40
+Removing symlink /home/149/ab8992/tasman-tides/rundirs/smooth-40/work
+132272377.gadi-pbs
+payu: warning: Job request includes 9 unused CPUs.
+payu: warning: CPU request increased from 3639 to 3648
+Loading input manifest: manifests/input.yaml
+Loading restart manifest: manifests/restart.yaml
+Loading exe manifest: manifests/exe.yaml
+payu: Found modules in /opt/Modules/v4.3.0
+qsub -q normal -P x77 -l walltime=05:00:00 -l ncpus=3648 -l mem=14592GB -l jobfs=10GB -N smooth-40 -l wd -j n -v PAYU_PATH=/g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin,PAYU_N_RUNS=50,PAYU_FORCE=True,MODULESHOME=/opt/Modules/v4.3.0,MODULES_CMD=/opt/Modules/v4.3.0/libexec/modulecmd.tcl,MODULEPATH=/g/data/hh5/public/modules:/etc/scl/modulefiles:/opt/Modules/modulefiles:/opt/Modules/v4.3.0/modulefiles:/apps/Modules/modulefiles -l storage=gdata/hh5+gdata/ik11+gdata/nm03+gdata/ua8+gdata/v45+gdata/x77+scratch/nm03 -- /g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin/python3.10 /g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin/payu-run
+
+Tue Jan 14 17:34:51 AEDT 2025
+Error found: Segmentation
+Resubmission counter: 5
+laboratory path:  /scratch/nm03/ab8992/mom6
+binary path:  /scratch/nm03/ab8992/mom6/bin
+input path:  /scratch/nm03/ab8992/mom6/input
+work path:  /scratch/nm03/ab8992/mom6/work
+archive path:  /scratch/nm03/ab8992/mom6/archive
+Moving log smooth-40.o132272377
+Moving log smooth-40.e132272377
+Moving log smooth-40.o132270715
+Moving log smooth-40.e132270715
+Moving log smooth-40.o132278635
+Moving log smooth-40.e132278635
+Removing work path /scratch/nm03/ab8992/mom6/work/smooth-40
+Removing symlink /home/149/ab8992/tasman-tides/rundirs/smooth-40/work
+132284967.gadi-pbs
+payu: warning: Job request includes 9 unused CPUs.
+payu: warning: CPU request increased from 3639 to 3648
+Loading input manifest: manifests/input.yaml
+Loading restart manifest: manifests/restart.yaml
+Loading exe manifest: manifests/exe.yaml
+payu: Found modules in /opt/Modules/v4.3.0
+qsub -q normal -P x77 -l walltime=05:00:00 -l ncpus=3648 -l mem=14592GB -l jobfs=10GB -N smooth-40 -l wd -j n -v PAYU_PATH=/g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin,PAYU_N_RUNS=50,PAYU_FORCE=True,MODULESHOME=/opt/Modules/v4.3.0,MODULES_CMD=/opt/Modules/v4.3.0/libexec/modulecmd.tcl,MODULEPATH=/g/data/hh5/public/modules:/etc/scl/modulefiles:/opt/Modules/modulefiles:/opt/Modules/v4.3.0/modulefiles:/apps/Modules/modulefiles -l storage=gdata/hh5+gdata/ik11+gdata/nm03+gdata/ua8+gdata/v45+gdata/x77+scratch/nm03 -- /g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin/python3.10 /g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin/payu-run
+
+Tue Jan 14 22:16:24 AEDT 2025
+Error found: Segmentation
+Resubmission counter: 5
+laboratory path:  /scratch/nm03/ab8992/mom6
+binary path:  /scratch/nm03/ab8992/mom6/bin
+input path:  /scratch/nm03/ab8992/mom6/input
+work path:  /scratch/nm03/ab8992/mom6/work
+archive path:  /scratch/nm03/ab8992/mom6/archive
+Moving log smooth-40.o132283899
+Moving log smooth-40.e132283899
+Moving log smooth-40.o132284967
+Moving log smooth-40.e132284967
+Moving log smooth-40.o132289668
+Moving log smooth-40.e132289668
+Moving log smooth-40.o132294499
+Moving log smooth-40.e132294499
+Removing work path /scratch/nm03/ab8992/mom6/work/smooth-40
+Removing symlink /home/149/ab8992/tasman-tides/rundirs/smooth-40/work
+132299586.gadi-pbs
+payu: warning: Job request includes 9 unused CPUs.
+payu: warning: CPU request increased from 3639 to 3648
+Loading input manifest: manifests/input.yaml
+Loading restart manifest: manifests/restart.yaml
+Loading exe manifest: manifests/exe.yaml
+payu: Found modules in /opt/Modules/v4.3.0
+qsub -q normal -P x77 -l walltime=05:00:00 -l ncpus=3648 -l mem=14592GB -l jobfs=10GB -N smooth-40 -l wd -j n -v PAYU_PATH=/g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin,PAYU_N_RUNS=50,PAYU_FORCE=True,MODULESHOME=/opt/Modules/v4.3.0,MODULES_CMD=/opt/Modules/v4.3.0/libexec/modulecmd.tcl,MODULEPATH=/g/data/hh5/public/modules:/etc/scl/modulefiles:/opt/Modules/modulefiles:/opt/Modules/v4.3.0/modulefiles:/apps/Modules/modulefiles -l storage=gdata/hh5+gdata/ik11+gdata/nm03+gdata/ua8+gdata/v45+gdata/x77+scratch/nm03 -- /g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin/python3.10 /g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin/payu-run
+
+Wed Jan 15 01:03:59 AEDT 2025
+Error not found: Segmentation
+Error not found: Segmentation fault: address not mapped to object
+Error not found: Segmentation fault: invalid permissions for mapped object
+Error not found: Transport retry count exceeded
+Error not found: atmosphere/input.nml
+Error not found: ORTE has lost communication with a remote daemon
+Error not found: MPI_ERRORS_ARE_FATAL
+Error found: eta has dropped below bathyT
+Reset resubmission counter
+Resubmission counter: 5
+laboratory path:  /scratch/nm03/ab8992/mom6
+binary path:  /scratch/nm03/ab8992/mom6/bin
+input path:  /scratch/nm03/ab8992/mom6/input
+work path:  /scratch/nm03/ab8992/mom6/work
+archive path:  /scratch/nm03/ab8992/mom6/archive
+Moving log smooth-40.o132298404
+Moving log smooth-40.e132298404
+Moving log smooth-40.o132299586
+Moving log smooth-40.e132299586
+Moving log smooth-40.o132302012
+Moving log smooth-40.e132302012
+Removing work path /scratch/nm03/ab8992/mom6/work/smooth-40
+Removing symlink /home/149/ab8992/tasman-tides/rundirs/smooth-40/work
+132303066.gadi-pbs
+payu: warning: Job request includes 9 unused CPUs.
+payu: warning: CPU request increased from 3639 to 3648
+Loading input manifest: manifests/input.yaml
+Loading restart manifest: manifests/restart.yaml
+Loading exe manifest: manifests/exe.yaml
+payu: Found modules in /opt/Modules/v4.3.0
+qsub -q normal -P x77 -l walltime=05:00:00 -l ncpus=3648 -l mem=14592GB -l jobfs=10GB -N smooth-40 -l wd -j n -v PAYU_PATH=/g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin,PAYU_N_RUNS=50,PAYU_FORCE=True,MODULESHOME=/opt/Modules/v4.3.0,MODULES_CMD=/opt/Modules/v4.3.0/libexec/modulecmd.tcl,MODULEPATH=/g/data/hh5/public/modules:/etc/scl/modulefiles:/opt/Modules/modulefiles:/opt/Modules/v4.3.0/modulefiles:/apps/Modules/modulefiles -l storage=gdata/hh5+gdata/ik11+gdata/nm03+gdata/ua8+gdata/v45+gdata/x77+scratch/nm03 -- /g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin/python3.10 /g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin/payu-run
+
+Wed Jan 15 03:49:23 AEDT 2025
+Error not found: Segmentation
+Error not found: Segmentation fault: address not mapped to object
+Error not found: Segmentation fault: invalid permissions for mapped object
+Error not found: Transport retry count exceeded
+Error not found: atmosphere/input.nml
+Error not found: ORTE has lost communication with a remote daemon
+Error not found: MPI_ERRORS_ARE_FATAL
+Error found: eta has dropped below bathyT
+Reset resubmission counter
+Resubmission counter: 5
+laboratory path:  /scratch/nm03/ab8992/mom6
+binary path:  /scratch/nm03/ab8992/mom6/bin
+input path:  /scratch/nm03/ab8992/mom6/input
+work path:  /scratch/nm03/ab8992/mom6/work
+archive path:  /scratch/nm03/ab8992/mom6/archive
+Moving log smooth-40.o132302963
+Moving log smooth-40.e132302963
+Moving log smooth-40.o132303066
+Moving log smooth-40.e132303066
+Moving log smooth-40.o132303432
+Moving log smooth-40.e132303432
+Removing work path /scratch/nm03/ab8992/mom6/work/smooth-40
+Removing symlink /home/149/ab8992/tasman-tides/rundirs/smooth-40/work
+132303651.gadi-pbs
+payu: warning: Job request includes 9 unused CPUs.
+payu: warning: CPU request increased from 3639 to 3648
+Loading input manifest: manifests/input.yaml
+Loading restart manifest: manifests/restart.yaml
+Loading exe manifest: manifests/exe.yaml
+payu: Found modules in /opt/Modules/v4.3.0
+qsub -q normal -P x77 -l walltime=05:00:00 -l ncpus=3648 -l mem=14592GB -l jobfs=10GB -N smooth-40 -l wd -j n -v PAYU_PATH=/g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin,PAYU_N_RUNS=50,PAYU_FORCE=True,MODULESHOME=/opt/Modules/v4.3.0,MODULES_CMD=/opt/Modules/v4.3.0/libexec/modulecmd.tcl,MODULEPATH=/g/data/hh5/public/modules:/etc/scl/modulefiles:/opt/Modules/modulefiles:/opt/Modules/v4.3.0/modulefiles:/apps/Modules/modulefiles -l storage=gdata/hh5+gdata/ik11+gdata/nm03+gdata/ua8+gdata/v45+gdata/x77+scratch/nm03 -- /g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin/python3.10 /g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin/payu-run
+
+Wed Jan 15 05:14:32 AEDT 2025
+Error not found: Segmentation
+Error not found: Segmentation fault: address not mapped to object
+Error not found: Segmentation fault: invalid permissions for mapped object
+Error not found: Transport retry count exceeded
+Error not found: atmosphere/input.nml
+Error not found: ORTE has lost communication with a remote daemon
+Error not found: MPI_ERRORS_ARE_FATAL
+Error found: eta has dropped below bathyT
+Reset resubmission counter
+Resubmission counter: 5
+laboratory path:  /scratch/nm03/ab8992/mom6
+binary path:  /scratch/nm03/ab8992/mom6/bin
+input path:  /scratch/nm03/ab8992/mom6/input
+work path:  /scratch/nm03/ab8992/mom6/work
+archive path:  /scratch/nm03/ab8992/mom6/archive
+Moving log smooth-40.o132303637
+Moving log smooth-40.e132303637
+Moving log smooth-40.o132303651
+Moving log smooth-40.e132303651
+Removing work path /scratch/nm03/ab8992/mom6/work/smooth-40
+Removing symlink /home/149/ab8992/tasman-tides/rundirs/smooth-40/work
+132303968.gadi-pbs
+payu: warning: Job request includes 9 unused CPUs.
+payu: warning: CPU request increased from 3639 to 3648
+Loading input manifest: manifests/input.yaml
+Loading restart manifest: manifests/restart.yaml
+Loading exe manifest: manifests/exe.yaml
+payu: Found modules in /opt/Modules/v4.3.0
+qsub -q normal -P x77 -l walltime=05:00:00 -l ncpus=3648 -l mem=14592GB -l jobfs=10GB -N smooth-40 -l wd -j n -v PAYU_PATH=/g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin,PAYU_N_RUNS=50,PAYU_FORCE=True,MODULESHOME=/opt/Modules/v4.3.0,MODULES_CMD=/opt/Modules/v4.3.0/libexec/modulecmd.tcl,MODULEPATH=/g/data/hh5/public/modules:/etc/scl/modulefiles:/opt/Modules/modulefiles:/opt/Modules/v4.3.0/modulefiles:/apps/Modules/modulefiles -l storage=gdata/hh5+gdata/ik11+gdata/nm03+gdata/ua8+gdata/v45+gdata/x77+scratch/nm03 -- /g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin/python3.10 /g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin/payu-run
+
+Wed Jan 15 07:07:15 AEDT 2025
+Error not found: Segmentation
+Error not found: Segmentation fault: address not mapped to object
+Error not found: Segmentation fault: invalid permissions for mapped object
+Error not found: Transport retry count exceeded
+Error not found: atmosphere/input.nml
+Error not found: ORTE has lost communication with a remote daemon
+Error not found: MPI_ERRORS_ARE_FATAL
+Error found: eta has dropped below bathyT
+Resubmission counter: 5
+laboratory path:  /scratch/nm03/ab8992/mom6
+binary path:  /scratch/nm03/ab8992/mom6/bin
+input path:  /scratch/nm03/ab8992/mom6/input
+work path:  /scratch/nm03/ab8992/mom6/work
+archive path:  /scratch/nm03/ab8992/mom6/archive
+Moving log smooth-40.o132303945
+Moving log smooth-40.e132303945
+Moving log smooth-40.o132303968
+Moving log smooth-40.e132303968
+Removing work path /scratch/nm03/ab8992/mom6/work/smooth-40
+Removing symlink /home/149/ab8992/tasman-tides/rundirs/smooth-40/work
+132304195.gadi-pbs
+payu: warning: Job request includes 9 unused CPUs.
+payu: warning: CPU request increased from 3639 to 3648
+Loading input manifest: manifests/input.yaml
+Loading restart manifest: manifests/restart.yaml
+Loading exe manifest: manifests/exe.yaml
+payu: Found modules in /opt/Modules/v4.3.0
+qsub -q normal -P x77 -l walltime=05:00:00 -l ncpus=3648 -l mem=14592GB -l jobfs=10GB -N smooth-40 -l wd -j n -v PAYU_PATH=/g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin,PAYU_N_RUNS=50,PAYU_FORCE=True,MODULESHOME=/opt/Modules/v4.3.0,MODULES_CMD=/opt/Modules/v4.3.0/libexec/modulecmd.tcl,MODULEPATH=/g/data/hh5/public/modules:/etc/scl/modulefiles:/opt/Modules/modulefiles:/opt/Modules/v4.3.0/modulefiles:/apps/Modules/modulefiles -l storage=gdata/hh5+gdata/ik11+gdata/nm03+gdata/ua8+gdata/v45+gdata/x77+scratch/nm03 -- /g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin/python3.10 /g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin/payu-run
+
+Wed Jan 15 08:55:53 AEDT 2025
+Error found: Segmentation
+Resubmission counter: 5
+laboratory path:  /scratch/nm03/ab8992/mom6
+binary path:  /scratch/nm03/ab8992/mom6/bin
+input path:  /scratch/nm03/ab8992/mom6/input
+work path:  /scratch/nm03/ab8992/mom6/work
+archive path:  /scratch/nm03/ab8992/mom6/archive
+Moving log smooth-40.o132304125
+Moving log smooth-40.e132304125
+Moving log smooth-40.o132304195
+Moving log smooth-40.e132304195
+Removing work path /scratch/nm03/ab8992/mom6/work/smooth-40
+Removing symlink /home/149/ab8992/tasman-tides/rundirs/smooth-40/work
+132304931.gadi-pbs
+payu: warning: Job request includes 9 unused CPUs.
+payu: warning: CPU request increased from 3639 to 3648
+Loading input manifest: manifests/input.yaml
+Loading restart manifest: manifests/restart.yaml
+Loading exe manifest: manifests/exe.yaml
+payu: Found modules in /opt/Modules/v4.3.0
+qsub -q normal -P x77 -l walltime=05:00:00 -l ncpus=3648 -l mem=14592GB -l jobfs=10GB -N smooth-40 -l wd -j n -v PAYU_PATH=/g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin,PAYU_N_RUNS=50,PAYU_FORCE=True,MODULESHOME=/opt/Modules/v4.3.0,MODULES_CMD=/opt/Modules/v4.3.0/libexec/modulecmd.tcl,MODULEPATH=/g/data/hh5/public/modules:/etc/scl/modulefiles:/opt/Modules/modulefiles:/opt/Modules/v4.3.0/modulefiles:/apps/Modules/modulefiles -l storage=gdata/hh5+gdata/ik11+gdata/nm03+gdata/ua8+gdata/v45+gdata/x77+scratch/nm03 -- /g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin/python3.10 /g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin/payu-run
+
