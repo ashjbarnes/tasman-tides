@@ -94,8 +94,18 @@ work/INPUT/forcing/init_eta.nc:
 work/INPUT/forcing/init_tracers.nc:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/full-20/forcing/init_tracers.nc
   hashes:
-    binhash: 56811cd6c69e106e4439975b1034b366
-    md5: 12874d0117b1c612880c954a328d8b3f
+    binhash: 8a3bd299fecf4c30c0f7400bb10416c5
+    md5: 357baa15194fa5e01e5251ccf0997de0
+work/INPUT/forcing/init_tracers_old.nc:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/full-20/forcing/init_tracers_old.nc
+  hashes:
+    binhash: 7a4161ec84acc938cd12473625f8c09b
+    md5: 6b44ae7f67a17e1c4075683a8273c1c7
+work/INPUT/forcing/init_tracers_zinterp.nc:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/full-20/forcing/init_tracers_zinterp.nc
+  hashes:
+    binhash: 424aa8fecab08d00f0cbf8da72bd7157
+    md5: c3c8da737cb6079594dc97ce461d8c5f
 work/INPUT/forcing/init_vel.nc:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/full-20/forcing/init_vel.nc
   hashes:
@@ -141,6 +151,11 @@ work/INPUT/forcing/tu_002.nc:
   hashes:
     binhash: 1da045a583d20092e16baa54af175773
     md5: 4280470e7697d07ca25e951543d1ddfe
+work/INPUT/forcing/tu_002_mod.nc:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/full-20/forcing/tu_002_mod.nc
+  hashes:
+    binhash: 8ffef1d57039b14a5987381a55b61c65
+    md5: 266ec828ff053800c7d08751a426c18d
 work/INPUT/forcing/tu_003.nc:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/full-20/forcing/tu_003.nc
   hashes:
@@ -161,6 +176,11 @@ work/INPUT/forcing/tz_002.nc:
   hashes:
     binhash: f8afafbda4e1e6305df60ed3b408de69
     md5: e260c40ea1433853effce215bedcd246
+work/INPUT/forcing/tz_002_mod.nc:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/full-20/forcing/tz_002_mod.nc
+  hashes:
+    binhash: da52f32daed7ca335b8bcf3dbde7f592
+    md5: c5a08840e0eeebc8ef4104d941e37796
 work/INPUT/forcing/tz_003.nc:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/full-20/forcing/tz_003.nc
   hashes:
@@ -251,6 +271,16 @@ work/INPUT/topog.nc:
   hashes:
     binhash: 40de8cdc25911f6dd1122f42618081dc
     md5: ed461e5e8c355be027fcfed67c41a002
+work/INPUT/topog_flattened.nc:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/full-20/topog_flattened.nc
+  hashes:
+    binhash: fc1fe37f58d24f4586f68c572188249a
+    md5: afb25849ea4c63a726c50586bfd02380
+work/INPUT/topog_noridge.nc:
+  fullpath: /g/data/nm03/ab8992/ttide-inputs/full-20/topog_noridge.nc
+  hashes:
+    binhash: 5a10497555ef48282807182b0e520ece
+    md5: 0551945c42bf04fc4d24c4d6727862ca
 work/INPUT/topog_raw.nc:
   fullpath: /g/data/nm03/ab8992/ttide-inputs/full-20/topog_raw.nc
   hashes:

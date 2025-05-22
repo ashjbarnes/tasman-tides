@@ -304,31 +304,32 @@ def vmodes(expt,t0 = 10000):
     client = tt.startdask(nthreads = 1)
     print(client)
     tt.logmsg(f"Starting vertical modes calculation for {expt} {t0}")
-    try:
-        data = tt.collect_data(
-                exptname=expt,
-                rawdata = ["rho"],
-                timerange = (t0,t0 + 10000)
-            ).sel(yb = slice(-120,120))
-    except:
-        data = tt.collect_data(
+    data = tt.collect_data(
             exptname=expt,
             rawdata = ["rho"],
-            timerange = (t0,t0 + 4000)
-        ).sel(yb = slice(-120,120))
+            timerange = (t0 - 233,t0 + 233 )
+        ).sel(yb = slice(-125,125))
     if "zi" in data:
         data = data.drop_vars("zi")
     H = data.bathy
     if H.mean("xb").mean("yb") <= 0:
         H *= -1
+    tt.logmsg("VMODES: data loaded.")
+    N = tt.getN(data.rho).mean("time")
 
-    N = tt.getN(data.rho).mean("time").load()
-
-    data = xr.merge([N.rename("N"),H.rename("H")]).load()
+    #! OLD! Doesn't work with 80th. Way too much overhead. Modify to coarsen data first
+    #! N = tt.getN(data.rho).mean("time").load()
+    #! print("Collected N, loading data..")
+    #! data = xr.merge([N.rename("N"),H.rename("H")]).load()
+    data = xr.merge([N.rename("N"),H.rename("H")]).coarsen(xb = 4,yb = 4,boundary = "trim").mean().load()
+    print("coarsened. Now vmodes")
+    
     data = data.chunk({"xb":1,"yb":1,"zl":-1})
 
+
+
     tt.logmsg("Calculating vertical modes")
-    out = tt.ShootingVmodes_parallel(data,nmodes = 8).load()
+    out = tt.ShootingVmodes_parallel(data,nmodes = 6).load()
     tt.logmsg("success")
     if not os.path.exists(f"/g/data/nm03/ab8992/postprocessed/{expt}/vertical_eigenfunctions"):
         os.makedirs(f"/g/data/nm03/ab8992/postprocessed/{expt}/vertical_eigenfunctions")
@@ -387,11 +388,11 @@ def qsub_lagrange_filter(experiment,t0,windowsize,offset):
     text = f"""
 #!/bin/bash
 #PBS -N lf-{experiment}-{t0}-{offset}
-#PBS -P nm03
+#PBS -P x77
 #PBS -q normalsr
-#PBS -l mem=192gb
-#PBS -l walltime=12:00:00
-#PBS -l ncpus=96
+#PBS -l mem=512gb
+#PBS -l walltime=6:00:00
+#PBS -l ncpus=104
 #PBS -l jobfs=400gb
 #PBS -l storage=gdata/v45+scratch/v45+scratch/x77+gdata/v45+gdata/nm03+gdata/hh5+scratch/nm03
 PYTHONNOUSERSITE=1
@@ -413,20 +414,20 @@ python3 /home/149/ab8992/tasman-tides/lfilter.py -e {experiment} -t {t0} -w {win
     pbs_log = f"lf-{experiment}-{t0}-{offset}.o{result.stdout.split('.')[0]}"
 
 
-    # Wait until the PBS logfile appears in the log folder
-    while not os.path.exists(f"/home/149/ab8992/tasman-tides/logs/lfilter/{pbs_error}"):
-        time.sleep(10)
+    # # Wait until the PBS logfile appears in the log folder
+    # while not os.path.exists(f"/home/149/ab8992/tasman-tides/logs/lfilter/{pbs_error}"):
+    #     time.sleep(10)
 
-    ## Rename the logfile to be recipe--experiment--current_date
-    current_date = time.strftime("%b_%d_%H-%M-%S").lower()
-    os.rename(
-        f"/home/149/ab8992/tasman-tides/logs/lfilter/{pbs_error}",
-        f"/home/149/ab8992/tasman-tides/logs/lfilter/{experiment}-{offset}_{current_date}.err",
-    )
-    os.rename(
-        f"/home/149/ab8992/tasman-tides/logs/lfilter/{pbs_log}",
-        f"/home/149/ab8992/tasman-tides/logs/lfilter/{experiment}-{offset}_{current_date}.out",
-    )
+    # ## Rename the logfile to be recipe--experiment--current_date
+    # current_date = time.strftime("%b_%d_%H-%M-%S").lower()
+    # os.rename(
+    #     f"/home/149/ab8992/tasman-tides/logs/lfilter/{pbs_error}",
+    #     f"/home/149/ab8992/tasman-tides/logs/lfilter/{experiment}-{offset}_{current_date}.err",
+    # )
+    # os.rename(
+    #     f"/home/149/ab8992/tasman-tides/logs/lfilter/{pbs_log}",
+    #     f"/home/149/ab8992/tasman-tides/logs/lfilter/{experiment}-{offset}_{current_date}.out",
+    # )
 
 def qsub(recipe, experiment, outputs,recompute,t0):
     tt.logmsg(f"Submitting {recipe} for {experiment}, {outputs} to qsub")
@@ -440,21 +441,23 @@ def qsub(recipe, experiment, outputs,recompute,t0):
 #!/bin/bash
 #PBS -N {recipe}-{experiment}
 #PBS -P x77
-#PBS -q normalbw
-#PBS -l mem=180gb
-#PBS -l walltime=12:00:00
-#PBS -l ncpus=28
+#PBS -q normalsr
+#PBS -l mem=512gb
+#PBS -l walltime=6:00:00
+#PBS -l ncpus=104
 #PBS -l jobfs=400gb
 #PBS -l storage=gdata/v45+scratch/v45+scratch/x77+gdata/v45+gdata/nm03+gdata/hh5+scratch/nm03
 PYTHONNOUSERSITE=1
 source /g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin/activate
 python3 /home/149/ab8992/tasman-tides/recipes.py -r {recipe} -e {experiment} -o {outputs} -q 0 {recompute} -t {t0}"""
-
-    with open(f"/home/149/ab8992/tasman-tides/logs/{recipe}/{recipe}-{experiment}-{outputs}.pbs", "w") as f:
+    filename = f"/home/149/ab8992/tasman-tides/logs/{recipe}/{recipe}-{experiment}-{outputs}.pbs"
+    if recipe == "vmodes":
+        filename = f"/home/149/ab8992/tasman-tides/logs/{recipe}/{recipe}-{experiment}-{t0}.pbs"
+    with open(filename, "w") as f:
         f.write(text)
 
     result = subprocess.run(
-        f"qsub /home/149/ab8992/tasman-tides/logs/{recipe}/{recipe}-{experiment}-{outputs}.pbs",
+        f"qsub {filename}",
         shell=True,
         capture_output=True,
         text=True,
@@ -464,19 +467,19 @@ python3 /home/149/ab8992/tasman-tides/recipes.py -r {recipe} -e {experiment} -o 
     pbs_log = f"{recipe}-{experiment}.o{result.stdout.split('.')[0]}"
 
     # Wait until the PBS logfile appears in the log folder
-    while not os.path.exists(f"/home/149/ab8992/tasman-tides/logs/{recipe}/{pbs_error}"):
-        time.sleep(10)
+    # while not os.path.exists(f"/home/149/ab8992/tasman-tides/logs/{recipe}/{pbs_error}"):
+    #     time.sleep(10)
 
-    ## Rename the logfile to be recipe--experiment--current_date
-    current_date = time.strftime("%b_%d_%H-%M-%S").lower()
-    os.rename(
-        f"/home/149/ab8992/tasman-tides/logs/{recipe}/{pbs_error}",
-        f"/home/149/ab8992/tasman-tides/logs/{recipe}/{experiment}_{current_date}.err",
-    )
-    os.rename(
-        f"/home/149/ab8992/tasman-tides/logs/{recipe}/{pbs_log}",
-        f"/home/149/ab8992/tasman-tides/logs/{recipe}/{experiment}_{current_date}.out",
-    )
+    # ## Rename the logfile to be recipe--experiment--current_date
+    # current_date = time.strftime("%b_%d_%H-%M-%S").lower()
+    # os.rename(
+    #     f"/home/149/ab8992/tasman-tides/logs/{recipe}/{pbs_error}",
+    #     f"/home/149/ab8992/tasman-tides/logs/{recipe}/{experiment}_{current_date}.err",
+    # )
+    # os.rename(
+    #     f"/home/149/ab8992/tasman-tides/logs/{recipe}/{pbs_log}",
+    #     f"/home/149/ab8992/tasman-tides/logs/{recipe}/{experiment}_{current_date}.out",
+    # )
 
     return
     

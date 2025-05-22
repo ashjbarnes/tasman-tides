@@ -34,14 +34,17 @@ def logmsg(message,logfile = home / "logs" /"mainlog"):
         f.write(current_time + ":\t" + message + "\n")
     return 
 
-def startdask(nthreads = 4):
+def startdask(nthreads = 4,n_workers = False):
     try:
     # Try to get the existing Dask client
         client = default_client()
         print(client)
     except ValueError:
         # If there's no existing client, create a new one
-        client = Client(threads_per_worker = nthreads)
+        if n_workers != False:
+            client = Client(threads_per_worker = nthreads,n_workers = n_workers)
+        else:
+            client = Client(threads_per_worker = nthreads)
         print(client)
     return client
 
@@ -484,7 +487,8 @@ def collect_data(exptname,rawdata = None,ppdata = None,lfiltered = None,chunks =
         time_per_output = 30 * 24
     elif res == "40" or exptname == "blank-20":
         time_per_output = 5 * 24
-
+    elif res == "80":
+        time_per_output = 1 * 24
     data = {}
     ## First handle the case of lfiltered data. Here, load the filtered
     ## data first, then extract the timerange information from it. Use
@@ -523,6 +527,9 @@ def collect_data(exptname,rawdata = None,ppdata = None,lfiltered = None,chunks =
             np.ceil(timerange[1] / time_per_output)
         ).astype(int)
         # change these outputs to strings with 3 digits
+        if "80" in exptname:
+            outputs -= (496 - 91) #! Here need to account for erroneous offset. 80th wasn't reset to start from zero, so clock starts from 496 days. First output is at output 91 after spinup
+            print(f"80th run: adjusting outputs to {outputs}")
         rawdata_paths = [f"/g/data/nm03/ab8992/outputs/{exptname}/output{i:03d}" for i in outputs]
 
     ppdata_path = Path("/g/data/nm03/ab8992/postprocessed/") / exptname
@@ -545,7 +552,7 @@ def collect_data(exptname,rawdata = None,ppdata = None,lfiltered = None,chunks =
                 all_files.extend(files)
 
             # Now pass all the files instead of a wildcard string
-            data[var] = xr.open_mfdataset(all_files, decode_times=False, parallel=True, decode_cf=False).sel(time = slice(timerange[0],timerange[1]))[var]
+            data[var] = xr.open_mfdataset(all_files, decode_times=False, parallel = True,decode_cf=False,lock = False).sel(time = slice(timerange[0],timerange[1]))[var]
             
             print("done.")
 
@@ -561,16 +568,16 @@ def collect_data(exptname,rawdata = None,ppdata = None,lfiltered = None,chunks =
         for var in ppdata:
             print(f"loading {var} topdown...",end = "\t" )
             data[var + "_topdown"] = xr.open_mfdataset(
-                str(ppdata_path / var / "topdown" / "*.nc"),chunks = chunks,decode_times = False,lock = False,parallel = True,decode_cf = False).sel(time = slice(timerange[0],timerange[1])
+                str(ppdata_path / var / "topdown" / "*.nc"),chunks = chunks,decode_times = False,lock = False,decode_cf = False).sel(time = slice(timerange[0],timerange[1])
             )[var].rename(f"{var}_topdown")
             print("done. loading transect...",end = "\t")
             data[var + "_transect"] = xr.open_mfdataset(
-                str(ppdata_path / var / "transect" / "*.nc"),chunks = chunks,decode_times = False,lock = False,parallel = True,decode_cf = False).sel(time = slice(timerange[0],timerange[1])
+                str(ppdata_path / var / "transect" / "*.nc"),chunks = chunks,decode_times = False,lock = False,decode_cf = False).sel(time = slice(timerange[0],timerange[1])
             )[var].rename(f"{var}_transect")
             print("done.")
 
 
-    data["bathy"] = xr.open_mfdataset(str(Path("/g/data/nm03/ab8992/outputs/") / exptname / "bathy_transect.nc")).rename({"depth":"bathy"})
+    data["bathy"] = -1 * xr.open_mfdataset(str(Path("/g/data/nm03/ab8992/outputs/") / exptname / "bathy_transect.nc")).rename({"depth":"bathy"})
 
 
     data = xr.merge([data[i] for i in data])
@@ -1280,10 +1287,12 @@ def ShootingVmodes(data,H = 5000,nmodes = 5):
                     coords = {"z_l":soln.x}
                 )
                 Weigenfunc = Weigenfunc / (np.sqrt((Weigenfunc**2).integrate("z_l")))
+                # Ueigenfunc = Weigenfunc.differentiate("z_l").interp(z_l = N.zl.values).fillna(0).rename({"z_l":"zl"})
+                Ueigenfunc = Weigenfunc.differentiate("z_l")
+                Ueigenfunc = Ueigenfunc / (np.sqrt((Ueigenfunc**2).integrate("z_l")))
 
-                # Ueigenfunc = Weigenfunc.differentiate("z_l").interp(z_l = N_trunc.zl.values).rename({"z_l":"zl"})
-                Ueigenfunc = Weigenfunc.differentiate("z_l").interp(z_l = N.zl.values).fillna(0).rename({"z_l":"zl"})
-                Ueigenfunc = Ueigenfunc / (np.sqrt((Ueigenfunc**2).integrate("zl")))
+                Ueigenfunc = Ueigenfunc.interp(z_l = N.zl.values).fillna(0).rename({"z_l":"zl"})
+                Weigenfunc = Weigenfunc.interp(z_l = N.zl.values).fillna(0).rename({"z_l":"zl"})
 
 
                 ## Now calculate the actual k from dispersion relation. Divide by sqrt(M2^2 - f^2)
@@ -1291,7 +1300,7 @@ def ShootingVmodes(data,H = 5000,nmodes = 5):
                 k *= np.sqrt(M2**2 - f**2)
                 h_wavelength = Ueigenfunc.isel(zl = 0).drop_vars(["zl"]).rename("Wavelength") * 0 + 1e-3/k 
 
-                efuncs.append(xr.merge([Weigenfunc.rename("W"),Ueigenfunc.rename("U"),h_wavelength]).assign_coords({"mode":i}).expand_dims("mode"))
+                efuncs.append(xr.merge([Ueigenfunc.rename("U"),Weigenfunc.rename("W"),h_wavelength]).assign_coords({"mode":i}).expand_dims("mode"))
 
 
             efuncs = xr.concat(efuncs,dim = "mode")
@@ -1302,7 +1311,7 @@ def ShootingVmodes(data,H = 5000,nmodes = 5):
             # These efuncs now contain polynomial spline objects. 
             # They should be used to generate both the vertical and horizontal eigenfunctions zi and zl points
 
-            return efuncs[["U","Wavelength"]].transpose("mode","zl","yb","xb")
+            return efuncs[["U","W","Wavelength"]].transpose("mode","zl","yb","xb")
         
         else:
             ## In this case we return a dummy values with the right shape
@@ -1312,7 +1321,7 @@ def ShootingVmodes(data,H = 5000,nmodes = 5):
                 coords = {"zl":N.zl.values}
             ).rename("U").expand_dims({"xb":data.xb.values,"yb":data.yb.values,"mode":np.arange(nmodes)}).transpose("mode","zl","yb","xb")
             h_wavelength = Ueigenfunc.isel(zl = 0).drop_vars(["zl"]).rename("Wavelength")
-            return xr.merge([Ueigenfunc,h_wavelength])
+            return xr.merge([Ueigenfunc,Ueigenfunc.rename("W"),h_wavelength])
         
     except Exception as e:
 
@@ -1329,7 +1338,7 @@ def ShootingVmodes_parallel(data,nmodes = 5):
     # print(data)
     vmode_template = data.N.expand_dims({"mode":np.arange(nmodes)}).rename("U").drop_vars(["lat","lon"])
     wavenumber_template = vmode_template.isel(zl = 0).drop_vars(["zl"]).rename("Wavelength")
-    template = xr.merge([vmode_template,wavenumber_template])
+    template = xr.merge([vmode_template,vmode_template.rename("W"),wavenumber_template]) ## Here, pass a dummy template to map blocks with metadata as expected from final function
     return xr.map_blocks(
         ShootingVmodes,
         data,kwargs = {"nmodes":nmodes},
