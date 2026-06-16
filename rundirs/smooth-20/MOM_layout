@@ -7,7 +7,7 @@ NIGLOBAL = 760
 NJGLOBAL = 795
                                 ! The total number of thickness grid points in the y-direction in the physical
                                 ! domain. With STATIC_MEMORY_ this is set in MOM_memory.h at compile time.
-MASKTABLE = "mask_table.105.36x30"
+MASKTABLE = "mask_table.104.36x30"
                                 ! A text file to specify n_mask, layout and mask_list. This feature masks out
                                 ! processors that contain only land points. The first line of mask_table is the
                                 ! number of regions to be masked out. The second line is the layout of the model

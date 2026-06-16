@@ -4,6 +4,8 @@ import warnings
 from datetime import timedelta
 from dask.distributed import Client,default_client
 from dask import delayed, compute
+import sys
+# sys.path.insert(0,"/home/149/ab8992/libraries/lagrangian-filtering")
 import filtering
 from pathlib import Path
 home = Path("/home/149/ab8992/tasman-tides")
@@ -40,6 +42,8 @@ def save_data_for_filter(expt,zl,t0,tmpstorage,sample_window = 250):
             retry = 100
         except Exception as e:
             print(f"An error occurred: {e}")
+            print(expt)
+            print((t0 - sample_window // 2,t0 + sample_window // 2 + sample_window % 2))
             print("Retry loading data")
             retry +=1
     print("Done loading data")

@@ -388,16 +388,16 @@ def qsub_lagrange_filter(experiment,t0,windowsize,offset):
     text = f"""
 #!/bin/bash
 #PBS -N lf-{experiment}-{t0}-{offset}
-#PBS -P x77
+#PBS -P nm03
 #PBS -q normalsr
 #PBS -l mem=512gb
 #PBS -l walltime=6:00:00
 #PBS -l ncpus=104
 #PBS -l jobfs=400gb
-#PBS -l storage=gdata/v45+scratch/v45+scratch/x77+gdata/v45+gdata/nm03+gdata/hh5+scratch/nm03
+#PBS -l storage=gdata/v45+scratch/v45+scratch/x77+gdata/v45+gdata/nm03+gdata/hh5+scratch/nm03+gdata/xp65+scratch/xp65
 PYTHONNOUSERSITE=1
-cd /scratch/v45/ab8992/tmp
-source /g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin/activate
+# source /g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin/activate 
+module use /g/data/xp65/public/modules; module load conda/analysis3
 python3 /home/149/ab8992/tasman-tides/lfilter.py -e {experiment} -t {t0} -w {windowsize} -o {offset}
 """
     with open(f"/home/149/ab8992/tasman-tides/logs/lfilter/lfilter-{experiment}-{t0}-{offset}.pbs", "w") as f:
@@ -440,15 +440,17 @@ def qsub(recipe, experiment, outputs,recompute,t0):
     text = f"""
 #!/bin/bash
 #PBS -N {recipe}-{experiment}
-#PBS -P x77
+#PBS -P nm03
 #PBS -q normalsr
 #PBS -l mem=512gb
 #PBS -l walltime=6:00:00
 #PBS -l ncpus=104
 #PBS -l jobfs=400gb
-#PBS -l storage=gdata/v45+scratch/v45+scratch/x77+gdata/v45+gdata/nm03+gdata/hh5+scratch/nm03
+#PBS -l storage=gdata/v45+scratch/v45+scratch/x77+gdata/v45+gdata/nm03+gdata/hh5+scratch/nm03+gdata/xp65+scratch/xp65
 PYTHONNOUSERSITE=1
-source /g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin/activate
+# source /g/data/hh5/public/apps/miniconda3/envs/analysis3-24.04/bin/activate 
+module use /g/data/xp65/public/modules; module load conda/analysis3
+# conda activate analysis3
 python3 /home/149/ab8992/tasman-tides/recipes.py -r {recipe} -e {experiment} -o {outputs} -q 0 {recompute} -t {t0}"""
     filename = f"/home/149/ab8992/tasman-tides/logs/{recipe}/{recipe}-{experiment}-{outputs}.pbs"
     if recipe == "vmodes":

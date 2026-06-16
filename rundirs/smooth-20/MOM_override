@@ -1,8 +1,6 @@
 ## Add override files here
-#override DT=100
-#override DT_THERM=400
-#override DTBT = -0.01
-
-
-#override TEMP_SALT_Z_INIT_FILE = "forcing/init_tracers_zinterp.nc" 
+#override DT=200
+#override DT_THERM=600
+#override DTBT = -0.1
 #override TOPO_FILE = "topog_flattened.nc"
+#override TEMP_SALT_Z_INIT_FILE = "init_tracers_zinterp.nc"

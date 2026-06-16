@@ -108,8 +108,8 @@ def filter_velocities(data):
     return (dvx - duy)
 
 ########################################### More involved postprocessing functions ###############################################
-
-def beamgrid(data,lat0 = -42.1,lon0 = 147.2,beamwidth = 400,beamlength = 1500,plot = False,xname = "xh",yname = "yh",vmin = None,vmax = None,chunks = 12):
+#! beamwidth was 400!! Changed to 1500 for revisions
+def beamgrid(data,lat0 = -42.1,lon0 = 147.2,beamwidth = 1500,beamlength = 1500,plot = False,xname = "xh",yname = "yh",vmin = None,vmax = None,chunks = 12):
     
     """
     Takes data output from MOM6, interpolates onto our small and rotated grid and saves for long term storage
@@ -366,17 +366,30 @@ def postprocessing(to_process,expt = "full-20",recompute = False):
         # Now we do the biggest ones, the hourly diagnostics. These are output in their own folder, chunked along y dimension
         # First do the velocities together, as these need to be summed along and against the beam
 
+
+        #! UPDATE FOR REVISION 2026 if I want to do the extended width 
+        #! of analysis region, then I need to select a larger area before beamgrid
+        #! Originally this was 
+        #! x: 144 -> 170, y = -55 -> -40
+        #! for the larger region, expand to 
+        #! x: 140 -> 170, y = -57 -> -34
+        #! 
+        yrange =  slice(-55,-40)
+        xrange = slice(144,170)
+        yrange =  slice(-57,-34)
+        xrange = slice(140,170)      
+
         theta = np.arctan((-43.3 + 49.8) / -17) # This is the angle of rotation
         u = xr.open_mfdataset(
             str(mom6out / f"*u.nc"),
             chunks={"z_l": 10,"time":10,"xq":-1,"yh":-1},
             decode_times=False,
-        ).u.sel(xq = slice(144,170),yh = slice(-55,-40))
+        ).u.sel(xq = xrange,yh = yrange)
         v = xr.open_mfdataset(
             str(mom6out / f"*v.nc"),
             chunks={"z_l": 10,"time":10,"xh":-1,"yq":-1},
             decode_times=False,
-        ).v.sel(xh = slice(144,170),yq = slice(-55,-40))
+        ).v.sel(xh = xrange,yq = yrange)
 
         u = beamgrid(u,xname = "xq",chunks = yb_chunksize).persist()
         v = beamgrid(v,yname = "yq",chunks = yb_chunksize).persist()
@@ -406,7 +419,7 @@ def postprocessing(to_process,expt = "full-20",recompute = False):
                     str(mom6out / f"*{diag}.nc"),
                     chunks={hourly_diags[diag]["z"]: 10,"time":10,"xh":-1,"yh":-1},
                     decode_times=False,
-                )[diag].sel({hourly_diags[diag]["x"] : slice(144,170), hourly_diags[diag]["y"] : slice(-55,-40)})
+                )[diag].sel({hourly_diags[diag]["x"] : xrange, hourly_diags[diag]["y"] : yrange})
             except Exception as e:
                 print(f"Failed to open {diag}")
                 print(e)
@@ -425,7 +438,7 @@ def postprocessing(to_process,expt = "full-20",recompute = False):
                     chunks={"time":10},
                     decode_times=False,
                 ).sel({
-                    "xh" : slice(144,170), "yh" : slice(-55,-40)
+                    "xh" : xrange, "yh" : yrange
                     })
             else:
                 ds = xr.open_mfdataset(
@@ -433,8 +446,8 @@ def postprocessing(to_process,expt = "full-20",recompute = False):
                     chunks={"time":10},
                     decode_times=False,
                 ).sel({
-                    "xh" : slice(144,170), "yh" : slice(-55,-40),
-                    "xq" : slice(144,170), "yq" : slice(-55,-40),
+                    "xh" : xrange, "yh" : yrange,
+                    "xq" : xrange, "yq" : yrange,
                     })
         except Exception as e:
             print(f"Failed to open surface!")
@@ -456,11 +469,11 @@ def postprocessing(to_process,expt = "full-20",recompute = False):
             del tauy
         del surface_transect
 
-        for i in ["u","v","ahh","e","rho"]:
-            subprocess.run(
-            f"rm {str(mom6out)}/*{i}.nc",
-            shell=True
-            )
+        # for i in ["u","v","ahh","e","rho"]:
+        #     subprocess.run(
+        #     f"rm {str(mom6out)}/*{i}.nc",
+        #     shell=True
+        #     )
 
 def collect_data(exptname,rawdata = None,ppdata = None,lfiltered = None,chunks = None,timerange = (None,None)):
     """
@@ -530,6 +543,14 @@ def collect_data(exptname,rawdata = None,ppdata = None,lfiltered = None,chunks =
         if "80" in exptname:
             outputs -= (496 - 91) #! Here need to account for erroneous offset. 80th wasn't reset to start from zero, so clock starts from 496 days. First output is at output 91 after spinup
             print(f"80th run: adjusting outputs to {outputs}")
+        if "dissipation" in exptname:
+            times_per_output = 24*15
+
+            offset_start = timerange[0] - 481
+            offset_end = timerange[1] - 481
+            first_output = np.floor(offset_start / times_per_output) + 21
+            last_output = np.ceil(offset_end / times_per_output) + 21
+            outputs = np.arange(int(first_output),int(last_output))
         rawdata_paths = [f"/g/data/nm03/ab8992/outputs/{exptname}/output{i:03d}" for i in outputs]
 
     ppdata_path = Path("/g/data/nm03/ab8992/postprocessed/") / exptname

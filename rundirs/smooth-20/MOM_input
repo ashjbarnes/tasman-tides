@@ -107,25 +107,25 @@ OBC_ZERO_BIHARMONIC = True      !   [Boolean] default = False
                                 ! viscosity term.
 OBC_TIDE_N_CONSTITUENTS = 1     ! default = 0
                                 ! Number of tidal constituents being added to the open boundary.
-OBC_SEGMENT_001 = "J=0,I=0:N,FLATHER,ORLANSKI,NUDGED,ORLANSKI_TAN,NUDGED_TAN" !
+OBC_SEGMENT_001 = "J=N,I=N:0,FLATHER,ORLANSKI,NUDGED,ORLANSKI_TAN,NUDGED_TAN" !
                                 ! Documentation needs to be dynamic?????
 OBC_SEGMENT_001_VELOCITY_NUDGING_TIMESCALES = 0.3, 360.0 !   [days] default = 0.0
                                 ! Timescales in days for nudging along a segment, for inflow, then outflow.
                                 ! Setting both to zero should behave like SIMPLE obcs for the baroclinic
                                 ! velocities.
-OBC_SEGMENT_002 = "J=N,I=N:0,FLATHER,ORLANSKI,NUDGED,ORLANSKI_TAN,NUDGED_TAN" !
+OBC_SEGMENT_002 = "J=0,I=0:N,FLATHER,ORLANSKI,NUDGED,ORLANSKI_TAN,NUDGED_TAN" !
                                 ! Documentation needs to be dynamic?????
 OBC_SEGMENT_002_VELOCITY_NUDGING_TIMESCALES = 0.3, 360.0 !   [days] default = 0.0
                                 ! Timescales in days for nudging along a segment, for inflow, then outflow.
                                 ! Setting both to zero should behave like SIMPLE obcs for the baroclinic
                                 ! velocities.
-OBC_SEGMENT_003 = "I=0,J=N:0,FLATHER,ORLANSKI,NUDGED,ORLANSKI_TAN,NUDGED_TAN" !
+OBC_SEGMENT_003 = "I=N,J=0:N,FLATHER,ORLANSKI,NUDGED,ORLANSKI_TAN,NUDGED_TAN" !
                                 ! Documentation needs to be dynamic?????
 OBC_SEGMENT_003_VELOCITY_NUDGING_TIMESCALES = 0.3, 360.0 !   [days] default = 0.0
                                 ! Timescales in days for nudging along a segment, for inflow, then outflow.
                                 ! Setting both to zero should behave like SIMPLE obcs for the baroclinic
                                 ! velocities.
-OBC_SEGMENT_004 = "I=N,J=0:N,FLATHER,ORLANSKI,NUDGED,ORLANSKI_TAN,NUDGED_TAN" !
+OBC_SEGMENT_004 = "I=0,J=N:0,FLATHER,ORLANSKI,NUDGED,ORLANSKI_TAN,NUDGED_TAN" !
                                 ! Documentation needs to be dynamic?????
 OBC_SEGMENT_004_VELOCITY_NUDGING_TIMESCALES = 0.3, 360.0 !   [days] default = 0.0
                                 ! Timescales in days for nudging along a segment, for inflow, then outflow.
@@ -232,7 +232,7 @@ INIT_LAYERS_FROM_Z_FILE = True  !   [Boolean] default = False
                                 ! Z-space file on a latitude-longitude grid.
 
 ! === module MOM_initialize_layers_from_Z ===
-TEMP_SALT_Z_INIT_FILE = "forcing/init_tracers.nc" ! default = "temp_salt_z.nc"
+TEMP_SALT_Z_INIT_FILE = "init_tracers.nc" ! default = "temp_salt_z.nc"
                                 ! The name of the z-space input file used to initialize temperatures (T) and
                                 ! salinities (S). If T and S are not in the same file, TEMP_Z_INIT_FILE and
                                 ! SALT_Z_INIT_FILE must be set.
@@ -247,7 +247,7 @@ TEMP_SALT_INIT_VERTICAL_REMAP_ONLY = True !   [Boolean] default = False
 DEPRESS_INITIAL_SURFACE = True  !   [Boolean] default = False
                                 ! If true,  depress the initial surface to avoid huge tsunamis when a large
                                 ! surface pressure is applied.
-SURFACE_HEIGHT_IC_FILE = "forcing/init_eta.nc" !
+SURFACE_HEIGHT_IC_FILE = "init_eta.nc" !
                                 ! The initial condition file for the surface height.
 SURFACE_HEIGHT_IC_VAR = "eta_t" ! default = "SSH"
                                 ! The initial condition variable for the surface height.
@@ -262,15 +262,15 @@ VELOCITY_CONFIG = "file"        ! default = "zero"
                                 !     rossby_front - a mixed layer front in thermal wind balance.
                                 !     soliton - Equatorial Rossby soliton.
                                 !     USER - call a user modified routine.
-VELOCITY_FILE = "forcing/init_vel.nc" !
+VELOCITY_FILE = "init_vel.nc" !
                                 ! The name of the velocity initial condition file.
-OBC_SEGMENT_001_DATA = "U=file:forcing/forcing_obc_segment_001.nc(u),V=file:forcing/forcing_obc_segment_001.nc(v),SSH=file:forcing/forcing_obc_segment_001.nc(eta),TEMP=file:forcing/forcing_obc_segment_001.nc(temp),SALT=file:forcing/forcing_obc_segment_001.nc(salt),Uamp=file:forcing/tu_001.nc(uamp),Uphase=file:forcing/tu_001.nc(uphase),Vamp=file:forcing/tu_001.nc(vamp),Vphase=file:forcing/tu_001.nc(vphase),SSHamp=file:forcing/tz_001.nc(zamp),SSHphase=file:forcing/tz_001.nc(zphase)" !
+OBC_SEGMENT_001_DATA = "U=file:forcing_obc_segment_001.nc(u),V=file:forcing_obc_segment_001.nc(v),SSH=file:forcing_obc_segment_001.nc(eta),TEMP=file:forcing_obc_segment_001.nc(temp),SALT=file:forcing_obc_segment_001.nc(salt),Uamp=file:tu_segment_001.nc(uamp),Uphase=file:tu_segment_001.nc(uphase),Vamp=file:tu_segment_001.nc(vamp),Vphase=file:tu_segment_001.nc(vphase),SSHamp=file:tz_segment_001.nc(zamp),SSHphase=file:tz_segment_001.nc(zphase)" !
                                 ! OBC segment docs
-OBC_SEGMENT_002_DATA = "U=file:forcing/forcing_obc_segment_002.nc(u),V=file:forcing/forcing_obc_segment_002.nc(v),SSH=file:forcing/forcing_obc_segment_002.nc(eta),TEMP=file:forcing/forcing_obc_segment_002.nc(temp),SALT=file:forcing/forcing_obc_segment_002.nc(salt),Uamp=file:forcing/tu_002.nc(uamp),Uphase=file:forcing/tu_002.nc(uphase),Vamp=file:forcing/tu_002.nc(vamp),Vphase=file:forcing/tu_002.nc(vphase),SSHamp=file:forcing/tz_002.nc(zamp),SSHphase=file:forcing/tz_002.nc(zphase)" !
+OBC_SEGMENT_002_DATA = "U=file:forcing_obc_segment_002.nc(u),V=file:forcing_obc_segment_002.nc(v),SSH=file:forcing_obc_segment_002.nc(eta),TEMP=file:forcing_obc_segment_002.nc(temp),SALT=file:forcing_obc_segment_002.nc(salt),Uamp=file:tu_segment_002.nc(uamp),Uphase=file:tu_segment_002.nc(uphase),Vamp=file:tu_segment_002.nc(vamp),Vphase=file:tu_segment_002.nc(vphase),SSHamp=file:tz_segment_002.nc(zamp),SSHphase=file:tz_segment_002.nc(zphase)" !
                                 ! OBC segment docs
-OBC_SEGMENT_003_DATA = "U=file:forcing/forcing_obc_segment_003.nc(u),V=file:forcing/forcing_obc_segment_003.nc(v),SSH=file:forcing/forcing_obc_segment_003.nc(eta),TEMP=file:forcing/forcing_obc_segment_003.nc(temp),SALT=file:forcing/forcing_obc_segment_003.nc(salt),Uamp=file:forcing/tu_003.nc(uamp),Uphase=file:forcing/tu_003.nc(uphase),Vamp=file:forcing/tu_003.nc(vamp),Vphase=file:forcing/tu_003.nc(vphase),SSHamp=file:forcing/tz_003.nc(zamp),SSHphase=file:forcing/tz_003.nc(zphase)" !
+OBC_SEGMENT_003_DATA = "U=file:forcing_obc_segment_003.nc(u),V=file:forcing_obc_segment_003.nc(v),SSH=file:forcing_obc_segment_003.nc(eta),TEMP=file:forcing_obc_segment_003.nc(temp),SALT=file:forcing_obc_segment_003.nc(salt),Uamp=file:tu_segment_003.nc(uamp),Uphase=file:tu_segment_003.nc(uphase),Vamp=file:tu_segment_003.nc(vamp),Vphase=file:tu_segment_003.nc(vphase),SSHamp=file:tz_segment_003.nc(zamp),SSHphase=file:tz_segment_003.nc(zphase)" !
                                 ! OBC segment docs
-OBC_SEGMENT_004_DATA = "U=file:forcing/forcing_obc_segment_004.nc(u),V=file:forcing/forcing_obc_segment_004.nc(v),SSH=file:forcing/forcing_obc_segment_004.nc(eta),TEMP=file:forcing/forcing_obc_segment_004.nc(temp),SALT=file:forcing/forcing_obc_segment_004.nc(salt),Uamp=file:forcing/tu_004.nc(uamp),Uphase=file:forcing/tu_004.nc(uphase),Vamp=file:forcing/tu_004.nc(vamp),Vphase=file:forcing/tu_004.nc(vphase),SSHamp=file:forcing/tz_004.nc(zamp),SSHphase=file:forcing/tz_004.nc(zphase)" !
+OBC_SEGMENT_004_DATA = "U=file:forcing_obc_segment_004.nc(u),V=file:forcing_obc_segment_004.nc(v),SSH=file:forcing_obc_segment_004.nc(eta),TEMP=file:forcing_obc_segment_004.nc(temp),SALT=file:forcing_obc_segment_004.nc(salt),Uamp=file:tu_segment_004.nc(uamp),Uphase=file:tu_segment_004.nc(uphase),Vamp=file:tu_segment_004.nc(vamp),Vphase=file:tu_segment_004.nc(vphase),SSHamp=file:tz_segment_004.nc(zamp),SSHphase=file:tz_segment_004.nc(zphase)" !
                                 ! OBC segment docs
 
 ! === module MOM_diag_mediator ===
@@ -295,7 +295,7 @@ DIAG_COORD_DEF_Z = "FILE:vcoord.nc,interfaces=zi" ! default = "WOA09"
                                 !                the filename and two variable names, separated
                                 !                by a comma or space, for sigma-2 and dz. e.g.
                                 !                HYBRID:vgrid.nc,sigma2,dz
-DIAG_COORD_DEF_RHO2 = "FILE:diag_rho2.nc,interfaces=rho2" ! default = "WOA09"
+!DIAG_COORD_DEF_RHO2 = "FILE:diag_rho2.nc,interfaces=rho2" ! default = "WOA09"
                                 ! Determines how to specify the coordinate resolution. Valid options are:
                                 !  PARAM       - use the vector-parameter DIAG_COORD_RES_RHO2
                                 !  UNIFORM[:N] - uniformly distributed

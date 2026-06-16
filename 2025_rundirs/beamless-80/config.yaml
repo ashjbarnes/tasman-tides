@@ -1,0 +1,30 @@
+project: x77
+queue: normal
+walltime: 1:15:00
+jobname: bless-80
+#ncpus: 1435
+ncpus: 5634
+jobfs: 100GB
+shortpath: /scratch/nm03
+
+model: mom6
+input:
+    - /g/data/nm03/ab8992/ttide-inputs/era5/10year
+    - /g/data/nm03/ab8992/ttide-inputs/full-80/
+
+exe: /g/data/nm03/mom_executables/jan2024-latest-everything-mod
+collate: false
+runlog: false
+storage:
+  gdata:
+    - ua8
+    - x77
+    - ik11
+
+mpi:
+  module: openmpi/4.1.2
+postscript:
+  postprocessing.sh
+userscripts:
+  error: resub.sh
+  run: rm -f resubmit.count

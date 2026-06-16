@@ -1,0 +1,5 @@
+## SMALL TIMESTEP
+#override DT=200
+#override DT_THERM=800
+#override DTBT = -0.1
+#override TOPO_FILE = "topog_noridge.nc"
